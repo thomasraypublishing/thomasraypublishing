@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Support - Pomagotchi | Thomas Ray Publishing LLC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .support-page { padding: 120px 0 80px; }
+        .support-content { max-width: 700px; margin: 0 auto; }
+        .support-content h1 { font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 8px; color: var(--color-accent); }
+        .support-subtitle { font-size: 1rem; color: var(--color-text-light); margin-bottom: 48px; }
+        .support-content h2 { font-family: var(--font-heading); font-size: 1.3rem; margin: 36px 0 12px; color: var(--color-accent); }
+        .support-content p { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: 14px; line-height: 1.8; }
+        .support-content a { color: var(--color-accent-warm); }
+        .back-link { display: inline-block; margin-bottom: 32px; font-size: 0.9rem; color: var(--color-text-light); text-decoration: none; transition: color var(--transition); }
+        .back-link:hover { color: var(--color-accent-warm); }
+        .contact-card {
+            background: var(--color-bg-alt);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .contact-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--color-accent);
+        }
+        .contact-card a {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 12px 32px;
+            background: var(--color-accent);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background var(--transition);
+        }
+        .contact-card a:hover {
+            background: #333;
+        }
+        .faq-item { margin-bottom: 24px; }
+        .faq-item h3 {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+        }
+        .faq-item p { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="logo-img">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#books">Books</a></li>
+                <li><a href="index.html#pomagotchi">Pomagotchi</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="support-page">
+        <div class="container">
+            <div class="support-content">
+                <a href="index.html#pomagotchi" class="back-link">&larr; Back to Pomagotchi</a>
+                <h1>Pomagotchi Support</h1>
+                <p class="support-subtitle">We're here to help you and your virtual Pom.</p>
+
+                <div class="contact-card">
+                    <h3>Need Help?</h3>
+                    <p>For questions, bug reports, or feedback about Pomagotchi, reach out to us directly.</p>
+                    <a href="mailto:thomasraypublishing@gmail.com?subject=Pomagotchi%20Support">Email Support</a>
+                </div>
+
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <h3>How do I sync my pet across devices?</h3>
+                    <p>Pomagotchi uses iCloud to automatically sync your pet's progress across your Apple devices. Make sure iCloud is enabled in your device's Settings under your Apple Account &gt; iCloud.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How do I restore my purchases?</h3>
+                    <p>Open the app and go to Settings. Your purchases are tied to your Apple ID and can be restored automatically. If items don't appear, try tapping "Restore Purchases" in the shop.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How do I manage or cancel my Pom Club subscription?</h3>
+                    <p>You can manage or cancel your subscription anytime through your device's Settings &gt; Apple ID &gt; Subscriptions. Your benefits will continue until the end of your current billing period.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How do I enable or disable location features?</h3>
+                    <p>Go to your device's Settings &gt; Privacy &amp; Security &gt; Location Services &gt; Pomagotchi. You can choose to allow location access "While Using the App," "Always," or "Never." Your pet will still function without location access, but environment-aware reactions will be disabled.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Is Pomagotchi safe for children?</h3>
+                    <p>Yes. Pomagotchi does not collect any personal information and does not connect to any third-party services. All data stays on your device or in your personal iCloud account. The app is safe for users of all ages.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How do I share my diagnostics for troubleshooting?</h3>
+                    <p>Go to Settings in the app, scroll to the Diagnostics section, and tap "Export Diagnostics." You can then share the report via email. The report contains only app and device information &mdash; no personal data.</p>
+                </div>
+
+                <h2>App Information</h2>
+                <p>Pomagotchi is developed by Thomas Ray Publishing LLC.</p>
+                <p><a href="privacy.html">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="footer-logo">
+                    <p>&copy; 2026 Thomas Ray Publishing LLC. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="index.html#books">Books</a>
+                    <a href="index.html#pomagotchi">Pomagotchi</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="support.html">App Support</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

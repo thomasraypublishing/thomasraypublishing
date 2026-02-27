@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thomas Ray Publishing LLC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="nav-logo">
+                <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="logo-img">
+            </a>
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#books">Books</a></li>
+                <li><a href="#pomagotchi">Pomagotchi</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="hero-logo">
+            <p class="hero-tagline">Stories, Art &amp; Digital Companions</p>
+        </div>
+    </header>
+
+    <section class="books" id="books">
+        <div class="container">
+            <h2 class="section-title">Our Books</h2>
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="images/adventure-pom.jpg" alt="Adventure Pom! Captain Henry Gingersnaps">
+                    </div>
+                    <div class="book-info">
+                        <h3>Adventure Pom! Captain Henry Gingersnaps</h3>
+                        <p class="book-author">By Sean Dryden &amp; Jerry Seguin</p>
+                        <p class="book-desc">Join Captain Henry Gingersnaps, a brave little Pomeranian, on a swashbuckling adventure across the high seas. A charming illustrated tale for readers of all ages.</p>
+                        <a href="https://a.co/d/05y3gYO0" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="images/fluffy-thoughts.png" alt="Fluffy Thoughts: A Pomeranian Activity Journal">
+                    </div>
+                    <div class="book-info">
+                        <h3>Fluffy Thoughts</h3>
+                        <p class="book-author">By Sean Dryden</p>
+                        <p class="book-desc">A Pomeranian activity journal featuring Captain Henry Gingersnaps, Sir Harper Snowflurry, and Bear. Fill your days with fluffy fun, creative prompts, and delightful activities.</p>
+                        <a href="https://a.co/d/0dqSnOU4" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="images/100-xiv.jpg" alt="100 XIV">
+                    </div>
+                    <div class="book-info">
+                        <h3>100 XIV</h3>
+                        <p class="book-author">By Jerry Seguin &amp; Sean Dryden</p>
+                        <p class="book-desc">A curated visual collection exploring form, composition, and artistic expression through one hundred compelling works.</p>
+                        <a href="https://a.co/d/02FaZKXb" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="images/100-ryb.jpg" alt="100 RYB">
+                    </div>
+                    <div class="book-info">
+                        <h3>100 RYB</h3>
+                        <p class="book-author">By Jerry Seguin</p>
+                        <p class="book-desc">An exploration of color through the Red-Yellow-Blue color model. One hundred vibrant works celebrating the foundational palette of traditional art.</p>
+                        <a href="https://a.co/d/05cxxosX" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pomagotchi" id="pomagotchi">
+        <div class="container">
+            <div class="app-showcase">
+                <div class="app-info">
+                    <h2 class="section-title">Pomagotchi</h2>
+                    <p class="app-subtitle">Your Virtual Pomeranian Companion</p>
+                    <p class="app-desc">Adopt and care for your very own virtual Pomeranian. Feed, play, and bond with your fluffy companion in this delightful iOS app from the world of Thomas Ray Publishing.</p>
+                    <ul class="app-features">
+                        <li>Raise and nurture your own virtual Pom</li>
+                        <li>Play mini-games and earn rewards</li>
+                        <li>Watch your pet react to your real-world environment</li>
+                        <li>Place your Pom in augmented reality with Teleport</li>
+                        <li>Capture memories in the Photo Booth</li>
+                        <li>Sync across all your Apple devices</li>
+                    </ul>
+                    <div class="app-buttons">
+                        <a href="#" class="app-store-badge" aria-label="Download on the App Store">
+                            <svg viewBox="0 0 120 40" width="150" height="50">
+                                <rect width="120" height="40" rx="5" fill="#000"/>
+                                <text x="60" y="15" text-anchor="middle" fill="#fff" font-size="7" font-family="Inter, sans-serif">Download on the</text>
+                                <text x="60" y="28" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="Inter, sans-serif">App Store</text>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="app-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="support.html">App Support</a>
+                    </div>
+                </div>
+                <div class="app-preview">
+                    <div class="phone-frame">
+                        <img src="images/pomagotchi-screenshot.png" alt="Pomagotchi App Screenshot" onerror="this.parentElement.classList.add('no-image')">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <p>Thomas Ray Publishing LLC is an independent publisher bringing creative stories, art, and digital experiences to life. From illustrated children's books to art collections and interactive apps, we craft experiences that spark joy and imagination.</p>
+                <p>Based on a love for Pomeranians, art, and storytelling, our publications span the playful adventures of Captain Henry Gingersnaps to curated visual art collections and our virtual pet companion app, Pomagotchi.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="footer-logo">
+                    <p>&copy; 2026 Thomas Ray Publishing LLC. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#books">Books</a>
+                    <a href="#pomagotchi">Pomagotchi</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="support.html">App Support</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
