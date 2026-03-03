@@ -134,7 +134,17 @@
 
                 <div class="faq-item">
                     <h3>How does the daily horoscope work?</h3>
-                    <p>The Device generates a personalized daily horoscope message using Apple's on-device Foundation Models. The horoscope considers the time of day and your reading history. It is generated entirely on your device &mdash; no data is sent to any server. The horoscope is cached for the day so you see the same message each time. If the on-device AI model is not available on your device, The Device falls back to a curated set of horoscope messages.</p>
+                    <p>The Device generates a personalized daily horoscope message using Apple's on-device Foundation Models. The horoscope considers the time of day, your reading history, moon phase, season, and local weather (if location is enabled). It is generated entirely on your device &mdash; no data is sent to any server. The horoscope is cached for the day so you see the same message each time. If the on-device AI model is not available on your device, The Device falls back to a curated set of horoscope messages.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What is the Cosmic Context system?</h3>
+                    <p>The Device gathers ambient cosmic signals &mdash; moon phase, season, time of day, solstice proximity, and optionally your local weather &mdash; to influence prediction narratives and option weighting. For example, during a full moon you may see moon-themed narrative intros, and stormy weather may bring more mystical predictions. Device signals like screen brightness also contribute to the cosmic alignment score. All of this happens locally on your device.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Why does The Device ask for my location?</h3>
+                    <p>Location is used only to fetch local weather conditions via Apple's WeatherKit. Weather data adds flavor to your predictions (e.g., storm-themed intros on rainy days). This is entirely optional &mdash; you can deny the permission and The Device works perfectly without it. Your location is never stored or sent to Thomas Ray Publishing.</p>
                 </div>
 
                 <div class="faq-item">
