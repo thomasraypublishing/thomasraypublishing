@@ -106,8 +106,14 @@
                 <h2>Apple Watch</h2>
                 <p>If you use the Pomagotchi Apple Watch companion app, pet data is synced between your iPhone and Apple Watch using Apple's WatchConnectivity framework. This communication occurs directly between your paired devices and does not pass through any external servers.</p>
 
-                <h2>Widgets, Live Activities &amp; Siri</h2>
-                <p>Pomagotchi supports Home Screen widgets, Live Activities, and Siri Shortcuts to give you quick access to your pet's status. These features use Apple's WidgetKit, ActivityKit, and AppIntents frameworks. Pet data shared with these features stays on your device within Apple's secure app sandbox.</p>
+                <h2>Widgets, Live Activities, Siri &amp; Spotlight</h2>
+                <p>Pomagotchi supports Home Screen widgets, Live Activities, Siri Shortcuts, and Spotlight search indexing to give you quick access to your pet's status. These features use Apple's WidgetKit, ActivityKit, AppIntents, and CoreSpotlight frameworks. Pet data shared with these features stays on your device within Apple's secure app sandbox. Spotlight indexing stores your pet's name, tricks, and badges in the on-device search index &mdash; this data is not transmitted externally.</p>
+
+                <h2>On-Device AI (Apple Intelligence)</h2>
+                <p>On supported devices (iOS 26+), Pomagotchi can use Apple's Foundation Models framework to generate personalized dialogue, dream stories, journal entries, and notification messages for your pet. All AI processing happens entirely on your device using Apple's built-in language model &mdash; no text is sent to external servers, and no data leaves your device. This feature is optional and can be disabled at any time in Settings.</p>
+
+                <h2>Image Playground</h2>
+                <p>On supported devices (iOS 18.1+), Pomagotchi can use Apple's Image Playground framework to generate AI-created scene backgrounds for the Photo Booth and Trading Card features. Image generation is handled entirely by Apple's on-device image generation system. No images or prompts are sent to our servers. This feature is optional and can be disabled in Settings.</p>
 
                 <h2>Notifications</h2>
                 <p>With your permission, Pomagotchi sends local notifications to remind you about your pet's needs. These notifications are generated and scheduled entirely on your device &mdash; no push notification servers are involved.</p>
@@ -125,7 +131,7 @@
                 <p>Pomagotchi does not knowingly collect any personal information from anyone, including children under 13. No personal data is transmitted to us or to third parties. Location data and all other app data are stored only on the user's device and personal iCloud account. The app is safe for users of all ages.</p>
 
                 <h2>Third-Party Services</h2>
-                <p>Pomagotchi does not integrate any third-party analytics, advertising, or tracking services. The only external services used are Apple's own frameworks &mdash; including StoreKit (purchases), Game Center (leaderboards and achievements), ARKit (augmented reality), WeatherKit (weather conditions), MapKit (nearby point-of-interest queries for environment detection), WatchConnectivity (Apple Watch sync), iCloud Key-Value Storage (cross-device sync), CloudKit (opt-in anonymous analytics), WidgetKit (widgets), ActivityKit (Live Activities), and AppIntents (Siri Shortcuts). All of these are governed by Apple's privacy policy.</p>
+                <p>Pomagotchi does not integrate any third-party analytics, advertising, or tracking services. The only external services used are Apple's own frameworks &mdash; including StoreKit (purchases), Game Center (leaderboards and achievements), ARKit (augmented reality), WeatherKit (weather conditions), MapKit (nearby point-of-interest queries for environment detection), WatchConnectivity (Apple Watch sync), iCloud Key-Value Storage (cross-device sync), CloudKit (opt-in anonymous analytics), WidgetKit (widgets), ActivityKit (Live Activities), AppIntents (Siri Shortcuts), CoreSpotlight (on-device search indexing), Foundation Models (on-device AI text generation), and ImagePlayground (on-device AI image generation). All of these are governed by Apple's privacy policy.</p>
 
                 <hr style="margin: 48px 0; border: none; border-top: 1px solid var(--color-border);">
 
