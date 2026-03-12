@@ -89,8 +89,7 @@
                 <h2>iCloud Sync</h2>
                 <p>Pomagotchi can sync your pet's progress, saved poms, coin balance, trophy achievements, leveling data (XP, badges), competition data (entries, results), and show wardrobe items across your Apple devices using Apple's iCloud Key-Value Storage. This feature is controlled by the &ldquo;iCloud Sync&rdquo; toggle in the app's Settings and is enabled by default. When enabled, your data is encrypted and stored in your personal iCloud account &mdash; it is not accessible to us. You can disable iCloud sync at any time in the app's Settings. Disabling it stops all future syncing but does not delete data already stored in iCloud.</p>
 
-                <h2>Microphone Access</h2>
-                <p>Pomagotchi offers an optional Sound Reactions feature that uses your device's microphone to let your pet react to nearby sounds. Audio is processed entirely on-device using Apple's built-in sound classification framework. No audio is recorded, stored, or transmitted. You can enable or disable this feature at any time in the app's Settings.</p>
+                <!-- Microphone Access section removed — Sound Reactions disabled for 1.0 launch. Restore when re-enabling. -->
 
                 <h2>Camera, AR &amp; Photos</h2>
                 <p>The Teleport (AR) feature uses your device camera to place your pet in augmented reality. Camera data is processed in real-time on your device and is never recorded or transmitted.</p>
@@ -133,7 +132,7 @@
                 <hr style="margin: 48px 0; border: none; border-top: 1px solid var(--color-border);">
 
                 <h1 id="the-device" style="margin-top: 0;">The Device - Cosmic Pyramid &mdash; Privacy Policy</h1>
-                <p class="policy-date">Effective: March 6, 2026</p>
+                <p class="policy-date">Effective: March 11, 2026</p>
 
                 <h2>Introduction</h2>
                 <p>Thomas Ray Publishing LLC ("we", "us", or "our") built The Device - Cosmic Pyramid as an entertainment application. This section covers how we handle information when you use The Device - Cosmic Pyramid. We are committed to protecting your privacy. All app data is processed and stored on your device. The only optional cloud features are anonymous analytics and in-app feedback, both of which use Apple's CloudKit and are described below.</p>
@@ -155,13 +154,18 @@
                     <li>Purchased prediction balance</li>
                     <li>Total lifetime prediction count</li>
                     <li>In-app purchase transaction IDs (for deduplication)</li>
-                    <li>Saved prediction images and reading history</li>
+                    <li>Saved prediction images and reading history (stored as files, capped at 50 readings)</li>
                     <li>Recent prediction values (for diversity tracking)</li>
                     <li>Cached daily horoscope message</li>
-                    <li>User preference settings</li>
+                    <li>User preference settings (sound, haptics, notifications)</li>
+                    <li>Birth date (optional) &mdash; stored locally to personalize readings through zodiac and numerology calculations; never transmitted externally</li>
+                    <li>Streak and milestone tracking (consecutive days of use)</li>
+                    <li>Subscription status and redemption code activation date</li>
+                    <li>Onboarding completion status</li>
+                    <li>Widget data (shared via App Group for home screen widget display)</li>
                     <li>Diagnostic logs (event counts and session info)</li>
                 </ul>
-                <p>This data is stored only on your device and is not accessible to us or any third party.</p>
+                <p>No data is synced to iCloud, backed up to any server, or shared with any third party.</p>
 
                 <h2>Location &amp; Weather Data</h2>
                 <p>The Device may optionally request your location to retrieve local weather conditions via Apple's WeatherKit service. This permission is entirely optional &mdash; you can deny it and the app functions normally without it. When granted:</p>
@@ -178,8 +182,20 @@
                 <h2>Saved Prediction Images</h2>
                 <p>When you save a prediction reading, an image is rendered and stored in the app's local Documents directory on your device. You may choose to share this image using the iOS share sheet, which is handled entirely by the operating system. Thomas Ray Publishing does not have access to shared images or their destinations. You control what you save and share.</p>
 
-                <h2>In-App Purchases</h2>
-                <p>The Device offers optional consumable in-app purchases for additional predictions. All purchase transactions are processed by Apple through the App Store. We do not receive, process, or store any payment information. All transactions are handled by Apple subject to their privacy policy.</p>
+                <h2>In-App Purchases &amp; Subscriptions</h2>
+                <p>The Device offers optional in-app purchases including a consumable single-prediction pack and auto-renewable subscriptions (monthly and annual) for unlimited readings. All purchase transactions are processed by Apple through the App Store. Thomas Ray Publishing does not have access to your payment information. Subscription status is stored locally on your device.</p>
+
+                <h2>Notifications</h2>
+                <p>The Device may request permission to send local push notifications. These notifications are scheduled entirely on your device and include daily reading reminders and moon phase alerts. No notification data is sent to any external server. You can disable notifications at any time in the app's Settings or in iOS Settings.</p>
+
+                <h2>Siri &amp; App Intents</h2>
+                <p>The Device provides Siri Shortcuts that let you start a reading, check your cosmic streak, view your last prediction, or check the moon phase using voice commands. When you invoke a shortcut, Siri sends your request to the app, which processes it entirely on your device. No voice data or intent data is transmitted to Thomas Ray Publishing or any third party.</p>
+
+                <h2>Live Activities</h2>
+                <p>The Device uses Live Activities to display prediction progress on your lock screen and Dynamic Island during readings, and optionally shows a persistent cosmic status display with moon phase, streak count, and reading availability. All Live Activity data is generated and displayed locally on your device. No Live Activity data is transmitted externally.</p>
+
+                <h2>Home Screen Widget</h2>
+                <p>The Device includes an optional home screen widget that displays moon phase, reading availability, streak count, and your daily horoscope. Widget data is shared between the main app and the widget extension via an App Group container stored locally on your device. No widget data is transmitted externally.</p>
 
                 <h2>Diagnostics &amp; Feedback</h2>
                 <p>The app maintains a local diagnostics log to help with troubleshooting. This log records event counts and session information on your device only. It is never automatically transmitted. When you send feedback through the app's Feedback form, you may optionally choose to include this diagnostic data with your message. The diagnostic report includes your app version, iOS version, device model, and event logs but does not include any personal information. Feedback is submitted to Apple's CloudKit &mdash; we do not use any third-party feedback or support services.</p>
