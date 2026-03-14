@@ -43,7 +43,7 @@
             <div class="policy-content">
                 <a href="index.html" class="back-link">&larr; Back to Home</a>
                 <h1>Privacy Policy</h1>
-                <p class="policy-date">Effective: March 11, 2026</p>
+                <p class="policy-date">Effective: March 13, 2026</p>
 
                 <h2>Introduction</h2>
                 <p>Thomas Ray Publishing LLC ("we", "us", or "our") built Pomagotchi as a premium application. This Privacy Policy explains how we handle information when you use our app. We are committed to protecting your privacy &mdash; Pomagotchi does not use any third-party analytics, advertising, or tracking services. All app data is processed and stored on your device or within your personal Apple ecosystem (iCloud, Game Center).</p>
@@ -52,7 +52,7 @@
                 <p>We do not automatically collect, transmit, or store any personal information on our own servers. We do not operate any servers or backend services. Specifically:</p>
                 <ul>
                     <li>We do not automatically collect names, email addresses, or contact information</li>
-                    <li>We do not collect browsing history or usage analytics</li>
+                    <li>We do not collect browsing history (anonymous usage analytics are collected by default &mdash; see Anonymous Analytics below)</li>
                     <li>We do not use device identifiers for tracking purposes</li>
                     <li>We do not use any third-party advertising or analytics services</li>
                 </ul>
@@ -106,10 +106,10 @@
                 <p>Pomagotchi integrates with Apple Game Center for leaderboards and achievements. Your game scores and achievement progress are submitted to Game Center and may be visible to other Game Center users depending on your Game Center privacy settings. Your Game Center profile and data are managed by Apple. We do not access your Game Center identity beyond what Apple provides for leaderboard and achievement functionality.</p>
 
                 <h2>Apple Watch</h2>
-                <p>If you use the Pomagotchi Apple Watch companion app, pet data is synced between your iPhone and Apple Watch using Apple's WatchConnectivity framework. This communication occurs directly between your paired devices and does not pass through any external servers.</p>
+                <p>If you use the Pomagotchi Apple Watch companion app, pet data is synced between your iPhone and Apple Watch using Apple's WatchConnectivity framework. This communication occurs directly between your paired devices and does not pass through any external servers. The Watch app can also read your step count from Apple HealthKit (with your permission) to trigger walk bonuses for your pet. Step count data is processed on-device only and is never transmitted to us or any third party. You can revoke HealthKit access at any time in your device's Settings &gt; Privacy &amp; Security &gt; Health.</p>
 
                 <h2>Widgets, Live Activities, Siri &amp; Spotlight</h2>
-                <p>Pomagotchi supports Home Screen widgets, Live Activities, Siri Shortcuts, and Spotlight search indexing to give you quick access to your pet's status. These features use Apple's WidgetKit, ActivityKit, AppIntents, and CoreSpotlight frameworks. Pet data shared with these features stays on your device within Apple's secure app sandbox. Spotlight indexing stores your pet's name, tricks, and badges in the on-device search index &mdash; this data is not transmitted externally.</p>
+                <p>Pomagotchi supports Home Screen widgets (including interactive Feed and Play buttons), Live Activities, Siri Shortcuts, and Spotlight search indexing to give you quick access to your pet's status. These features use Apple's WidgetKit, ActivityKit, AppIntents, and CoreSpotlight frameworks. Pet data shared with these features stays on your device within Apple's secure app sandbox. Spotlight indexing stores your pet's name, tricks, and badges in the on-device search index &mdash; this data is not transmitted externally.</p>
 
                 <h2>On-Device AI (Apple Intelligence)</h2>
                 <p>On supported devices (iOS 26+), Pomagotchi can use Apple's Foundation Models framework to generate personalized dialogue, dream stories, journal entries, and notification messages for your pet. All AI processing happens entirely on your device using Apple's built-in language model &mdash; no text is sent to external servers, and no data leaves your device. This feature is optional and can be disabled at any time in Settings.</p>
@@ -120,17 +120,17 @@
                 <h2>Diagnostics &amp; Feedback</h2>
                 <p>The app maintains a local diagnostics log to help with troubleshooting. This log records event counts and session information on your device only. It is never automatically transmitted. When you send feedback through the app's Feedback form, you may optionally choose to include this diagnostic data with your message. The diagnostic report includes your app version, iOS version, device model, and event logs but does not include any personal information. Feedback is sent directly to us via email &mdash; we do not use any third-party feedback or support services.</p>
 
-                <h2>Anonymous Analytics (Opt-In)</h2>
-                <p>Pomagotchi offers an optional &ldquo;Share Anonymous Analytics&rdquo; setting you can enable in Settings. When enabled, the app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit) to help us improve the app. These reports are sent at most once every 24 hours.</p>
-                <p>Reports include: app version, iOS version, device model, screen dimensions, language/locale, anonymous session count, pet age (in seconds), pet variant, aggregated action counts (e.g. number of feeds, plays), game play counts and recent scores, error summaries, which features are enabled, subscription status, daily streak, and trophy count.</p>
+                <h2>Anonymous Analytics</h2>
+                <p>Pomagotchi collects anonymous usage analytics by default to help us improve the app. The app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit). These reports are sent at most once every 24 hours.</p>
+                <p>Reports include: app version, iOS version, device model, device category (iPhone/iPad), screen dimensions, language/locale, anonymous session count, days since first launch, days active in the last 7 and 30 days, pet age (in seconds), pet variant, aggregated action counts (e.g. number of feeds, plays, walks, bedtime uses), game play counts and recent scores, error summaries, which features and settings are enabled (iCloud sync, AI messages, haptics, sound reactions), subscription status and tenure, in-app purchase event counts, promo codes redeemed count, daily streak, trophy count, crash-free session rate, memory warning counts, whether an Apple Watch is paired, and whether widget data is active.</p>
                 <p>Reports do <strong>NOT</strong> include: your name, Apple ID, email, location, pet name, IP address, or any other personally identifiable information. Each install is assigned a random identifier for deduplication only &mdash; it cannot be used to identify you.</p>
-                <p>This feature is OFF by default. You can enable or disable it at any time in Settings. Disabling it immediately stops all future report submissions.</p>
+                <p>This feature is ON by default. You can disable it at any time in Settings under &ldquo;Share Anonymous Analytics.&rdquo; Disabling it immediately stops all future report submissions.</p>
 
                 <h2>Children's Privacy</h2>
                 <p>Pomagotchi does not knowingly collect any personal information from anyone, including children under 13. No personal data is transmitted to us or to third parties. Location data and all other app data are stored only on the user's device and personal iCloud account. The app is safe for users of all ages.</p>
 
                 <h2>Third-Party Services</h2>
-                <p>Pomagotchi does not integrate any third-party analytics, advertising, or tracking services. The only external services used are Apple's own frameworks &mdash; including StoreKit (purchases), Game Center (leaderboards and achievements), ARKit (augmented reality), WeatherKit (weather conditions), MapKit (nearby point-of-interest queries for environment detection), WatchConnectivity (Apple Watch sync), iCloud Key-Value Storage (cross-device sync), CloudKit (opt-in anonymous analytics), WidgetKit (widgets), ActivityKit (Live Activities), AppIntents (Siri Shortcuts), CoreSpotlight (on-device search indexing), Foundation Models (on-device AI text generation), and ImagePlayground (on-device AI image generation). All of these are governed by Apple's privacy policy.</p>
+                <p>Pomagotchi does not integrate any third-party analytics, advertising, or tracking services. The only external services used are Apple's own frameworks &mdash; including StoreKit (purchases), Game Center (leaderboards and achievements), ARKit (augmented reality), WeatherKit (weather conditions), MapKit (nearby point-of-interest queries for environment detection), WatchConnectivity (Apple Watch sync), HealthKit (step count on Apple Watch), iCloud Key-Value Storage (cross-device sync), CloudKit (anonymous analytics), WidgetKit (interactive widgets), ActivityKit (Live Activities), AppIntents (Siri Shortcuts), CoreSpotlight (on-device search indexing), CoreHaptics (tactile feedback), and Foundation Models (on-device AI text generation). All of these are governed by Apple's privacy policy.</p>
 
                 <hr style="margin: 48px 0; border: none; border-top: 1px solid var(--color-border);">
 
@@ -203,11 +203,11 @@
                 <h2>Diagnostics &amp; Feedback</h2>
                 <p>The app maintains a local diagnostics log to help with troubleshooting. This log records event counts and session information on your device only. It is never automatically transmitted. When you send feedback through the app's Feedback form, you may optionally choose to include this diagnostic data with your message. The diagnostic report includes your app version, iOS version, device model, and event logs but does not include any personal information. Feedback is submitted to Apple's CloudKit &mdash; we do not use any third-party feedback or support services.</p>
 
-                <h2>Anonymous Analytics (Opt-In)</h2>
-                <p>The Device offers an optional &ldquo;Share Anonymous Analytics&rdquo; setting you can enable in Settings. When enabled, the app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit) to help us improve the app. These reports are sent at most once every 24 hours.</p>
-                <p>Reports include: app version, iOS version, device model, screen dimensions, language/locale, anonymous session count, total readings count, current and longest streaks, subscription and redemption status, purchased prediction count, feature toggle states (sound, haptics, notifications, Enhanced Awareness), AI model availability, engagement counts (quick readings, shares, share bonuses, gallery size), onboarding status, free readings remaining, purchase event count, attunement completion rate, average reading interval, most frequent prediction category, device language, sound cache performance, AI generation speed, days since install, session duration, aggregated action counts, and error summaries.</p>
+                <h2>Anonymous Analytics</h2>
+                <p>The Device collects anonymous usage analytics to help us improve the app. The app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit). These reports are sent at most once every 24 hours.</p>
+                <p>Reports include: app version, iOS version, device model, screen dimensions, language/locale, anonymous session count, total readings count, current and longest streaks, subscription and redemption status, purchased prediction count, feature toggle states (sound, haptics, notifications, Enhanced Awareness), AI model availability, engagement counts (quick readings, shares, share bonuses, gallery size), onboarding status, free readings remaining, purchase event count, attunement completion rate, average reading interval, most frequent prediction category, device language, sound cache performance, AI generation speed, days since install, session duration, paywall views, time-of-day usage patterns, Apple Watch companion app usage, aggregated action counts, and error summaries.</p>
                 <p>Reports do <strong>NOT</strong> include: your name, Apple ID, email, location, IP address, or any other personally identifiable information. Each install is assigned a random identifier for deduplication only &mdash; it cannot be used to identify you.</p>
-                <p>This feature is OFF by default. You can enable or disable it at any time in Settings. Disabling it immediately stops all future report submissions.</p>
+                <p>This feature is ON by default. You can disable it at any time via &ldquo;Share Anonymous Analytics&rdquo; in Settings. Disabling it immediately stops all future report submissions.</p>
 
                 <h2>Children's Privacy</h2>
                 <p>The Device does not knowingly collect any personal information from anyone, including children under 13. No personal data is transmitted to us or to third parties unless you explicitly opt in to anonymous analytics or submit feedback. The app is suitable for all ages as an entertainment product.</p>
