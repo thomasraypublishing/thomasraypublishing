@@ -32,6 +32,7 @@
                 <li><a href="index.html#books">Books</a></li>
                 <li><a href="index.html#pomagotchi">Pomagotchi</a></li>
                 <li><a href="index.html#the-device">The Device</a></li>
+                <li><a href="index.html#colophon">Colophon</a></li>
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
@@ -218,6 +219,95 @@
 
                 <hr style="margin: 48px 0; border: none; border-top: 1px solid var(--color-border);">
 
+                <h1 id="colophon" style="margin-top: 0;">Colophon &mdash; Privacy Policy</h1>
+                <p class="policy-date">Effective: March 17, 2026</p>
+
+                <h2>Introduction</h2>
+                <p>Thomas Ray Publishing LLC ("we", "us", or "our") built Colophon as a business management application for independent publishers, authors, and small creative businesses. This section covers how we handle information when you use Colophon. We are committed to protecting your privacy &mdash; Colophon does not use any third-party analytics, advertising, or tracking services. All business data is processed and stored on your device or within your personal Apple ecosystem (iCloud).</p>
+
+                <h2>Information We Do Not Collect</h2>
+                <p>We do not automatically collect, transmit, or store any personal information on our own servers. We do not operate any custom servers or backend services. Specifically:</p>
+                <ul>
+                    <li>We do not automatically collect names, email addresses, or contact information</li>
+                    <li>We do not collect browsing history or usage data without your explicit opt-in</li>
+                    <li>We do not use device identifiers for tracking purposes</li>
+                    <li>We do not use any third-party advertising, analytics, or tracking services</li>
+                    <li>We do not connect to banking systems or access account balances</li>
+                    <li>We do not send data to external AI services</li>
+                </ul>
+                <p>If you choose to send feedback through the app's Feedback form, you may optionally provide your name and email address so we can follow up. This information is stored in Apple's CloudKit and is only used to respond to your feedback.</p>
+
+                <h2>Data Stored on Your Device</h2>
+                <p>All business data is stored locally on your device using Apple's Core Data framework. This includes:</p>
+                <ul>
+                    <li>Expense records (merchant, amount, date, category, notes, receipt images)</li>
+                    <li>Mileage trip logs (origin, destination, distance, purpose)</li>
+                    <li>Business documents (files, tags, categories, expiration dates)</li>
+                    <li>Business activities and calendar event references</li>
+                    <li>Journal entries (text, voice transcriptions, attendees, action items)</li>
+                    <li>Book titles and royalty records from publishing platforms</li>
+                    <li>Revenue tracking data by book and platform</li>
+                    <li>Funding account records (display name, institution name, optional last-four digits, payment method type)</li>
+                    <li>Capital contributions and tax basis calculations</li>
+                    <li>App preferences and settings</li>
+                    <li>Diagnostic logs (event counts and session info)</li>
+                </ul>
+                <p>This data is stored only on your device. If iCloud Sync is enabled, your data also syncs to your personal iCloud account via Apple's CloudKit (see iCloud Sync below).</p>
+
+                <h2>Funding Accounts &amp; Financial Data</h2>
+                <p>Colophon allows you to track funding accounts for business and personal finance separation. Account records store only a display name, institution name, optional last-four digits of the account number, and payment method type. Colophon does not connect to any bank, access account balances, or process any financial transactions. Capital contribution and tax basis calculations are performed entirely on your device. No financial data is transmitted to Thomas Ray Publishing or any third party.</p>
+
+                <h2>Location Services</h2>
+                <p>With your permission, Colophon uses your device's location for mileage trip detection and address-based distance calculations. Location data is:</p>
+                <ul>
+                    <li>Processed and stored entirely on your device</li>
+                    <li>Never transmitted to our servers or any third party</li>
+                    <li>Used only for mileage logging and IRS deduction calculations</li>
+                </ul>
+                <p>You can revoke location permission at any time in your device's Settings.</p>
+
+                <h2>iCloud Sync</h2>
+                <p>Colophon syncs your business data across your Apple devices using Apple's NSPersistentCloudKitContainer. When enabled, your data is encrypted and stored in your personal iCloud account &mdash; it is not accessible to us. Sync includes expenses, trips, documents, activities, journal entries, royalty records, and funding account data. You can manage iCloud sync through your device's iCloud settings.</p>
+
+                <h2>Calendar Integration</h2>
+                <p>With your permission, Colophon reads events from your Apple Calendar (via EventKit) to link business activities to calendar entries. Calendar data is read on-device and cached locally. Colophon may create new calendar events when you explicitly request it but does not modify or delete existing events without your action. Calendar data is never transmitted to Thomas Ray Publishing or any third party.</p>
+
+                <h2>Camera &amp; Photos</h2>
+                <p>Colophon uses your device's camera to capture receipt images. The app also uses Apple's Vision framework to perform on-device OCR (optical character recognition) to extract merchant names, amounts, and dates from receipts. You can also import receipt images from your Photos library. All image processing happens entirely on your device &mdash; no images or extracted data are transmitted externally.</p>
+
+                <h2>Voice Recording &amp; Transcription</h2>
+                <p>The Voice-to-Journal feature uses your device's microphone and Apple's Speech framework to transcribe voice recordings into journal entries. All transcription occurs entirely on your device. Audio recordings are not stored permanently unless you save the transcription as a journal entry. Thomas Ray Publishing does not receive or store any audio data. You can revoke microphone and speech recognition permissions at any time in your device's Settings.</p>
+
+                <h2>On-Device AI Processing</h2>
+                <p>Colophon uses Apple's on-device machine learning frameworks (Vision, NaturalLanguage, and Foundation Models) for receipt OCR, expense categorization, journal entity extraction, and natural language business queries. All AI processing happens entirely on your device &mdash; no prompts, inputs, or outputs are transmitted to any external server.</p>
+
+                <h2>In-App Purchases &amp; Subscriptions</h2>
+                <p>Colophon offers optional auto-renewable subscriptions (monthly and annual) for advanced features. All purchase transactions are processed by Apple through the App Store. Thomas Ray Publishing does not have access to your payment information. Subscription status is verified on-device using Apple's StoreKit 2 framework.</p>
+
+                <h2>Siri &amp; App Intents</h2>
+                <p>Colophon provides Siri Shortcuts for quick access to expenses, mileage, reports, and other features. When you invoke a shortcut, Siri sends your request to the app, which processes it entirely on your device. No voice data or intent data is transmitted to Thomas Ray Publishing.</p>
+
+                <h2>Diagnostics &amp; Feedback</h2>
+                <p>The app maintains a local diagnostics log to help with troubleshooting. This log records event counts and session information on your device only. It is never automatically transmitted. When you send feedback through the app's Feedback form, you may optionally choose to include diagnostic data. The diagnostic report includes your app version, iOS version, device model, and session history but does not include any personal or business data. Feedback is submitted to Apple's CloudKit.</p>
+
+                <h2>Anonymous Analytics</h2>
+                <p>Colophon offers optional anonymous usage analytics to help us improve the app. Unlike our other apps, analytics in Colophon are <strong>disabled by default</strong> and require your explicit opt-in. When enabled, the app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit), at most once every 24 hours.</p>
+                <p>Reports include: app version, iOS/macOS version, device model, screen dimensions, language/locale, anonymous session count, feature usage counts (number of expenses, trips, documents, journal entries), entity counts, sync health status, subscription status, and crash-free session rate.</p>
+                <p>Reports do <strong>NOT</strong> include: your name, Apple ID, email, location, business data, financial figures, merchant names, document contents, IP address, or any other personally identifiable information. Each install is assigned a random identifier for deduplication only.</p>
+                <p>You can enable or disable analytics at any time in Settings under &ldquo;Share Anonymous Analytics.&rdquo;</p>
+
+                <h2>Children's Privacy</h2>
+                <p>Colophon is a business management application designed for adults. We do not knowingly collect any personal information from children under 13.</p>
+
+                <h2>Third-Party Services</h2>
+                <p>Colophon does not integrate any third-party analytics, advertising, or tracking services. The only external services used are Apple's own frameworks &mdash; including Core Data with CloudKit (data storage and sync), StoreKit 2 (subscriptions), EventKit (calendar integration), Vision (receipt OCR), Speech (voice transcription), NaturalLanguage (entity extraction), Foundation Models (on-device AI), Charts (financial visualization), AppIntents (Siri Shortcuts), and PDFKit (report generation). All of these are governed by Apple's privacy policy.</p>
+
+                <h2>Contact Us</h2>
+                <p>If you have any questions about this section of the Privacy Policy, please contact us at:<br>
+                <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a></p>
+
+                <hr style="margin: 48px 0; border: none; border-top: 1px solid var(--color-border);">
+
                 <h2>Changes to This Policy</h2>
                 <p>We may update this Privacy Policy from time to time. Any changes will be reflected in the app with an updated effective date. Your continued use of the app after changes constitutes acceptance of the updated policy.</p>
 
@@ -240,6 +330,7 @@
                     <a href="index.html#books">Books</a>
                     <a href="index.html#pomagotchi">Pomagotchi</a>
                     <a href="index.html#the-device">The Device</a>
+                    <a href="index.html#colophon">Colophon</a>
                     <a href="privacy.html">Privacy Policy</a>
                     <a href="terms.html">Terms of Use</a>
                     <a href="support.html">App Support</a>
