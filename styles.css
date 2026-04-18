@@ -344,19 +344,11 @@ body {
     padding: 100px 0;
 }
 
-.section-lede {
-    text-align: center;
-    max-width: 620px;
-    margin: -32px auto 48px;
-    color: var(--color-text-light);
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
 .stickers-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    align-items: start;
 }
 
 .sticker-card {
@@ -364,61 +356,35 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 28px 20px;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
     text-decoration: none;
     color: var(--color-text);
-    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    transition: transform var(--transition);
 }
 
 .sticker-card:hover,
 .sticker-card:focus-visible {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
-    border-color: var(--color-accent-warm);
 }
 
 .sticker-icon {
-    width: 120px;
-    height: 120px;
-    border-radius: 24px;
-    overflow: hidden;
-    background: var(--color-bg-alt);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    margin-bottom: 18px;
-}
-
-.sticker-icon img {
-    width: 100%;
-    height: 100%;
+    width: 160px;
+    height: 160px;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
+    border-radius: 36px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+    background: var(--color-bg-alt);
     display: block;
-}
-
-.sticker-card h3 {
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--color-accent);
-}
-
-.sticker-card p {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
-    line-height: 1.55;
     margin-bottom: 14px;
 }
 
-.sticker-cta {
-    margin-top: auto;
-    font-size: 0.8rem;
+.sticker-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-accent-warm);
+    color: var(--color-accent);
+    line-height: 1.3;
 }
 
 /* ---- About ---- */
@@ -580,8 +546,24 @@ body {
 
     .books,
     .pomagotchi,
+    .sticker-packs,
     .about {
         padding: 64px 0;
+    }
+
+    .stickers-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .sticker-icon {
+        width: 130px;
+        height: 130px;
+        border-radius: 28px;
+    }
+
+    .sticker-name {
+        font-size: 0.9rem;
     }
 
     .book-card {
