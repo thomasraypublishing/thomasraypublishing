@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Thomas Ray Publishing LLC &mdash; Stories, Art &amp; Digital Companions</title>
     <meta name="description" content="Thomas Ray Publishing LLC is an independent publisher of illustrated books, curated art collections, iOS apps including Pomagotchi and The Device, and iMessage sticker packs.">
     <meta name="author" content="Thomas Ray Publishing LLC">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#F4ECDC">
     <link rel="canonical" href="https://thomasraypublishing.com/">
     <link rel="icon" type="image/jpeg" href="images/logo.jpg">
     <link rel="apple-touch-icon" href="images/logo.jpg">
@@ -20,244 +20,435 @@
     <meta name="twitter:title" content="Thomas Ray Publishing LLC">
     <meta name="twitter:description" content="Illustrated books, art collections, iOS apps, and iMessage sticker packs from Thomas Ray Publishing LLC.">
     <meta name="twitter:image" content="https://thomasraypublishing.com/images/logo.jpg">
-    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <nav class="navbar" id="navbar">
-        <div class="container nav-content">
-            <a href="#" class="nav-logo">
-                <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="logo-img">
+<body data-theme="paper">
+
+<div class="atmo" id="atmo" aria-hidden="true"></div>
+
+<nav class="top">
+    <div class="wrap">
+        <a href="#" class="brand" aria-label="Thomas Ray Publishing home">
+            <div class="dot" aria-hidden="true"></div>
+            <span>Thomas Ray Publishing</span>
+            <span class="divider" aria-hidden="true"></span>
+            <span class="small">Est. Indie</span>
+        </a>
+        <div class="navlinks">
+            <a href="#apps">Apps</a>
+            <a href="#books">Books</a>
+            <a href="#stickers">Stickers</a>
+            <a href="#about">About</a>
+            <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero" id="hero">
+    <div class="wrap">
+        <div class="eyebrow">
+            <div class="line" aria-hidden="true"></div>
+            <div class="mono">Catalog N<sup>o</sup>&nbsp;2026 &mdash; Vol. I</div>
+        </div>
+        <h1>
+            Stories, <em>art</em>,<br>
+            and a <span class="cos">cosmic</span><br>
+            little Pomeranian.
+        </h1>
+        <p class="lede">
+            An independent publisher of illustrated books, curated art volumes, and
+            two peculiar iOS companions &mdash; one fluffy, one oracular.
+        </p>
+
+        <div class="hero-meta-row">
+            <div class="item"><div class="sq" aria-hidden="true"></div><span>Pomagotchi &mdash; virtual pet</span></div>
+            <div class="item"><div class="sq cos" aria-hidden="true"></div><span>The Device &mdash; cosmic pyramid</span></div>
+            <div class="item"><span class="mono">Four titles, two apps, five stickers</span></div>
+        </div>
+
+        <div class="specimens">
+            <a class="specimen spec-pom" href="#pomagotchi">
+                <div class="meta">
+                    <div>
+                        <div class="mono">App &middot; Specimen 01</div>
+                        <div class="title"><em>Pomagotchi</em></div>
+                        <div class="tag">Your virtual Pomeranian.</div>
+                    </div>
+                    <div class="desc">
+                        Feed, play, and level your Pom from 1 &rarr; 33. Dog shows, AR teleport,
+                        and on-device Apple Intelligence dialogue.
+                    </div>
+                    <div class="cta">
+                        <span>Enter the hutch</span>
+                        <span class="arrow" aria-hidden="true">&rarr;</span>
+                    </div>
+                </div>
+                <div class="stage" id="pom-stage">
+                    <img src="images/pomagotchi-screenshot.png" alt="Pomagotchi app screenshot">
+                </div>
             </a>
-            <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#books">Books</a></li>
-                <li><a href="#pomagotchi">Pomagotchi</a></li>
-                <li><a href="#the-device">The Device</a></li>
-                <li><a href="#sticker-packs">Sticker Packs</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <header class="hero">
-        <div class="container">
-            <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="hero-logo">
-            <p class="hero-tagline">Stories, Art &amp; Digital Companions</p>
+            <a class="specimen spec-dev" href="#the-device" id="device-specimen">
+                <div class="meta">
+                    <div>
+                        <div class="mono">App &middot; Specimen 02</div>
+                        <div class="title" style="color:var(--ink)"><em>The Device</em></div>
+                        <div class="tag">A cosmic fortune pyramid.</div>
+                    </div>
+                    <div class="desc">
+                        On-device horoscopes shaped by moon phase, weather, and numerology.
+                        Tap the pyramid for a reading.
+                    </div>
+                    <div class="cta">
+                        <span>Ask the stars</span>
+                        <span class="arrow" aria-hidden="true">&rarr;</span>
+                    </div>
+                </div>
+                <div class="stage" id="device-stage">
+                    <div class="stars" aria-hidden="true"></div>
+                    <img src="images/thedevice-screenshot.png" alt="The Device app screenshot">
+                    <div class="click-hint">Tap to divine</div>
+                    <div class="fortune" id="fortune-text">Press the glass.</div>
+                </div>
+            </a>
         </div>
-    </header>
+    </div>
+</header>
 
-    <section class="books" id="books">
-        <div class="container">
-            <h2 class="section-title">Our Books</h2>
-            <div class="books-grid">
-                <div class="book-card">
-                    <div class="book-cover">
-                        <img src="images/adventure-pom.jpg" alt="Adventure Pom! Captain Henry Gingersnaps">
-                    </div>
-                    <div class="book-info">
-                        <h3>Adventure Pom! Captain Henry Gingersnaps</h3>
-                        <p class="book-author">By Sean Dryden &amp; Jerry Seguin</p>
-                        <p class="book-desc">Join Captain Henry Gingersnaps, a brave little Pomeranian, on a swashbuckling adventure across the high seas. A charming illustrated tale for readers of all ages.</p>
-                        <a href="https://a.co/d/05y3gYO0" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
-                    </div>
-                </div>
-                <div class="book-card">
-                    <div class="book-cover">
-                        <img src="images/fluffy-thoughts.png" alt="Fluffy Thoughts: A Pomeranian Activity Journal">
-                    </div>
-                    <div class="book-info">
-                        <h3>Fluffy Thoughts</h3>
-                        <p class="book-author">By Sean Dryden</p>
-                        <p class="book-desc">A Pomeranian activity journal featuring Captain Henry Gingersnaps, Sir Harper Snowflurry, and Bear. Fill your days with fluffy fun, creative prompts, and delightful activities.</p>
-                        <a href="https://a.co/d/0dqSnOU4" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
-                    </div>
-                </div>
-                <div class="book-card">
-                    <div class="book-cover">
-                        <img src="images/100-xiv.jpg" alt="100 XIV">
-                    </div>
-                    <div class="book-info">
-                        <h3>100 XIV</h3>
-                        <p class="book-author">By Jerry Seguin &amp; Sean Dryden</p>
-                        <p class="book-desc">A curated visual collection exploring form, composition, and artistic expression through one hundred compelling works.</p>
-                        <a href="https://a.co/d/02FaZKXb" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
-                    </div>
-                </div>
-                <div class="book-card">
-                    <div class="book-cover">
-                        <img src="images/100-ryb.jpg" alt="100 RYB">
-                    </div>
-                    <div class="book-info">
-                        <h3>100 RYB</h3>
-                        <p class="book-author">By Jerry Seguin</p>
-                        <p class="book-desc">An exploration of color through the Red-Yellow-Blue color model. One hundred vibrant works celebrating the foundational palette of traditional art.</p>
-                        <a href="https://a.co/d/05cxxosX" target="_blank" rel="noopener" class="book-buy">Buy on Amazon</a>
-                    </div>
+<section class="chapter" id="apps">
+    <div class="wrap">
+        <div class="chapter-head">
+            <div class="num">I<span>Digital Companions</span></div>
+            <div>
+                <h2>Two small <em>companions</em><br>for your pocket.</h2>
+                <div class="blurb">
+                    Built with care, native to iOS, private by design. One raises a fluffy
+                    friend; the other whispers forecasts from the stars.
                 </div>
             </div>
         </div>
-    </section>
 
-    <section class="pomagotchi" id="pomagotchi">
-        <div class="container">
-            <div class="app-showcase">
-                <div class="app-info">
-                    <h2 class="section-title">Pomagotchi</h2>
-                    <p class="app-subtitle">Your Virtual Pomeranian Companion</p>
-                    <p class="app-desc">Adopt and care for your very own virtual Pomeranian. Feed, play, and bond with your fluffy companion in this delightful iOS app from the world of Thomas Ray Publishing.</p>
-                    <ul class="app-features">
-                        <li>Raise, feed, and bond with your own virtual Pom</li>
-                        <li>Level up from 1 to 33 through mini-games, daily care, and trophies</li>
-                        <li>Compete in Dog Shows across Regional, State, National, and International tiers</li>
-                        <li>Place your Pom in augmented reality with Teleport &mdash; save AR photos to your gallery</li>
-                        <li>Apple Intelligence &mdash; on-device AI dialogue, Photo Booth scenes, and Trading Card backgrounds</li>
-                        <li>Puff Pop! match-3 with 999 levels, Siri Shortcuts, and iCloud sync across your Apple devices</li>
-                    </ul>
-                    <div class="app-buttons">
-                        <a href="https://apps.apple.com/us/app/pomagotchi/id6759592794" target="_blank" rel="noopener" class="app-store-badge" aria-label="Download Pomagotchi on the App Store">
-                            <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" width="150" height="50">
-                        </a>
-                    </div>
-                    <div class="app-links">
-                        <a href="privacy.html">Privacy Policy</a>
-                        <a href="terms.html">Terms of Use</a>
-                        <a href="support.html">App Support</a>
-                    </div>
-                </div>
-                <div class="app-preview">
-                    <div class="phone-frame">
-                        <img src="images/pomagotchi-screenshot.png" alt="Pomagotchi App Screenshot" onerror="this.parentElement.classList.add('no-image')">
+        <article class="app-card" id="pomagotchi">
+            <div class="copy">
+                <div class="mono">App I &middot; iOS</div>
+                <h3>Pomagotchi <em>&mdash; a virtual Pom.</em></h3>
+                <p class="lede">Adopt, feed, play, and bond with your very own virtual Pomeranian in the world of Thomas Ray Publishing.</p>
+                <ul class="features">
+                    <li><span>Raise, feed, and bond with your own virtual Pom</span></li>
+                    <li><span>Level 1 &rarr; 33 through mini-games, daily care, and trophies</span></li>
+                    <li><span>Dog Shows: Regional, State, National, International</span></li>
+                    <li><span>Teleport to AR &mdash; save Pom photos to your gallery</span></li>
+                    <li><span>On-device Apple Intelligence dialogue &amp; Photo Booth</span></li>
+                    <li><span>Puff Pop! match-3, 999 levels, Siri Shortcuts, iCloud sync</span></li>
+                </ul>
+                <div class="actions">
+                    <a href="https://apps.apple.com/us/app/pomagotchi/id6759592794" class="app-store-badge" target="_blank" rel="noopener" aria-label="Download Pomagotchi on the App Store">
+                        <svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.365 1.43c0 1.14-.43 2.25-1.2 3.06-.81.88-2.14 1.56-3.25 1.47-.14-1.1.4-2.24 1.16-3.03.85-.88 2.29-1.56 3.29-1.5zM21 17.28c-.37.85-.55 1.23-1.04 1.98-.68 1.04-1.64 2.34-2.83 2.35-1.06.01-1.33-.69-2.77-.68-1.44.01-1.74.69-2.8.68-1.19-.01-2.1-1.18-2.78-2.22-1.9-2.92-2.1-6.34-.93-8.16.83-1.29 2.14-2.05 3.37-2.05 1.26 0 2.05.69 3.09.69 1.01 0 1.62-.69 3.08-.69 1.1 0 2.27.6 3.1 1.64-2.73 1.5-2.29 5.39.51 6.46z"/></svg>
+                        <div class="lbl"><span class="t">Download on the</span><span class="b">App Store</span></div>
+                    </a>
+                    <div class="policy-links">
+                        <a href="privacy.html">Privacy</a>
+                        <a href="terms.html">Terms</a>
+                        <a href="support.html">Support</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section class="pomagotchi" id="the-device">
-        <div class="container">
-            <div class="app-showcase">
-                <div class="app-info">
-                    <h2 class="section-title">The Device - Cosmic Pyramid</h2>
-                    <p class="app-subtitle">A Mystical Fortune Telling Experience</p>
-                    <p class="app-desc">Gaze into the triangular glass brick pyramid and receive predictions from beyond the stars. A mystical fortune telling app with on-device AI, immersive visuals, and cosmic energy.</p>
-                    <ul class="app-features">
-                        <li>AI-powered daily horoscope using Apple Foundation Models (on-device)</li>
-                        <li>Zodiac &amp; numerology personalization &mdash; Western zodiac, Chinese zodiac, and Life Path readings</li>
-                        <li>Cosmic Context &mdash; moon phase, weather, season, and location shape every reading</li>
-                        <li>Live Activities on lock screen and Dynamic Island during readings</li>
-                        <li>Home screen widget with moon phase, horoscope, streak, and readings count</li>
-                        <li>3-layer parallax starfield with a stereo cathedral-reverb sound engine</li>
-                    </ul>
-                    <div class="app-buttons">
-                        <a href="https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897" target="_blank" rel="noopener" class="app-store-badge" aria-label="Download The Device on the App Store">
-                            <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" width="150" height="50">
-                        </a>
-                    </div>
-                    <div class="app-links">
-                        <a href="privacy.html#the-device">Privacy Policy</a>
-                        <a href="terms.html#the-device">Terms of Use</a>
-                        <a href="support.html#the-device-faq">App Support</a>
-                    </div>
-                </div>
-                <div class="app-preview">
-                    <div class="phone-frame">
-                        <img src="images/thedevice-screenshot.png" alt="The Device App Screenshot" onerror="this.parentElement.classList.add('no-image')">
+            <div class="screen">
+                <div class="screen-bg-pom">
+                    <div class="frame">
+                        <img src="images/pomagotchi-screenshot.png" alt="Pomagotchi app screenshot">
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </article>
 
-    <section class="sticker-packs" id="sticker-packs">
-        <div class="container">
-            <h2 class="section-title">Sticker Packs</h2>
-            <div class="stickers-grid">
-                <a href="https://apps.apple.com/us/app/captain-henry-gingersnaps/id1154389474" target="_blank" rel="noopener" class="sticker-card" aria-label="Captain Henry Gingersnaps stickers on the App Store">
-                    <img src="images/sticker-captainhenry.png" alt="Captain Henry Gingersnaps sticker pack icon" class="sticker-icon">
-                    <span class="sticker-name">Captain Henry Gingersnaps</span>
-                </a>
-                <a href="https://apps.apple.com/us/app/wigstaglam/id1257484846" target="_blank" rel="noopener" class="sticker-card" aria-label="Wigstaglam stickers on the App Store">
-                    <img src="images/sticker-wigstaglam.png" alt="Wigstaglam sticker pack icon" class="sticker-icon">
-                    <span class="sticker-name">Wigstaglam</span>
-                </a>
-                <a href="https://apps.apple.com/us/app/the-fear-of/id1223865077" target="_blank" rel="noopener" class="sticker-card" aria-label="The Fear Of stickers on the App Store">
-                    <img src="images/sticker-fearof.png" alt="The Fear Of sticker pack icon" class="sticker-icon">
-                    <span class="sticker-name">The Fear Of</span>
-                </a>
-                <a href="https://apps.apple.com/us/app/magic-b-ball/id1163553465" target="_blank" rel="noopener" class="sticker-card" aria-label="Magic B-Ball stickers on the App Store">
-                    <img src="images/sticker-magicbball.png" alt="Magic B-Ball sticker pack icon" class="sticker-icon">
-                    <span class="sticker-name">Magic B-Ball</span>
-                </a>
-                <a href="https://apps.apple.com/us/app/100-stk/id1155768710" target="_blank" rel="noopener" class="sticker-card" aria-label="100 STK stickers on the App Store">
-                    <img src="images/sticker-100stk.png" alt="100 STK sticker pack icon" class="sticker-icon">
-                    <span class="sticker-name">100 STK</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="about" id="about">
-        <div class="container">
-            <h2 class="section-title">About Us</h2>
-            <div class="about-content">
-                <p>Thomas Ray Publishing LLC is an independent publisher bringing creative stories, art, and digital experiences to life. From illustrated children's books to art collections and interactive apps, we craft experiences that spark joy and imagination.</p>
-                <p>Based on a love for Pomeranians, art, and storytelling, our publications span the playful adventures of Captain Henry Gingersnaps, curated visual art collections, our virtual pet companion app Pomagotchi, the mystical fortune telling experience The Device, and a lineup of iMessage sticker packs for everyday delight.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer" id="contact">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <img src="images/logo.jpg" alt="Thomas Ray Publishing LLC" class="footer-logo">
-                    <p>&copy; 2026 Thomas Ray Publishing LLC. All rights reserved.</p>
+        <article class="app-card reverse device" id="the-device">
+            <div class="screen">
+                <div class="screen-bg-device">
+                    <div class="frame">
+                        <img src="images/thedevice-screenshot.png" alt="The Device app screenshot">
+                    </div>
                 </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <a href="#books">Books</a>
-                    <a href="#pomagotchi">Pomagotchi</a>
-                    <a href="#the-device">The Device</a>
-                    <a href="#sticker-packs">Sticker Packs</a>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Use</a>
-                    <a href="support.html">App Support</a>
+            </div>
+            <div class="copy">
+                <div class="mono">App II &middot; iOS</div>
+                <h3>The Device <em style="color:var(--cosmos-2)">&mdash; Cosmic Pyramid.</em></h3>
+                <p class="lede">A mystical fortune telling experience. Gaze into the triangular glass brick and receive predictions from beyond the stars.</p>
+                <ul class="features">
+                    <li><span>AI-powered horoscope using Apple Foundation Models (on-device)</span></li>
+                    <li><span>Western &amp; Chinese zodiac, Life Path numerology</span></li>
+                    <li><span>Moon phase, weather, season, and location shape each reading</span></li>
+                    <li><span>Live Activities &amp; Dynamic Island during readings</span></li>
+                    <li><span>Home-screen widget: moon phase, streak, horoscope</span></li>
+                    <li><span>3-layer parallax starfield with cathedral-reverb engine</span></li>
+                </ul>
+                <div class="actions">
+                    <a href="https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897" class="app-store-badge" target="_blank" rel="noopener" aria-label="Download The Device on the App Store">
+                        <svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.365 1.43c0 1.14-.43 2.25-1.2 3.06-.81.88-2.14 1.56-3.25 1.47-.14-1.1.4-2.24 1.16-3.03.85-.88 2.29-1.56 3.29-1.5zM21 17.28c-.37.85-.55 1.23-1.04 1.98-.68 1.04-1.64 2.34-2.83 2.35-1.06.01-1.33-.69-2.77-.68-1.44.01-1.74.69-2.8.68-1.19-.01-2.1-1.18-2.78-2.22-1.9-2.92-2.1-6.34-.93-8.16.83-1.29 2.14-2.05 3.37-2.05 1.26 0 2.05.69 3.09.69 1.01 0 1.62-.69 3.08-.69 1.1 0 2.27.6 3.1 1.64-2.73 1.5-2.29 5.39.51 6.46z"/></svg>
+                        <div class="lbl"><span class="t">Download on the</span><span class="b">App Store</span></div>
+                    </a>
+                    <div class="policy-links">
+                        <a href="privacy.html#the-device">Privacy</a>
+                        <a href="terms.html#the-device">Terms</a>
+                        <a href="support.html#the-device-faq">Support</a>
+                    </div>
                 </div>
-                <div class="footer-contact">
-                    <h4>Contact</h4>
-                    <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="chapter" id="books">
+    <div class="wrap">
+        <div class="chapter-head">
+            <div class="num">II<span>Books &amp; Art Volumes</span></div>
+            <div>
+                <h2>Four titles &mdash; two <em>adventures</em>,<br>two art collections.</h2>
+                <div class="blurb">
+                    Illustrated children's tales starring a brave Pomeranian, alongside
+                    curated visual volumes exploring color and form.
                 </div>
             </div>
         </div>
-    </footer>
 
-    <script>
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('active');
+        <div class="catalog">
+            <a class="book" href="https://a.co/d/05y3gYO0" target="_blank" rel="noopener">
+                <div class="cover"><img src="images/adventure-pom.jpg" alt="Adventure Pom! Captain Henry Gingersnaps cover"></div>
+                <div class="meta">
+                    <div class="num">Title &middot; 01 &middot; 2026</div>
+                    <h4>Adventure Pom! <br>Captain Henry Gingersnaps</h4>
+                    <div class="by">by Sean Dryden &amp; Jerry Seguin</div>
+                    <p>A swashbuckling tale across the high seas with Captain Henry Gingersnaps, a brave little Pomeranian.</p>
+                    <span class="buy">Buy on Amazon &rarr;</span>
+                </div>
+            </a>
+
+            <a class="book" href="https://a.co/d/0dqSnOU4" target="_blank" rel="noopener">
+                <div class="cover"><img src="images/fluffy-thoughts.png" alt="Fluffy Thoughts cover"></div>
+                <div class="meta">
+                    <div class="num">Title &middot; 02 &middot; 2026</div>
+                    <h4>Fluffy Thoughts</h4>
+                    <div class="by">by Sean Dryden</div>
+                    <p>A Pomeranian activity journal &mdash; creative prompts and delightful activities starring Henry, Harper, and Bear.</p>
+                    <span class="buy">Buy on Amazon &rarr;</span>
+                </div>
+            </a>
+
+            <a class="book" href="https://a.co/d/02FaZKXb" target="_blank" rel="noopener">
+                <div class="cover"><img src="images/100-xiv.jpg" alt="100 XIV cover"></div>
+                <div class="meta">
+                    <div class="num">Title &middot; 03 &middot; 2026</div>
+                    <h4>100 XIV</h4>
+                    <div class="by">by Jerry Seguin &amp; Sean Dryden</div>
+                    <p>A curated visual collection exploring form, composition, and artistic expression in one hundred works.</p>
+                    <span class="buy">Buy on Amazon &rarr;</span>
+                </div>
+            </a>
+
+            <a class="book" href="https://a.co/d/05cxxosX" target="_blank" rel="noopener">
+                <div class="cover"><img src="images/100-ryb.jpg" alt="100 RYB cover"></div>
+                <div class="meta">
+                    <div class="num">Title &middot; 04 &middot; 2026</div>
+                    <h4>100 RYB</h4>
+                    <div class="by">by Jerry Seguin</div>
+                    <p>Color studied through the Red-Yellow-Blue model &mdash; one hundred vibrant works on the foundational palette.</p>
+                    <span class="buy">Buy on Amazon &rarr;</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="chapter" id="stickers">
+    <div class="wrap">
+        <div class="chapter-head">
+            <div class="num">III<span>Sticker Packs</span></div>
+            <div>
+                <h2>iMessage packs<br>for <em>everyday</em> delight.</h2>
+                <div class="blurb">Five packs on the iOS App Store. Press one.</div>
+            </div>
+        </div>
+
+        <div class="stickers">
+            <a class="stk" href="https://apps.apple.com/us/app/captain-henry-gingersnaps/id1154389474" target="_blank" rel="noopener">
+                <div class="icn"><img src="images/sticker-captainhenry.png" alt="Captain Henry Gingersnaps sticker pack icon"></div>
+                <div class="name">Captain Henry<br>Gingersnaps</div>
+                <div class="plat">iMessage &middot; Pack 01</div>
+            </a>
+            <a class="stk" href="https://apps.apple.com/us/app/wigstaglam/id1257484846" target="_blank" rel="noopener">
+                <div class="icn"><img src="images/sticker-wigstaglam.png" alt="Wigstaglam sticker pack icon"></div>
+                <div class="name">Wigstaglam</div>
+                <div class="plat">iMessage &middot; Pack 02</div>
+            </a>
+            <a class="stk" href="https://apps.apple.com/us/app/the-fear-of/id1223865077" target="_blank" rel="noopener">
+                <div class="icn"><img src="images/sticker-fearof.png" alt="The Fear Of sticker pack icon"></div>
+                <div class="name">The Fear Of</div>
+                <div class="plat">iMessage &middot; Pack 03</div>
+            </a>
+            <a class="stk" href="https://apps.apple.com/us/app/magic-b-ball/id1163553465" target="_blank" rel="noopener">
+                <div class="icn"><img src="images/sticker-magicbball.png" alt="Magic B-Ball sticker pack icon"></div>
+                <div class="name">Magic B-Ball</div>
+                <div class="plat">iMessage &middot; Pack 04</div>
+            </a>
+            <a class="stk" href="https://apps.apple.com/us/app/100-stk/id1155768710" target="_blank" rel="noopener">
+                <div class="icn"><img src="images/sticker-100stk.png" alt="100 STK sticker pack icon"></div>
+                <div class="name">100 STK</div>
+                <div class="plat">iMessage &middot; Pack 05</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="chapter" id="about">
+    <div class="wrap">
+        <div class="chapter-head">
+            <div class="num">IV<span>About the House</span></div>
+            <div>
+                <h2>An independent publisher<br>for <em>small wonders</em>.</h2>
+            </div>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-text">
+                <p class="big-quote">
+                    We make <span class="mark">curious little things</span>
+                    &mdash; books, art volumes, and apps that feel like they arrived
+                    from a nearby, fluffier universe.
+                </p>
+                <p>
+                    Thomas Ray Publishing LLC is an independent publisher bringing creative
+                    stories, art, and digital experiences to life. From illustrated
+                    children's books to art collections and interactive apps, we craft
+                    experiences that spark joy and imagination.
+                </p>
+                <p>
+                    Rooted in a love for Pomeranians, art, and storytelling, our catalog
+                    spans the playful adventures of Captain Henry Gingersnaps, curated
+                    visual art collections, our virtual pet companion <em>Pomagotchi</em>,
+                    the mystical <em>Device</em>, and a lineup of iMessage sticker packs
+                    for everyday delight.
+                </p>
+
+                <div class="about-stats">
+                    <div class="stat"><div class="n">04</div><div class="l">Published titles</div></div>
+                    <div class="stat"><div class="n">02</div><div class="l">iOS apps</div></div>
+                    <div class="stat"><div class="n">05</div><div class="l">Sticker packs</div></div>
+                    <div class="stat"><div class="n">33</div><div class="l">Pomagotchi levels</div></div>
+                </div>
+            </div>
+
+            <div class="about-collage" aria-hidden="true">
+                <div class="tag mono">Archive &middot; Selected Works</div>
+                <div class="card c1"><img src="images/adventure-pom.jpg" alt=""></div>
+                <div class="card c2"><img src="images/fluffy-thoughts.png" alt=""></div>
+                <div class="card c3"><img src="images/100-xiv.jpg" alt=""></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer id="contact">
+    <div class="wrap">
+        <div class="foot-grid">
+            <div class="foot-brand">
+                <div class="brand">
+                    <div class="dot" aria-hidden="true"></div>
+                    <span>Thomas Ray Publishing</span>
+                </div>
+                <div class="serif-big">Stories, art &amp; digital companions.</div>
+            </div>
+            <div class="foot-col">
+                <h5>Catalog</h5>
+                <a href="#apps">Apps</a>
+                <a href="#books">Books</a>
+                <a href="#stickers">Stickers</a>
+                <a href="#about">About</a>
+            </div>
+            <div class="foot-col">
+                <h5>Legal</h5>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Use</a>
+                <a href="support.html">App Support</a>
+            </div>
+            <div class="foot-col">
+                <h5>Contact</h5>
+                <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
+            </div>
+        </div>
+        <div class="foot-bottom">
+            <div>&copy; 2026 Thomas Ray Publishing LLC. All rights reserved.</div>
+            <div class="mono">Set in Newsreader &amp; Inter Tight</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Atmosphere (stars + fluff)
+    function seedAtmo() {
+        const atmo = document.getElementById('atmo');
+        if (!atmo) return;
+        atmo.innerHTML = '';
+        const w = window.innerWidth, h = Math.max(window.innerHeight * 2, 1600);
+        for (let i = 0; i < 40; i++) {
+            const s = document.createElement('div'); s.className = 'star';
+            s.style.left = Math.random() * w + 'px';
+            s.style.top = Math.random() * h + 'px';
+            s.style.animationDelay = (Math.random() * 6) + 's';
+            atmo.appendChild(s);
         }
+        for (let i = 0; i < 8; i++) {
+            const f = document.createElement('div'); f.className = 'fluff';
+            const size = 120 + Math.random() * 220;
+            f.style.width = size + 'px'; f.style.height = size + 'px';
+            f.style.left = Math.random() * w + 'px';
+            f.style.top = Math.random() * h + 'px';
+            f.style.animationDelay = (Math.random() * 30) + 's';
+            f.style.animationDuration = (28 + Math.random() * 22) + 's';
+            atmo.appendChild(f);
+        }
+    }
+    seedAtmo();
+    window.addEventListener('resize', () => { clearTimeout(window.__rz); window.__rz = setTimeout(seedAtmo, 200); });
 
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                document.getElementById('navLinks').classList.remove('active');
-            });
+    // Device fortune
+    const FORTUNES = [
+        "The moon is waxing. Return the call you've been avoiding.",
+        "A small fluffy ally arrives within 48 hours.",
+        "Do not sign the thing on Tuesday.",
+        "Your second-best idea this week is actually the best one.",
+        "A stranger will laugh at your joke. Accept the omen.",
+        "The east-facing window knows something. Sit by it.",
+        "Buy the book with the blue spine.",
+        "You are closer than you think. Keep your grip loose.",
+        "Venus is cooperative. Send the message before noon.",
+        "Forgive the small thing \u2014 it's older than it looks."
+    ];
+    const deviceEl = document.getElementById('device-specimen');
+    const fortuneEl = document.getElementById('fortune-text');
+    if (deviceEl && fortuneEl) {
+        deviceEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pick = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+            fortuneEl.classList.remove('show');
+            setTimeout(() => { fortuneEl.textContent = pick; fortuneEl.classList.add('show'); }, 120);
         });
+    }
 
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+    // Smooth anchor nav (offset for sticky nav)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+            const id = a.getAttribute('href').slice(1);
+            if (!id) return;
+            const el = document.getElementById(id);
+            if (el) {
+                e.preventDefault();
+                window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' });
             }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
