@@ -142,40 +142,56 @@
         <hr class="section-rule">
 
         <h1 id="the-device">The Device &mdash; Cosmic Pyramid</h1>
-        <p class="updated">Effective: March 11, 2026</p>
+        <p class="updated">Effective: March 1, 2026 &middot; Last Updated: May 5, 2026</p>
 
         <h2>Introduction</h2>
-        <p>Thomas Ray Publishing LLC ("we", "us", or "our") built The Device - Cosmic Pyramid as an entertainment application. This section covers how we handle information when you use The Device - Cosmic Pyramid. We are committed to protecting your privacy. All app data is processed and stored on your device. The only optional cloud features are anonymous analytics and in-app feedback, both of which use Apple's CloudKit and are described below.</p>
+        <p>Thomas Ray Publishing LLC ("we", "us", or "our") built The Device - Cosmic Pyramid as an entertainment application. This section covers how we handle information when you use The Device - Cosmic Pyramid. We are committed to protecting your privacy. Most app data is processed and stored on your device; reading history is additionally synced to your own iCloud account so it follows you across your Apple devices. The only data sent to us is via two opt-in features &mdash; anonymous analytics and in-app feedback &mdash; both of which use Apple's CloudKit and are described below.</p>
 
         <h2>Information We Do Not Collect</h2>
-        <p>We do not automatically collect, transmit, or store any personal information on our own servers. We do not operate any custom servers or backend services. Specifically:</p>
+        <p>We do not operate any custom servers or backend services. Specifically:</p>
         <ul>
             <li>We do not automatically collect names, email addresses, or contact information</li>
-            <li>We do not collect browsing history or usage analytics without your explicit opt-in</li>
             <li>We do not use device identifiers for tracking purposes</li>
             <li>We do not use any third-party advertising, analytics, or tracking services</li>
+            <li>We do not engage in cross-app tracking</li>
+            <li>We do not sell, rent, or trade personal information to third parties</li>
         </ul>
         <p>If you choose to send feedback through the app's Feedback form, you may optionally provide your name and email address so we can follow up. This information is sent to Apple's CloudKit and is only used to respond to your feedback.</p>
 
         <h2>Data Stored on Your Device</h2>
-        <p>All app data is stored locally on your device using standard iOS storage (UserDefaults and the app's Documents directory). This includes:</p>
+        <p>Most app data is stored locally on your device using standard iOS storage (UserDefaults, App Group shared storage, and the app's Documents directory). Reading history is additionally synced to your own iCloud account &mdash; see the iCloud Sync section below. Data stored on your device includes:</p>
         <ul>
             <li>Daily prediction count (resets each day)</li>
-            <li>Purchased prediction balance</li>
-            <li>Total lifetime prediction count</li>
+            <li>Purchased prediction balance and subscription status</li>
+            <li>Total lifetime prediction count and lifetime cosmic profile aggregate</li>
+            <li>Streak and milestone tracking (consecutive days of use)</li>
             <li>In-app purchase transaction IDs (for deduplication)</li>
-            <li>Saved prediction images and reading history (stored as files, capped at 50 readings)</li>
+            <li>Saved prediction images and reading history (stored as files in the app's Documents directory, capped at 50 readings)</li>
             <li>Recent prediction values (for diversity tracking)</li>
             <li>Cached daily horoscope message</li>
-            <li>User preference settings (sound, haptics, notifications)</li>
-            <li>Birth date (optional) &mdash; stored locally to personalize readings through zodiac and numerology calculations; never transmitted externally</li>
-            <li>Streak and milestone tracking (consecutive days of use)</li>
-            <li>Subscription status and redemption code activation date</li>
+            <li>User preference settings (sound, haptics, notifications, Enhanced Awareness, analytics opt-in)</li>
+            <li>Birth date (optional) &mdash; stored locally to personalize readings through zodiac and numerology calculations; never transmitted to Thomas Ray Publishing</li>
             <li>Onboarding completion status</li>
+            <li>Daily Challenge progress, attempts, level, and streak data</li>
+            <li>Power-up inventory counts (Rewind Time, Glimpse Beyond, Temporal Dilation, Astral Echo)</li>
+            <li>Trophy progression and completion records</li>
+            <li>Game Center achievements and leaderboard scores (managed by Apple Game Center, subject to Apple's privacy policy)</li>
+            <li>Cosmic Compass referral code, redemption count, access expiry date, and permanent-access flag (if earned)</li>
+            <li>Free-preview redemption date for the daily Cosmic Compass preview</li>
             <li>Widget data (shared via App Group for home screen widget display)</li>
+            <li>A random install identifier used to de-duplicate referral redemptions and analytics reports (not tied to your Apple ID)</li>
             <li>Diagnostic logs (event counts and session info)</li>
         </ul>
-        <p>No data is synced to iCloud, backed up to any server, or shared with any third party.</p>
+        <p>User preference data is not synced to iCloud and is not shared with any third party. Game Center data is managed by Apple.</p>
+
+        <h2>iCloud Sync (Reading History &mdash; Private Database)</h2>
+        <p>If you are signed into iCloud, your structured reading history (one record per past reading &mdash; mode, date, predictions, and tags) is synchronized across your devices using your own private iCloud database via Apple's CloudKit framework. This sync uses the iCloud container <code>iCloud.com.thomasraypublishing.thedevice</code> and a custom zone named <code>UserReadings</code>.</p>
+        <ul>
+            <li>Reading data in the private database is accessible only to you through your own iCloud account. Thomas Ray Publishing LLC cannot access, read, or modify it.</li>
+            <li>Saved prediction images (PNG snapshots of the pyramid) are not synced &mdash; they remain only on the originating device and are regenerated on demand.</li>
+            <li>If you are not signed into iCloud, reading history simply stays on the device.</li>
+            <li>You can stop the sync at any time by signing out of iCloud or by disabling iCloud for The Device under Settings &gt; Apple Account &gt; iCloud &gt; Apps Using iCloud.</li>
+        </ul>
 
         <h2>Location &amp; Weather Data</h2>
         <p>The Device may optionally request your location to retrieve local weather conditions via Apple's WeatherKit service. This permission is entirely optional &mdash; you can deny it and the app functions normally without it. When granted:</p>
@@ -186,20 +202,37 @@
             <li>You can revoke location access at any time in Settings &gt; Privacy &gt; Location Services.</li>
         </ul>
 
+        <h2>Device Signals &amp; Cosmic Context</h2>
+        <p>The Device reads certain device signals in real time to flavor your reading experience. These include battery level, screen brightness, current time, date, and motion sensor data (accelerometer, gyroscope, and compass heading via CoreMotion). Motion data is used for parallax UI effects, cosmic alignment scoring, and palm reading features. These values are used momentarily to influence prediction theming and visual effects, and are never stored, logged, or transmitted off your device.</p>
+
+        <h2>Microphone &amp; Audio</h2>
+        <p>The Device may request microphone access for two optional features: voice-activated cosmic queries (using Apple's Speech framework) and ambient sound detection (using Apple's SoundAnalysis framework). All audio processing occurs entirely on your device in real time. No audio data is recorded, stored, or transmitted to Thomas Ray Publishing or any third party. Audio sessions are activated only while features are in use and are immediately deactivated when complete.</p>
+
+        <h2>Bluetooth &amp; Cosmic Pairing</h2>
+        <p>The Device includes an optional Cosmic Pairing feature that uses Bluetooth Low Energy (BLE) to exchange zodiac profile data (western sign, Chinese sign, element, cosmic mood, and moon phase) with a nearby paired device. This data contains no personal identifiers. The exchange occurs directly between devices over BLE and is not transmitted to any server. No Bluetooth data is stored beyond the current pairing session.</p>
+
         <h2>On-Device AI Processing</h2>
-        <p>The Device uses Apple's on-device Foundation Models and NaturalLanguage framework extensively to personalize your experience. When AI Predictions is enabled in Settings, the on-device model generates: creative prediction options for each category, unique poetic narrative intros for each prediction, reading summaries that tie your predictions into a cohesive story, mystical reasons for your lucky numbers, atmospheric peril prompts, personalized daily notification messages, enhanced Siri responses, and reflective commentary when revisiting past readings. Daily horoscope messages and prediction diversity analysis also use on-device AI. All AI processing occurs entirely on your device. No prompts, inputs, or outputs are transmitted to any external server. Apple's on-device models do not send data to Apple or any third party. You can disable AI Predictions at any time in Settings.</p>
+        <p>The Device uses Apple's on-device Foundation Models and NaturalLanguage framework extensively to personalize your experience. When Enhanced Awareness is enabled in Settings, the on-device model generates: creative prediction options for each category, unique poetic narrative intros for each prediction, reading summaries that tie your predictions into a cohesive story, mystical reasons for your lucky numbers, atmospheric peril prompts, personalized daily notification messages, enhanced Siri responses, and reflective commentary when revisiting past readings. Daily horoscope messages and prediction diversity analysis also use on-device AI. All AI processing occurs entirely on your device. No prompts, inputs, or outputs are transmitted to any external server. Apple's on-device models do not send data to Apple or any third party. You can disable Enhanced Awareness at any time in Settings.</p>
 
         <h2>Saved Prediction Images</h2>
-        <p>When you save a prediction reading, an image is rendered and stored in the app's local Documents directory on your device. You may choose to share this image using the iOS share sheet, which is handled entirely by the operating system. Thomas Ray Publishing does not have access to shared images or their destinations. You control what you save and share.</p>
+        <p>When you save a prediction reading, an image is rendered and stored in the app's local Documents directory on your device. You may also save reading images directly to your Photo Library using the Save to Photos button &mdash; this requires your permission via the system photo library prompt. You may choose to share images using the iOS share sheet, which is handled entirely by the operating system. Thomas Ray Publishing does not have access to shared or saved images or their destinations.</p>
 
         <h2>In-App Purchases &amp; Subscriptions</h2>
-        <p>The Device offers optional in-app purchases including a consumable single-prediction pack and auto-renewable subscriptions (monthly and annual) for unlimited readings. All purchase transactions are processed by Apple through the App Store. Thomas Ray Publishing does not have access to your payment information. Subscription status is stored locally on your device.</p>
+        <p>The Device offers the following optional in-app purchases:</p>
+        <ul>
+            <li>Auto-renewable subscriptions for unlimited readings: Unlimited Readings &mdash; Monthly ($1.99/month) and Unlimited Readings &mdash; Annual ($9.99/year). No free trial period is currently offered.</li>
+            <li>Consumable single-reading pack: 1 Prediction ($0.99).</li>
+            <li>Consumable Daily Challenge power-ups, sold individually ($0.99 each): Rewind Time, Glimpse Beyond, Temporal Dilation, and Astral Echo.</li>
+            <li>Consumable Cosmic Toolkit bundle ($2.99) containing one of each power-up.</li>
+            <li>Consumable ten-pack arsenals for each power-up ($5.99 each).</li>
+        </ul>
+        <p>All purchase transactions are processed by Apple through the App Store. Thomas Ray Publishing does not receive or have access to your payment information. Subscription status, purchased prediction balance, and power-up inventory are stored locally on your device. A "Restore Purchases" option is available on the paywall and in the app's Settings to recover prior purchases on a new device or after reinstalling.</p>
 
         <h2>Notifications</h2>
         <p>The Device may request permission to send local push notifications. These notifications are scheduled entirely on your device and include daily reading reminders and moon phase alerts. No notification data is sent to any external server. You can disable notifications at any time in the app's Settings or in iOS Settings.</p>
 
         <h2>Siri &amp; App Intents</h2>
-        <p>The Device provides Siri Shortcuts that let you start a reading, check your cosmic streak, view your last prediction, or check the moon phase using voice commands. When you invoke a shortcut, Siri sends your request to the app, which processes it entirely on your device. No voice data or intent data is transmitted to Thomas Ray Publishing or any third party.</p>
+        <p>The Device provides Siri Shortcuts and App Intents for: starting a reading, requesting a daily outlook, requesting a yearly forecast, checking your cosmic streak, viewing how many readings remain today, viewing your last prediction, viewing your last lucky numbers, requesting fresh lucky numbers, hearing your daily horoscope, checking the current moon phase, and looking up your zodiac sign. When you invoke a shortcut, Siri sends your request to the app, which processes it entirely on your device. No voice data or intent data is transmitted to Thomas Ray Publishing or any third party.</p>
 
         <h2>Live Activities</h2>
         <p>The Device uses Live Activities to display prediction progress on your lock screen and Dynamic Island during readings, and optionally shows a persistent cosmic status display with moon phase, streak count, and reading availability. All Live Activity data is generated and displayed locally on your device. No Live Activity data is transmitted externally.</p>
@@ -207,14 +240,20 @@
         <h2>Home Screen Widget</h2>
         <p>The Device includes an optional home screen widget that displays moon phase, reading availability, streak count, and your daily horoscope. Widget data is shared between the main app and the widget extension via an App Group container stored locally on your device. No widget data is transmitted externally.</p>
 
+        <h2>Apple Watch Companion App</h2>
+        <p>The Device includes an optional Apple Watch companion app that provides mini cosmic readings, streak tracking, daily briefings, a cosmic tuner, and watch face complications. Data is synced between your iPhone and Apple Watch using Apple's WatchConnectivity framework. This communication occurs directly between your paired devices over Bluetooth or Wi-Fi and does not pass through any external server. Watch data (reading counts, streak, horoscope, cosmic mood) is stored locally on the Watch via an App Group container. No Watch data is transmitted to Thomas Ray Publishing or any third party.</p>
+
         <h2>Diagnostics &amp; Feedback</h2>
         <p>The app maintains a local diagnostics log to help with troubleshooting. This log records event counts and session information on your device only. It is never automatically transmitted. When you send feedback through the app's Feedback form, you may optionally choose to include this diagnostic data with your message. The diagnostic report includes your app version, iOS version, device model, and event logs but does not include any personal information. Feedback is submitted to Apple's CloudKit &mdash; we do not use any third-party feedback or support services.</p>
 
         <h2>Anonymous Analytics</h2>
-        <p>The Device collects anonymous usage analytics to help us improve the app. The app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit). These reports are sent at most once every 24 hours.</p>
-        <p>Reports include: app version, iOS version, device model, screen dimensions, language/locale, anonymous session count, total readings count, current and longest streaks, subscription and redemption status, purchased prediction count, feature toggle states (sound, haptics, notifications, Enhanced Awareness), AI model availability, engagement counts (quick readings, shares, share bonuses, gallery size), onboarding status, free readings remaining, purchase event count, attunement completion rate, average reading interval, most frequent prediction category, device language, sound cache performance, AI generation speed, days since install, session duration, paywall views, time-of-day usage patterns, Apple Watch companion app usage, aggregated action counts, and error summaries.</p>
+        <p>The Device collects anonymous usage analytics to help us improve the app. The app periodically sends an anonymous usage report to our secure cloud database (Apple CloudKit's public database). These reports are sent at most once every 24 hours.</p>
+        <p>Reports include: app version, iOS version, device model, screen dimensions, language/locale, anonymous session count, total readings count, current and longest streaks, subscription and redemption status, purchased prediction count, feature toggle states (sound, haptics, notifications, Enhanced Awareness), AI model availability, engagement counts (quick readings, shares, share bonuses, gallery size), onboarding status and highest onboarding step reached, free readings remaining, purchase event count, attunement completion rate, average reading interval, reading mode selection counts (Daily, Yearly, Lifetime), Simon game completion and abandonment rates, peril prompt acceptance and decline counts, average time spent viewing prediction reveals, average return-to-app interval, paywall views and conversion metrics, most frequent prediction category, device language, sound cache performance, AI generation speed, days since install, session duration, time-of-day usage patterns, zodiac profile configuration status, Apple Watch companion app usage (sessions, mini readings, cosmic tests, high scores, complication taps), CloudKit upload health (success/fail counts, retry counts, average upload time, error code breakdown), Cosmic Compass view counts and on-device AI personalization rate, referral share/redemption/tier-progression events (no personal identifiers), enticement card impression and tap counts, aggregated action counts, and error summaries.</p>
         <p>Reports do <strong>NOT</strong> include: your name, Apple ID, email, location, IP address, or any other personally identifiable information. Each install is assigned a random identifier for deduplication only &mdash; it cannot be used to identify you.</p>
         <p>This feature is ON by default. You can disable it at any time via &ldquo;Share Anonymous Analytics&rdquo; in Settings. Disabling it immediately stops all future report submissions.</p>
+
+        <h2>Cosmic Compass Referral Codes</h2>
+        <p>The Cosmic Compass feature includes an optional referral system. When you generate a referral code to share, a record containing the code itself (formatted with a zodiac prefix, e.g., ARI-7K3M), an associated random install identifier, and a creation timestamp is written to Apple's CloudKit public database. When someone else redeems your code, a separate redemption record is written, containing the redeemer's random install identifier and the date of redemption. No names, email addresses, Apple IDs, or location data are associated with referral codes or redemptions. These records exist so the app can award access tiers to code owners as their codes are redeemed. Referral codes and redemption records are accessible only to Thomas Ray Publishing LLC.</p>
 
         <h2>Children's Privacy</h2>
         <p>The Device does not knowingly collect any personal information from anyone, including children under 13. No personal data is transmitted to us or to third parties unless you explicitly opt in to anonymous analytics or submit feedback. The app is suitable for all ages as an entertainment product.</p>
