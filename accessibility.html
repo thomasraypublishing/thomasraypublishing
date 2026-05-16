@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Accessibility Statement | Thomas Ray Publishing LLC</title>
+    <meta name="description" content="Thomas Ray Publishing LLC's commitment to accessibility, current conformance level, known limitations, and how to report barriers.">
+    <meta name="theme-color" content="#0F0C1F">
+    <link rel="canonical" href="https://thomasraypublishing.com/accessibility.html">
+    <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+    <link rel="apple-touch-icon" href="images/logo.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Thomas Ray Publishing LLC">
+    <meta property="og:title" content="Accessibility Statement | Thomas Ray Publishing LLC">
+    <meta property="og:description" content="Accessibility commitment, conformance, and barrier reporting for Thomas Ray Publishing LLC.">
+    <meta property="og:url" content="https://thomasraypublishing.com/accessibility.html">
+    <meta property="og:image" content="https://thomasraypublishing.com/images/logo.jpg">
+    <meta name="twitter:card" content="summary">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="cosmic">
+
+<nav class="top">
+    <div class="wrap">
+        <a href="index.html" class="brand" aria-label="Thomas Ray Publishing home">
+            <div class="dot" aria-hidden="true"></div>
+            <span>Thomas Ray Publishing</span>
+            <span class="divider" aria-hidden="true"></span>
+            <span class="small">Est. Indie</span>
+        </a>
+        <div class="navlinks">
+            <a href="index.html#apps">Apps</a>
+            <a href="index.html#books">Books</a>
+            <a href="index.html#stickers">Stickers</a>
+            <a href="index.html#about">About</a>
+            <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<main class="prose">
+    <div class="wrap">
+        <a href="index.html" class="back-link">&larr;&nbsp;&nbsp;Back to Home</a>
+        <div class="eyebrow">
+            <div class="line" aria-hidden="true"></div>
+            <div class="mono">Chapter VIII &middot; Accessibility</div>
+        </div>
+        <h1>Accessibility <em>Statement</em></h1>
+        <p class="updated">Version 1.0.0 &middot; Effective May 16, 2026 &middot; Last updated May 16, 2026</p>
+
+        <aside class="card-callout">
+            <h3>The short version</h3>
+            <p>Every Thomas Ray Publishing app is built to be usable by people with disabilities &mdash; full VoiceOver coverage, Dynamic Type at every size including AX1&ndash;AX5, Reduce Motion support, color-independent information, and Switch / Voice Control compatibility. If something is broken or missing, email <a href="mailto:accessibility@thomasraypublishing.com">accessibility@thomasraypublishing.com</a> and we'll fix it as a priority issue.</p>
+        </aside>
+
+        <h2>1. Our commitment</h2>
+        <p>Thomas Ray Publishing LLC ("TRP") designs every app and the marketing website to conform with the <a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) 2.2 Level AA</a> and Apple's accessibility frameworks. Accessibility is not a feature we add at the end &mdash; it is a TRP Prime Directive that governs the first line of code we write for each app:</p>
+        <ul>
+            <li>VoiceOver labels, hints, and traits on every interactive element.</li>
+            <li>Dynamic Type at all sizes, including the accessibility-size variants AX1&ndash;AX5.</li>
+            <li>Respect for Reduce Motion, Bold Text, Increase Contrast, Reduce Transparency, and Differentiate Without Color.</li>
+            <li>Color-independent information (no meaning conveyed solely by color).</li>
+            <li>Sufficient touch-target sizes (44&times;44 pt minimum).</li>
+            <li>WCAG AA color contrast (4.5:1 for text; 3:1 for large text and UI components) in Light and Dark themes.</li>
+            <li>Compatibility with Switch Control, Voice Control, and external keyboards on iPadOS and macOS.</li>
+            <li>Live Activities and widgets that read correctly with VoiceOver.</li>
+        </ul>
+
+        <h2>2. Standards we follow</h2>
+        <ul>
+            <li><strong>WCAG 2.2 Level AA</strong> (or its successor) for web content and digital interfaces.</li>
+            <li>Apple's <a href="https://developer.apple.com/accessibility/">Human Interface Guidelines &mdash; Accessibility</a>.</li>
+            <li>Apple's accessibility APIs: Accessibility (UIKit and AppKit), SwiftUI accessibility modifiers, App Intents accessibility entities, ActivityKit and WidgetKit accessibility, MusicHaptics, and CoreHaptics.</li>
+            <li>Section 508 of the US Rehabilitation Act (29 U.S.C. &sect;794d) as relevant to consumer software.</li>
+            <li>EN 301 549 (European harmonized accessibility standard) as it incorporates WCAG 2.2 AA.</li>
+        </ul>
+
+        <h2>3. Per-app conformance</h2>
+
+        <h3>3.1 Pomagotchi</h3>
+        <p><strong>Conformance level: WCAG 2.2 AA &middot; Audited internally May 2026.</strong></p>
+        <ul>
+            <li>Full VoiceOver coverage for pet status, accessory closet, mini-games, dog-show competitions, shop, settings, and the photo booth.</li>
+            <li>Dynamic Type supported through AX5 across all primary surfaces. Custom illustrations include text alternatives.</li>
+            <li>Reduce Motion: heavy parallax, bounce animations, and atmospheric particles fall back to static or fade transitions.</li>
+            <li>Interactive widgets (Feed / Play) expose accessibility labels through App Intents.</li>
+            <li>Pom Coin balance, stat indicators, and trophies use redundant text labels alongside color cues.</li>
+            <li><em>Known limitation:</em> The Trading Card 3D tilt effect is decorative; it auto-disables under Reduce Motion. We are exploring an additional "Static cards only" toggle for users who want it independently.</li>
+        </ul>
+
+        <h3>3.2 The Device &mdash; Cosmic Pyramid</h3>
+        <p><strong>Conformance level: WCAG 2.2 AA &middot; Audited internally May 2026.</strong></p>
+        <ul>
+            <li>Full VoiceOver coverage for the pyramid interaction, reading flow, gallery, and onboarding.</li>
+            <li>Dynamic Type supported through AX5; prediction narratives are presented in scrollable views that reflow at every text size.</li>
+            <li>Reduce Motion replaces the cosmic-pulse animation with a calm fade; haptic intensity is reduced under Reduce Motion.</li>
+            <li>Live Activity and widget surfaces have plain-text fallbacks.</li>
+            <li><em>Known limitation:</em> Sound effects are integral to the atmosphere; we are adding optional captions for sound cues in a future release.</li>
+        </ul>
+
+        <h3>3.3 Colophon</h3>
+        <p><strong>Conformance level: WCAG 2.2 AA &middot; Audited internally May 2026.</strong></p>
+        <ul>
+            <li>Full VoiceOver coverage of expense entry, mileage logs, document library, journal, royalty import, reports, and Siri Shortcuts.</li>
+            <li>Dynamic Type supported through AX5 across all forms, lists, and reports; report PDFs use accessible tagged structure.</li>
+            <li>Receipt OCR results display with both text labels and confidence indicators that are not conveyed by color alone.</li>
+            <li>Voice-to-Journal transcripts are fully selectable and screen-reader-friendly.</li>
+            <li>Full keyboard and pointer support on iPadOS and macOS; menu-bar commands include keyboard shortcuts.</li>
+            <li><em>Known limitation:</em> Some legacy CSV imports from third-party publishing platforms include non-accessible characters; we sanitize on import.</li>
+        </ul>
+
+        <h3>3.4 Marketing website (this site)</h3>
+        <p><strong>Conformance level: WCAG 2.2 AA target.</strong></p>
+        <ul>
+            <li>Semantic HTML, landmark regions (<code>nav</code>, <code>main</code>, <code>footer</code>), proper heading order, and skip-to-content patterns.</li>
+            <li>Text resizes cleanly up to 200% with no loss of content or functionality.</li>
+            <li>Atmospheric star and fluff particles respect <code>prefers-reduced-motion</code> and are decorative (<code>aria-hidden</code>).</li>
+            <li>Both Paper and Cosmic themes meet WCAG AA contrast for body text and interactive elements.</li>
+            <li>All images include descriptive <code>alt</code> attributes or are flagged as decorative.</li>
+        </ul>
+
+        <h2>4. Known limitations</h2>
+        <p>We are honest about the gaps:</p>
+        <ul>
+            <li>Localization beyond English currently relies on Apple's on-device Translation framework for AI-generated text in Pomagotchi and The Device. Static UI is localized progressively per app; some strings may briefly appear in English while a locale is being added.</li>
+            <li>Some illustrations and decorative animations are still being reviewed for high-contrast variants. Increase Contrast falls back to system-provided contrast where custom variants are not yet available.</li>
+            <li>We do not yet provide ASL or signed-video tutorials. We're exploring captioned video walkthroughs for the next major releases.</li>
+        </ul>
+        <p>When we identify a barrier, we add it to our public roadmap with a target fix release; reach out at <a href="mailto:accessibility@thomasraypublishing.com">accessibility@thomasraypublishing.com</a> for the latest status.</p>
+
+        <h2>5. Reporting barriers</h2>
+        <p>If you encounter an accessibility barrier in any TRP app or on this website, please tell us. We treat accessibility reports as priority issues and respond within 5 business days, with a remediation plan within 30 days where the fix is non-trivial.</p>
+        <p><strong>Email:</strong> <a href="mailto:accessibility@thomasraypublishing.com">accessibility@thomasraypublishing.com</a></p>
+        <p>In your message please include:</p>
+        <ul>
+            <li>Which app or page you were using (and the version, if known).</li>
+            <li>Your device, OS version, and any assistive technology (VoiceOver, Switch Control, etc.).</li>
+            <li>What you were trying to do.</li>
+            <li>What happened and what you expected to happen.</li>
+            <li>Whether you'd like a follow-up when the fix ships.</li>
+        </ul>
+
+        <h2>6. How we test</h2>
+        <ul>
+            <li>VoiceOver runs on every screen as part of pre-release QA on iPhone, iPad, and Mac.</li>
+            <li>Dynamic Type is tested at AX5 on the smallest supported device (iPhone SE class) and on the largest (iPhone 17 Pro Max, iPad Pro).</li>
+            <li>Color contrast is automatically checked with Xcode's Accessibility Inspector and the Stark plug-in.</li>
+            <li>External keyboard, Switch Control, and Voice Control flows are exercised on iPadOS for any app shipping a non-trivial form or list.</li>
+            <li>The marketing website is checked with <code>axe DevTools</code> and the Pa11y CLI on every deploy.</li>
+        </ul>
+
+        <h2>7. Legal context</h2>
+        <p>This statement is intended in good faith to describe our actual conformance and our remediation commitment. It does not waive any rights you may have under the Americans with Disabilities Act (ADA), Section 508, the EU Accessibility Act (Directive (EU) 2019/882) effective June 28, 2025, the UK Equality Act 2010, California's Unruh Civil Rights Act, or any other applicable law.</p>
+
+        <h2>8. Changes</h2>
+        <p>We review this statement at least annually and after every major app release. The version number and effective date at the top of this page reflect the current text.</p>
+
+        <h2>9. Contact</h2>
+        <p>Accessibility: <a href="mailto:accessibility@thomasraypublishing.com">accessibility@thomasraypublishing.com</a><br>
+        General: <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a><br>
+        Thomas Ray Publishing LLC, 2360 Corporate Circle, Suite 400, Henderson, NV 89074-7722</p>
+
+        <aside class="card-callout">
+            <h3>Help us do better</h3>
+            <p>Accessibility reports go straight to the developer. Every fix ships in the next release.</p>
+            <a class="btn" href="mailto:accessibility@thomasraypublishing.com?subject=Accessibility%20Report">Report a barrier</a>
+        </aside>
+    </div>
+</main>
+
+<footer>
+    <div class="wrap">
+        <div class="foot-grid">
+            <div class="foot-brand">
+                <div class="brand">
+                    <div class="dot" aria-hidden="true"></div>
+                    <span>Thomas Ray Publishing</span>
+                </div>
+                <div class="serif-big">Stories, art &amp; digital companions.</div>
+            </div>
+            <div class="foot-col">
+                <h5>Catalog</h5>
+                <a href="index.html#apps">Apps</a>
+                <a href="index.html#books">Books</a>
+                <a href="index.html#stickers">Stickers</a>
+                <a href="index.html#about">About</a>
+            </div>
+            <div class="foot-col">
+                <h5>Legal</h5>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Use</a>
+                <a href="accessibility.html">Accessibility</a>
+                <a href="support.html">App Support</a>
+            </div>
+            <div class="foot-col">
+                <h5>Contact</h5>
+                <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
+            </div>
+        </div>
+        <div class="foot-bottom">
+            <div>&copy; 2026 Thomas Ray Publishing LLC. All rights reserved.</div>
+            <div class="mono">Set in Newsreader &amp; Inter Tight</div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
