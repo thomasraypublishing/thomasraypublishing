@@ -455,3 +455,17 @@ footer {
     border-bottom: none;
 }
 .prose .card-callout .btn:hover { background: var(--ink-2); }
+
+/* -------- Hush Hush Snap Snap -------- */
+.hero-meta-row .item .sq.hhss { background: #E8869A; }
+.screen-bg-hhss {
+    background: radial-gradient(120% 120% at 40% 30%, #2a1520, #1a0d14 55%, #0f080d 100%);
+    padding: 48px; border-radius: 32px; position: relative; overflow: hidden;
+}
+.screen-bg-hhss::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(232,134,154,.07) 1px, transparent 1px);
+    background-size: 10px 10px; opacity: .4;
+}
+.app-card.hhss ul.features li::before { background: #E8869A; }
+.app-card.hhss h3 em { color: #E8869A; }
