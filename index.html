@@ -20,13 +20,14 @@
     <meta name="twitter:title" content="Thomas Ray Publishing LLC">
     <meta name="twitter:description" content="Illustrated books, art collections, iOS apps, and iMessage sticker packs from Thomas Ray Publishing LLC.">
     <meta name="twitter:image" content="https://thomasraypublishing.com/images/logo.jpg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/fonts/newsreader-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body data-theme="cosmic">
 
+<canvas id="atmo-canvas" aria-hidden="true"></canvas>
 <div class="atmo" id="atmo" aria-hidden="true"></div>
 
 <nav class="top">
@@ -44,10 +45,36 @@
             <a href="#about">About</a>
             <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
         </div>
+        <button class="menu-btn" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="menu-overlay">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </nav>
 
-<header class="hero" id="hero">
+<div class="menu-overlay" id="menu-overlay" aria-hidden="false">
+    <div class="close-hint">Esc to close</div>
+    <a href="#apps"><em>I</em> &mdash; Apps</a>
+    <a href="#books"><em>II</em> &mdash; Books</a>
+    <a href="#stickers"><em>III</em> &mdash; Stickers</a>
+    <a href="#about"><em>IV</em> &mdash; About</a>
+    <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
+    <div class="menu-foot">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="support.html">Support</a>
+        <a href="accessibility.html">Accessibility</a>
+    </div>
+</div>
+
+<nav id="chapter-rail" aria-label="Chapters">
+    <a href="#hero" data-world="hero" aria-label="Top">&#9678;</a>
+    <a href="#pomagotchi" data-world="pom" aria-label="Pomagotchi">I</a>
+    <a href="#the-device" data-world="device" aria-label="The Device">II</a>
+    <a href="#hush-hush-snap-snap" data-world="hhss" aria-label="Hush Hush Snap Snap">III</a>
+    <a href="#books" data-world="editorial" aria-label="Books and more">IV</a>
+</nav>
+
+<header class="hero" id="hero" data-world="hero">
     <div class="wrap">
         <div class="eyebrow">
             <div class="line" aria-hidden="true"></div>
@@ -88,7 +115,7 @@
                     </div>
                 </div>
                 <div class="stage" id="pom-stage">
-                    <img src="images/pomagotchi-screenshot.png" alt="Pomagotchi app screenshot">
+                    <img src="images/opt/pomagotchi-screenshot.webp" alt="Pomagotchi app screenshot">
                 </div>
             </a>
 
@@ -110,7 +137,7 @@
                 </div>
                 <div class="stage" id="device-stage">
                     <div class="stars" aria-hidden="true"></div>
-                    <img src="images/thedevice-screenshot.png" alt="The Device app screenshot">
+                    <img src="images/opt/thedevice-screenshot.webp" alt="The Device app screenshot">
                     <div class="click-hint">Tap to divine</div>
                     <div class="fortune" id="fortune-text">Press the glass.</div>
                 </div>
@@ -132,7 +159,7 @@
             </div>
         </div>
 
-        <article class="app-card" id="pomagotchi">
+        <article class="app-card" id="pomagotchi" data-world="pom">
             <div class="copy">
                 <div class="mono">App I &middot; iOS</div>
                 <h3>Pomagotchi <em>&mdash; a virtual Pom.</em></h3>
@@ -160,17 +187,17 @@
             <div class="screen">
                 <div class="screen-bg-pom">
                     <div class="frame">
-                        <img src="images/pomagotchi-screenshot.png" alt="Pomagotchi app screenshot">
+                        <img src="images/opt/pomagotchi-screenshot.webp" width="720" height="1558" loading="lazy" decoding="async" alt="Pomagotchi app screenshot">
                     </div>
                 </div>
             </div>
         </article>
 
-        <article class="app-card reverse device" id="the-device">
+        <article class="app-card reverse device" id="the-device" data-world="device">
             <div class="screen">
                 <div class="screen-bg-device">
                     <div class="frame">
-                        <img src="images/thedevice-screenshot.png" alt="The Device app screenshot">
+                        <img src="images/opt/thedevice-screenshot.webp" width="720" height="1558" loading="lazy" decoding="async" alt="The Device app screenshot">
                     </div>
                 </div>
             </div>
@@ -200,10 +227,11 @@
             </div>
         </article>
 
-        <article class="app-card hhss" id="hush-hush-snap-snap">
+        <article class="app-card hhss" id="hush-hush-snap-snap" data-world="hhss">
             <div class="copy">
                 <div class="mono">App III &middot; iOS</div>
                 <h3>Hush Hush<br>Snap Snap <em>&mdash; silent camera.</em></h3>
+                <div class="shutter-line" aria-hidden="true"></div>
                 <p class="lede">A silent-capture camera for the moments a shutter sound would ruin. Pets, wildlife, theaters, ceremonies &mdash; capture cleanly. Control completely.</p>
                 <ul class="features">
                     <li><span>Three independent cue toggles &mdash; visual, haptic, and audio each on or off separately</span></li>
@@ -228,7 +256,7 @@
             <div class="screen">
                 <div class="screen-bg-hhss">
                     <div class="frame">
-                        <img src="images/HHSS_03_triggers_6.5_1284x2778.png" alt="Hush Hush Snap Snap camera interface showing smile-trigger controls">
+                        <img src="images/opt/HHSS_03_triggers_6.5_1284x2778.webp" width="720" height="1558" loading="lazy" decoding="async" alt="Hush Hush Snap Snap camera interface showing smile-trigger controls">
                     </div>
                 </div>
             </div>
@@ -236,7 +264,7 @@
     </div>
 </section>
 
-<section class="chapter" id="books">
+<section class="chapter" id="books" data-world="editorial">
     <div class="wrap">
         <div class="chapter-head">
             <div class="num">II<span>Books &amp; Art Volumes</span></div>
@@ -251,7 +279,7 @@
 
         <div class="catalog">
             <a class="book" href="https://a.co/d/05y3gYO0" target="_blank" rel="noopener">
-                <div class="cover"><img src="images/adventure-pom.jpg" alt="Adventure Pom! Captain Henry Gingersnaps cover"></div>
+                <div class="cover"><img src="images/opt/adventure-pom.webp" width="640" height="467" loading="lazy" decoding="async" alt="Adventure Pom! Captain Henry Gingersnaps cover"></div>
                 <div class="meta">
                     <div class="num">Title &middot; 01 &middot; 2026</div>
                     <h4>Adventure Pom! <br>Captain Henry Gingersnaps</h4>
@@ -262,7 +290,7 @@
             </a>
 
             <a class="book" href="https://a.co/d/0dqSnOU4" target="_blank" rel="noopener">
-                <div class="cover"><img src="images/fluffy-thoughts.png" alt="Fluffy Thoughts cover"></div>
+                <div class="cover"><img src="images/opt/fluffy-thoughts.webp" width="640" height="636" loading="lazy" decoding="async" alt="Fluffy Thoughts cover"></div>
                 <div class="meta">
                     <div class="num">Title &middot; 02 &middot; 2026</div>
                     <h4>Fluffy Thoughts</h4>
@@ -273,7 +301,7 @@
             </a>
 
             <a class="book" href="https://a.co/d/02FaZKXb" target="_blank" rel="noopener">
-                <div class="cover"><img src="images/100-xiv.jpg" alt="100 XIV cover"></div>
+                <div class="cover"><img src="images/opt/100-xiv.webp" width="640" height="837" loading="lazy" decoding="async" alt="100 XIV cover"></div>
                 <div class="meta">
                     <div class="num">Title &middot; 03 &middot; 2026</div>
                     <h4>100 XIV</h4>
@@ -284,7 +312,7 @@
             </a>
 
             <a class="book" href="https://a.co/d/05cxxosX" target="_blank" rel="noopener">
-                <div class="cover"><img src="images/100-ryb.jpg" alt="100 RYB cover"></div>
+                <div class="cover"><img src="images/opt/100-ryb.webp" width="640" height="965" loading="lazy" decoding="async" alt="100 RYB cover"></div>
                 <div class="meta">
                     <div class="num">Title &middot; 04 &middot; 2026</div>
                     <h4>100 RYB</h4>
@@ -309,27 +337,27 @@
 
         <div class="stickers">
             <a class="stk" href="https://apps.apple.com/us/app/captain-henry-gingersnaps/id1154389474" target="_blank" rel="noopener">
-                <div class="icn"><img src="images/sticker-captainhenry.png" alt="Captain Henry Gingersnaps sticker pack icon"></div>
+                <div class="icn"><img src="images/opt/sticker-captainhenry.webp" width="480" height="360" loading="lazy" decoding="async" alt="Captain Henry Gingersnaps sticker pack icon"></div>
                 <div class="name">Captain Henry<br>Gingersnaps</div>
                 <div class="plat">iMessage &middot; Pack 01</div>
             </a>
             <a class="stk" href="https://apps.apple.com/us/app/wigstaglam/id1257484846" target="_blank" rel="noopener">
-                <div class="icn"><img src="images/sticker-wigstaglam.png" alt="Wigstaglam sticker pack icon"></div>
+                <div class="icn"><img src="images/opt/sticker-wigstaglam.webp" width="480" height="360" loading="lazy" decoding="async" alt="Wigstaglam sticker pack icon"></div>
                 <div class="name">Wigstaglam</div>
                 <div class="plat">iMessage &middot; Pack 02</div>
             </a>
             <a class="stk" href="https://apps.apple.com/us/app/the-fear-of/id1223865077" target="_blank" rel="noopener">
-                <div class="icn"><img src="images/sticker-fearof.png" alt="The Fear Of sticker pack icon"></div>
+                <div class="icn"><img src="images/opt/sticker-fearof.webp" width="480" height="360" loading="lazy" decoding="async" alt="The Fear Of sticker pack icon"></div>
                 <div class="name">The Fear Of</div>
                 <div class="plat">iMessage &middot; Pack 03</div>
             </a>
             <a class="stk" href="https://apps.apple.com/us/app/magic-b-ball/id1163553465" target="_blank" rel="noopener">
-                <div class="icn"><img src="images/sticker-magicbball.png" alt="Magic B-Ball sticker pack icon"></div>
+                <div class="icn"><img src="images/opt/sticker-magicbball.webp" width="480" height="480" loading="lazy" decoding="async" alt="Magic B-Ball sticker pack icon"></div>
                 <div class="name">Magic B-Ball</div>
                 <div class="plat">iMessage &middot; Pack 04</div>
             </a>
             <a class="stk" href="https://apps.apple.com/us/app/100-stk/id1155768710" target="_blank" rel="noopener">
-                <div class="icn"><img src="images/sticker-100stk.png" alt="100 STK sticker pack icon"></div>
+                <div class="icn"><img src="images/opt/sticker-100stk.webp" width="480" height="360" loading="lazy" decoding="async" alt="100 STK sticker pack icon"></div>
                 <div class="name">100 STK</div>
                 <div class="plat">iMessage &middot; Pack 05</div>
             </a>
@@ -368,24 +396,24 @@
                 </p>
 
                 <div class="about-stats">
-                    <div class="stat"><div class="n">04</div><div class="l">Published titles</div></div>
-                    <div class="stat"><div class="n">03</div><div class="l">iOS apps</div></div>
-                    <div class="stat"><div class="n">05</div><div class="l">Sticker packs</div></div>
-                    <div class="stat"><div class="n">33</div><div class="l">Pomagotchi levels</div></div>
+                    <div class="stat"><div class="n" data-count="04">04</div><div class="l">Published titles</div></div>
+                    <div class="stat"><div class="n" data-count="03">03</div><div class="l">iOS apps</div></div>
+                    <div class="stat"><div class="n" data-count="05">05</div><div class="l">Sticker packs</div></div>
+                    <div class="stat"><div class="n" data-count="33">33</div><div class="l">Pomagotchi levels</div></div>
                 </div>
             </div>
 
             <div class="about-collage" aria-hidden="true">
                 <div class="tag mono">Archive &middot; Selected Works</div>
-                <div class="card c1"><img src="images/adventure-pom.jpg" alt=""></div>
-                <div class="card c2"><img src="images/fluffy-thoughts.png" alt=""></div>
-                <div class="card c3"><img src="images/100-xiv.jpg" alt=""></div>
+                <div class="card c1"><img src="images/opt/adventure-pom.webp" loading="lazy" decoding="async" alt=""></div>
+                <div class="card c2"><img src="images/opt/fluffy-thoughts.webp" loading="lazy" decoding="async" alt=""></div>
+                <div class="card c3"><img src="images/opt/100-xiv.webp" loading="lazy" decoding="async" alt=""></div>
             </div>
         </div>
     </div>
 </section>
 
-<footer id="contact">
+<footer id="contact" data-world="editorial">
     <div class="wrap">
         <div class="foot-grid">
             <div class="foot-brand">
@@ -421,70 +449,10 @@
     </div>
 </footer>
 
-<script>
-    // Atmosphere (stars + fluff)
-    function seedAtmo() {
-        const atmo = document.getElementById('atmo');
-        if (!atmo) return;
-        atmo.innerHTML = '';
-        const w = window.innerWidth, h = Math.max(window.innerHeight * 2, 1600);
-        for (let i = 0; i < 40; i++) {
-            const s = document.createElement('div'); s.className = 'star';
-            s.style.left = Math.random() * w + 'px';
-            s.style.top = Math.random() * h + 'px';
-            s.style.animationDelay = (Math.random() * 6) + 's';
-            atmo.appendChild(s);
-        }
-        for (let i = 0; i < 8; i++) {
-            const f = document.createElement('div'); f.className = 'fluff';
-            const size = 120 + Math.random() * 220;
-            f.style.width = size + 'px'; f.style.height = size + 'px';
-            f.style.left = Math.random() * w + 'px';
-            f.style.top = Math.random() * h + 'px';
-            f.style.animationDelay = (Math.random() * 30) + 's';
-            f.style.animationDuration = (28 + Math.random() * 22) + 's';
-            atmo.appendChild(f);
-        }
-    }
-    seedAtmo();
-    window.addEventListener('resize', () => { clearTimeout(window.__rz); window.__rz = setTimeout(seedAtmo, 200); });
-
-    // Device fortune
-    const FORTUNES = [
-        "The moon is waxing. Return the call you've been avoiding.",
-        "A small fluffy ally arrives within 48 hours.",
-        "Do not sign the thing on Tuesday.",
-        "Your second-best idea this week is actually the best one.",
-        "A stranger will laugh at your joke. Accept the omen.",
-        "The east-facing window knows something. Sit by it.",
-        "Buy the book with the blue spine.",
-        "You are closer than you think. Keep your grip loose.",
-        "Venus is cooperative. Send the message before noon.",
-        "Forgive the small thing \u2014 it's older than it looks."
-    ];
-    const deviceEl = document.getElementById('device-specimen');
-    const fortuneEl = document.getElementById('fortune-text');
-    if (deviceEl && fortuneEl) {
-        deviceEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            const pick = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
-            fortuneEl.classList.remove('show');
-            setTimeout(() => { fortuneEl.textContent = pick; fortuneEl.classList.add('show'); }, 120);
-        });
-    }
-
-    // Smooth anchor nav (offset for sticky nav)
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', (e) => {
-            const id = a.getAttribute('href').slice(1);
-            if (!id) return;
-            const el = document.getElementById(id);
-            if (el) {
-                e.preventDefault();
-                window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' });
-            }
-        });
-    });
-</script>
+<script defer src="assets/vendor/gsap.min.js"></script>
+<script defer src="assets/vendor/ScrollTrigger.min.js"></script>
+<script defer src="assets/vendor/SplitText.min.js"></script>
+<script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+<script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
