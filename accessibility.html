@@ -16,9 +16,9 @@
     <meta property="og:url" content="https://thomasraypublishing.com/accessibility.html">
     <meta property="og:image" content="https://thomasraypublishing.com/images/logo.jpg">
     <meta name="twitter:card" content="summary">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/fonts/newsreader-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body data-theme="cosmic">
@@ -38,8 +38,26 @@
             <a href="index.html#about">About</a>
             <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
         </div>
+        <button class="menu-btn" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="menu-overlay">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </nav>
+<div class="menu-overlay" id="menu-overlay">
+    <div class="close-hint">Esc to close</div>
+    <a href="index.html#apps"><em>I</em> &mdash; Apps</a>
+    <a href="index.html#books"><em>II</em> &mdash; Books</a>
+    <a href="index.html#stickers"><em>III</em> &mdash; Stickers</a>
+    <a href="index.html#about"><em>IV</em> &mdash; About</a>
+    <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
+    <div class="menu-foot">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="support.html">Support</a>
+        <a href="accessibility.html">Accessibility</a>
+    </div>
+</div>
+
 
 <main class="prose">
     <div class="wrap">
@@ -206,5 +224,6 @@
         </div>
     </div>
 </footer>
+<script type="module" src="assets/js/prose.js"></script>
 </body>
 </html>
