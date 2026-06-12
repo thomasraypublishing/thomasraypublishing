@@ -11,6 +11,8 @@ import { initChapters } from './chapters.js';
 import { initReveals, initTilt } from './reveals.js';
 import { initNav } from './nav.js';
 import { initFortune } from './fortune.js';
+import { initCaptureSpecimen } from './specimen.js';
+import { initCameo } from './cameo.js';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = window.matchMedia('(pointer: fine)').matches;
@@ -65,12 +67,23 @@ if (atmosphere) {
   seedCssAtmo();
 }
 
-// Fortune binds before nav so its preventDefault wins on the specimen card.
+// Interactive specimens bind before nav so their preventDefault wins.
 initFortune({ atmosphere, motion: !reduceMotion });
+
+let chapters = null;
+if (!reduceMotion && window.gsap) {
+  chapters = initChapters({ atmosphere, motion: true });
+}
+
+initCaptureSpecimen({
+  atmosphere,
+  motion: !reduceMotion,
+  currentWorld: () => chapters?.getWorld() ?? 'hero',
+});
 initNav({ motion: !reduceMotion });
+initCameo({ motion: !reduceMotion });
 
 if (!reduceMotion && window.gsap) {
-  initChapters({ atmosphere, motion: true });
   initReveals();
   if (finePointer && !mobile) initTilt();
 }

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>OG card source — render at 1200x630</title>
+<style>
+  @font-face {
+    font-family: 'Newsreader';
+    src: url('../assets/fonts/newsreader-normal-400.woff2') format('woff2');
+    font-weight: 400; font-style: normal;
+  }
+  @font-face {
+    font-family: 'Newsreader';
+    src: url('../assets/fonts/newsreader-italic-400.woff2') format('woff2');
+    font-weight: 400; font-style: italic;
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../assets/fonts/jetbrains-mono-normal-400.woff2') format('woff2');
+    font-weight: 400; font-style: normal;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: #000; }
+  .card {
+    position: absolute; top: 0; left: 0;
+    width: 1200px; height: 630px;
+    background:
+      radial-gradient(1.5px 1.5px at 8% 18%, rgba(255,255,255,.9), transparent 50%),
+      radial-gradient(1px 1px at 22% 72%, rgba(255,255,255,.55), transparent 50%),
+      radial-gradient(1px 1px at 38% 30%, rgba(255,255,255,.6), transparent 50%),
+      radial-gradient(1.5px 1.5px at 87% 22%, rgba(255,255,255,.8), transparent 50%),
+      radial-gradient(1px 1px at 73% 80%, rgba(255,255,255,.5), transparent 50%),
+      radial-gradient(1px 1px at 92% 60%, rgba(255,255,255,.65), transparent 50%),
+      radial-gradient(1px 1px at 56% 12%, rgba(255,255,255,.5), transparent 50%),
+      radial-gradient(1px 1px at 14% 48%, rgba(183,172,235,.6), transparent 50%),
+      radial-gradient(120% 130% at 50% 115%, #221A44 0%, #150F2E 45%, #0F0C1F 100%);
+    color: #F6F0E0;
+    overflow: hidden;
+    padding: 64px 72px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .dot {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #F7C79A, #C75A2B 75%);
+  }
+  .brand .name { font-family: 'Newsreader', Georgia, serif; font-size: 30px; letter-spacing: -0.01em; }
+  .brand .est { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: .14em; color: #938AA7; text-transform: uppercase; margin-left: 8px; }
+  h1 {
+    font-family: 'Newsreader', Georgia, serif; font-weight: 400;
+    font-size: 86px; line-height: 1.04; letter-spacing: -0.025em;
+    max-width: 18ch;
+  }
+  h1 em { font-style: italic; color: #F5B07A; }
+  h1 .cos { font-style: italic; color: #8E80E0; }
+  .meta { display: flex; align-items: center; gap: 36px; }
+  .meta .item { display: flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 16px; letter-spacing: .06em; color: #D7CFB8; }
+  .meta .sq { width: 14px; height: 14px; }
+  .sq.pom { background: #F5B07A; }
+  .sq.dev { background: #8478D8; }
+  .sq.hhss { background: #E8869A; }
+  .rule { position: absolute; left: 72px; right: 72px; bottom: 152px; height: 1px; background: rgba(214,207,184,.18); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">
+    <div class="dot"></div>
+    <span class="name">Thomas Ray Publishing</span>
+    <span class="est">Est. Indie &middot; Catalog N&deg; 2026</span>
+  </div>
+  <h1>Stories, <em>art</em>, and<br>three <span class="cos">curious</span> iOS<br>companions.</h1>
+  <div class="rule"></div>
+  <div class="meta">
+    <div class="item"><div class="sq pom"></div>POMAGOTCHI</div>
+    <div class="item"><div class="sq dev"></div>THE DEVICE</div>
+    <div class="item"><div class="sq hhss"></div>HUSH HUSH SNAP SNAP</div>
+  </div>
+</div>
+</body>
+</html>

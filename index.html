@@ -15,11 +15,13 @@
     <meta property="og:title" content="Thomas Ray Publishing LLC">
     <meta property="og:description" content="Illustrated books, art collections, iOS apps, and iMessage sticker packs from Thomas Ray Publishing LLC.">
     <meta property="og:url" content="https://thomasraypublishing.com/">
-    <meta property="og:image" content="https://thomasraypublishing.com/images/logo.jpg">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://thomasraypublishing.com/images/og-card.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Thomas Ray Publishing LLC">
     <meta name="twitter:description" content="Illustrated books, art collections, iOS apps, and iMessage sticker packs from Thomas Ray Publishing LLC.">
-    <meta name="twitter:image" content="https://thomasraypublishing.com/images/logo.jpg">
+    <meta name="twitter:image" content="https://thomasraypublishing.com/images/og-card.jpg">
     <link rel="preload" href="assets/fonts/newsreader-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="assets/fonts/fonts.css">
@@ -140,6 +142,35 @@
                     <img src="images/opt/thedevice-screenshot.webp" alt="The Device app screenshot">
                     <div class="click-hint">Tap to divine</div>
                     <div class="fortune" id="fortune-text">Press the glass.</div>
+                </div>
+            </a>
+
+            <a class="specimen spec-hhss" href="#hush-hush-snap-snap" id="hhss-specimen">
+                <div class="meta">
+                    <div>
+                        <div class="mono">App &middot; Specimen 03</div>
+                        <div class="title"><em>Hush Hush Snap Snap</em></div>
+                        <div class="tag">The quiet one.</div>
+                    </div>
+                    <div class="desc">
+                        A camera that never makes a sound. Press the shutter and it will
+                        photograph the sky above this very page &mdash; silently, of course.
+                    </div>
+                    <div class="cta">
+                        <span>Press the shutter</span>
+                        <span class="arrow" aria-hidden="true">&rarr;</span>
+                    </div>
+                </div>
+                <div class="stage" id="hhss-stage">
+                    <div class="viewfinder" aria-hidden="true">
+                        <span class="vf-line v1"></span><span class="vf-line v2"></span>
+                        <span class="vf-line h1"></span><span class="vf-line h2"></span>
+                        <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
+                        <span class="vf-corner bl"></span><span class="vf-corner br"></span>
+                    </div>
+                    <div class="click-hint">Tap to capture &mdash; silently</div>
+                    <div class="polaroids" id="hhss-polaroids"></div>
+                    <span class="visually-hidden" id="hhss-status" role="status"></span>
                 </div>
             </a>
         </div>
@@ -442,9 +473,20 @@
                 <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
             </div>
         </div>
+        <div class="colophon">
+            <div class="mono">Colophon</div>
+            <p>
+                Set in <em>Newsreader</em>, <em>Inter Tight</em> &amp; <em>JetBrains Mono</em>,
+                served from our own shelf. The sky overhead is drawn live in WebGL &mdash;
+                2,400 particles, four weathers, one per chapter. No trackers, no cookies,
+                no third-party requests: the only one watching you here is the little dog.
+                Built by hand in California.
+            </p>
+            <div class="mono">Catalog N&deg; 2026 &middot; Vol. I &middot; Second printing</div>
+        </div>
         <div class="foot-bottom">
             <div>&copy; 2026 Thomas Ray Publishing LLC. All rights reserved.</div>
-            <div class="mono">Set in Newsreader &amp; Inter Tight</div>
+            <div class="mono">Printed on pixels</div>
         </div>
     </div>
 </footer>

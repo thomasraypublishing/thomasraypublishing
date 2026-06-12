@@ -585,3 +585,82 @@ nav.top { z-index: 70; }
 
 /* -------- Frame: GPU hint for tilt/parallax -------- */
 .app-card .frame { will-change: transform; }
+
+/* ========================================
+   Specimen 03 — the silent capture
+   ======================================== */
+.spec-hhss {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1.5fr;
+    min-height: 300px;
+}
+@media (max-width: 820px) { .spec-hhss { grid-template-columns: 1fr; } }
+.spec-hhss .stage {
+    position: relative; cursor: pointer; user-select: none;
+    background: radial-gradient(130% 130% at 60% 40%, #2A1722 0%, #1B0F17 55%, #120A10 100%);
+    min-height: 260px;
+    transition: filter .14s ease;
+}
+.spec-hhss .stage.shuttering { filter: brightness(0.55); }
+.viewfinder { position: absolute; inset: 18px; pointer-events: none; }
+.vf-line { position: absolute; background: rgba(232,134,154,.22); }
+.vf-line.v1 { left: 33.33%; top: 0; bottom: 0; width: 1px; }
+.vf-line.v2 { left: 66.66%; top: 0; bottom: 0; width: 1px; }
+.vf-line.h1 { top: 33.33%; left: 0; right: 0; height: 1px; }
+.vf-line.h2 { top: 66.66%; left: 0; right: 0; height: 1px; }
+.vf-corner { position: absolute; width: 18px; height: 18px; border: 1.5px solid rgba(232,134,154,.65); }
+.vf-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+.vf-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+.vf-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+.vf-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+.spec-hhss .click-hint {
+    position: absolute; top: 26px; right: 28px; z-index: 3;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.625rem;
+    letter-spacing: .14em; text-transform: uppercase; color: rgba(232,134,154,.75);
+}
+.polaroids {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    padding: 30px; pointer-events: none;
+}
+.polaroid {
+    margin: 0; background: #F6F0E0; padding: 7px 7px 9px;
+    box-shadow: 0 16px 30px -12px rgba(0,0,0,.6);
+    transform: rotate(var(--tilt, 0deg));
+    max-width: 36%;
+}
+.polaroid img { display: block; width: 100%; border-radius: 1px; }
+.polaroid figcaption {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.5625rem;
+    letter-spacing: .08em; color: #3A342A; margin-top: 6px; text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ========================================
+   Colophon
+   ======================================== */
+.colophon {
+    margin-top: 56px; padding-top: 24px;
+    border-top: 1px dashed var(--rule);
+    display: grid; gap: 12px;
+}
+.colophon p {
+    font-family: 'Newsreader', Georgia, serif; font-size: 0.9375rem;
+    line-height: 1.65; color: var(--ink-2); max-width: 64ch; margin: 0;
+}
+.colophon p em { font-style: italic; color: var(--ink); }
+
+/* ========================================
+   Captain Henry's cameo
+   ======================================== */
+.henry-cameo {
+    position: fixed; bottom: 0; right: 4vw; z-index: 45;
+    width: clamp(90px, 12vw, 150px); height: auto;
+    pointer-events: none; opacity: 0;
+    filter: invert(0.92) sepia(0.14) saturate(1.4) hue-rotate(-12deg) drop-shadow(0 4px 14px rgba(0,0,0,.5));
+    transition: opacity .4s ease;
+}

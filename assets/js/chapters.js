@@ -24,6 +24,16 @@ export function initChapters({ atmosphere, motion }) {
     document.querySelectorAll('header[data-world], article[data-world], section[data-world], footer[data-world]'));
   let current = 'hero';
 
+  // Declared before any ScrollTrigger exists: when the page loads already
+  // scrolled (e.g. a reload mid-page), onEnter fires synchronously inside
+  // ScrollTrigger.create and reaches syncRail immediately.
+  const rail = document.getElementById('chapter-rail');
+  function syncRail(world) {
+    if (!rail) return;
+    rail.querySelectorAll('a').forEach((a) =>
+      a.classList.toggle('active', a.dataset.world === world));
+  }
+
   function enter(world) {
     if (world === current || !PALETTES[world]) return;
     current = world;
@@ -56,12 +66,7 @@ export function initChapters({ atmosphere, motion }) {
     });
   }
 
-  // ---- progress rail (desktop only, decorative) ---------------------------
-  const rail = document.getElementById('chapter-rail');
-  function syncRail(world) {
-    if (!rail) return;
-    rail.querySelectorAll('a').forEach((a) =>
-      a.classList.toggle('active', a.dataset.world === world));
-  }
-  syncRail('hero');
+  syncRail(current);
+
+  return { getWorld: () => current };
 }
