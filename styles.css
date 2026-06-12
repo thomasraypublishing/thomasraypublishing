@@ -627,9 +627,12 @@ nav.top { z-index: 70; }
     margin: 0; background: #F6F0E0; padding: 7px 7px 9px;
     box-shadow: 0 16px 30px -12px rgba(0,0,0,.6);
     transform: rotate(var(--tilt, 0deg));
-    max-width: 36%;
+    max-width: 40%;
 }
-.polaroid img { display: block; width: 100%; border-radius: 1px; }
+.polaroid img {
+    display: block; width: auto; max-width: 100%;
+    max-height: min(170px, 24vw); border-radius: 1px;
+}
 .polaroid figcaption {
     font-family: 'JetBrains Mono', monospace; font-size: 0.5625rem;
     letter-spacing: .08em; color: #3A342A; margin-top: 6px; text-align: center;

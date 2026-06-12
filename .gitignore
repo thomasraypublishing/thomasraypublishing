@@ -3,3 +3,9 @@
 *.pdf
 Feedback/
 *.zip
+
+# Photo originals (optimized copies live in images/photos/opt/)
+images/photos/*.jpeg
+images/photos/*.jpg
+images/photos/*.png
+images/photos/*.heic

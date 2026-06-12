@@ -75,11 +75,7 @@ if (!reduceMotion && window.gsap) {
   chapters = initChapters({ atmosphere, motion: true });
 }
 
-initCaptureSpecimen({
-  atmosphere,
-  motion: !reduceMotion,
-  currentWorld: () => chapters?.getWorld() ?? 'hero',
-});
+initCaptureSpecimen({ motion: !reduceMotion });
 initNav({ motion: !reduceMotion });
 initCameo({ motion: !reduceMotion });
 

@@ -235,34 +235,6 @@ export function createAtmosphere(canvas, { mobile = false } = {}) {
       const halfH = Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
       uniforms.uPulse.value.set(ndcX * halfH * camera.aspect, ndcY * halfH, strength);
     },
-    /* Photograph the current sky: render a frame, then synchronously copy a
-       center crop onto a small canvas (the WebGL buffer is only readable in
-       the same task as the render). Returns a JPEG data URL. */
-    capture(w = 360, h = 270) {
-      renderer.render(scene, camera);
-      const src = renderer.domElement;
-      const out = document.createElement('canvas');
-      out.width = w; out.height = h;
-      const ctx = out.getContext('2d');
-      // A faint indigo night-sky base so the print never reads as pure black.
-      const bg = ctx.createRadialGradient(w * 0.5, h * 0.6, 0, w * 0.5, h * 0.6, w * 0.7);
-      bg.addColorStop(0, '#1a1430');
-      bg.addColorStop(1, '#0a0814');
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, w, h);
-      const srcAspect = src.width / src.height, outAspect = w / h;
-      let sw = src.width, sh = src.height, sx = 0, sy = 0;
-      if (srcAspect > outAspect) { sw = src.height * outAspect; sx = (src.width - sw) / 2; }
-      else { sh = src.width / outAspect; sy = (src.height - sh) / 2; }
-      // Long-exposure the sky: brighten, then add a second pass so faint
-      // particles bloom like a night-mode photo.
-      ctx.filter = 'brightness(2.1) saturate(1.35)';
-      ctx.drawImage(src, sx, sy, sw, sh, 0, 0, w, h);
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.filter = 'brightness(1.4) blur(1px)';
-      ctx.drawImage(src, sx, sy, sw, sh, 0, 0, w, h);
-      return out.toDataURL('image/jpeg', 0.85);
-    },
     pause, play,
   };
 }
