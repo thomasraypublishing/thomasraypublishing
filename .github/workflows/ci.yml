@@ -33,17 +33,24 @@ jobs:
           echo "All three App Store links verified."
 
   link-check:
+    # Self-referential absolute URLs (canonicals, the /pomagotchi/ notice
+    # link) are checked against the LIVE site, which lags a push by the
+    # Pages deploy. Run on PR / weekly / manual — never on push — so a
+    # brand-new self-page never races its own deploy. Per-push protection
+    # for the store links is the exact-match store-link-integrity job above.
+    if: github.event_name != 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Check links with lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          # Accept redirects (a.co + App Store both redirect); retry flaky
-          # hosts; treat the run as advisory on network hiccups but fail on
-          # genuinely dead links.
+          # --root-dir resolves the root-relative (/foo) links used in
+          # 404.html against the repo root. Accept redirects (a.co + App
+          # Store both 3xx); retry flaky hosts; fail on genuinely dead links.
           args: >-
             --no-progress
+            --root-dir ${{ github.workspace }}
             --max-retries 3
             --retry-wait-time 2
             --accept 200,206,301,302,307,308,403,429
