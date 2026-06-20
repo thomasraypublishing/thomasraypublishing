@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
     <title>Thomas Ray Publishing LLC &mdash; Stories, Art &amp; Digital Companions</title>
     <meta name="description" content="Thomas Ray Publishing LLC is an independent publisher of illustrated books, curated art collections, iOS apps including Pomagotchi and The Device, and iMessage sticker packs.">
     <meta name="author" content="Thomas Ray Publishing LLC">
@@ -26,6 +27,95 @@
     <link rel="preload" href="assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="assets/fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://thomasraypublishing.com/#org",
+          "name": "Thomas Ray Publishing LLC",
+          "url": "https://thomasraypublishing.com/",
+          "logo": "https://thomasraypublishing.com/images/logo.jpg",
+          "image": "https://thomasraypublishing.com/images/og-card.jpg",
+          "email": "thomasraypublishing@gmail.com",
+          "description": "Independent publisher of illustrated books, curated art collections, iOS apps, and iMessage sticker packs.",
+          "foundingLocation": "California, USA"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://thomasraypublishing.com/#website",
+          "url": "https://thomasraypublishing.com/",
+          "name": "Thomas Ray Publishing",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Pomagotchi",
+          "operatingSystem": "iOS, iPadOS, watchOS",
+          "applicationCategory": "GameApplication",
+          "url": "https://apps.apple.com/us/app/pomagotchi/id6759592794",
+          "description": "Adopt, feed, play, and bond with your own virtual Pomeranian. Level 1—33 through mini-games, dog shows, AR teleport, and on-device Apple Intelligence dialogue.",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" },
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "The Device — Cosmic Pyramid",
+          "operatingSystem": "iOS, iPadOS, watchOS",
+          "applicationCategory": "EntertainmentApplication",
+          "url": "https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897",
+          "description": "A mystical fortune-telling experience. On-device horoscopes shaped by moon phase, weather, season, and numerology using Apple Foundation Models.",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" },
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Hush Hush Snap Snap",
+          "operatingSystem": "iOS, watchOS",
+          "applicationCategory": "PhotographyApplication",
+          "url": "https://apps.apple.com/us/app/hush-hush-snap-snap/id6763808286",
+          "description": "A silent-capture camera for the moments a shutter sound would ruin. Smile and palm triggers, manual controls, RAW capture. Free with optional one-time Pro upgrade.",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" },
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
+        {
+          "@type": "Book",
+          "name": "Adventure Pom! Captain Henry Gingersnaps",
+          "author": [
+            { "@type": "Person", "name": "Sean Dryden" },
+            { "@type": "Person", "name": "Jerry Seguin" }
+          ],
+          "url": "https://a.co/d/05y3gYO0",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" }
+        },
+        {
+          "@type": "Book",
+          "name": "Fluffy Thoughts",
+          "author": { "@type": "Person", "name": "Sean Dryden" },
+          "url": "https://a.co/d/0dqSnOU4",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" }
+        },
+        {
+          "@type": "Book",
+          "name": "100 XIV",
+          "author": [
+            { "@type": "Person", "name": "Jerry Seguin" },
+            { "@type": "Person", "name": "Sean Dryden" }
+          ],
+          "url": "https://a.co/d/02FaZKXb",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" }
+        },
+        {
+          "@type": "Book",
+          "name": "100 RYB",
+          "author": { "@type": "Person", "name": "Jerry Seguin" },
+          "url": "https://a.co/d/05cxxosX",
+          "publisher": { "@id": "https://thomasraypublishing.com/#org" }
+        }
+      ]
+    }
+    </script>
 </head>
 <body data-theme="cosmic">
 

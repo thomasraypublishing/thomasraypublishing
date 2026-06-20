@@ -1,0 +1,55 @@
+name: Site Monitor
+
+# Outside-in availability + TLS health. Probes the LIVE site from GitHub's
+# runners — nothing is added to the site itself, so the no-trackers pledge
+# is untouched. On failure, GitHub's workflow-failure notification emails you.
+#
+# Covers two distinct failure modes the deploy-success signal does NOT:
+#   - the live site being unreachable even when a deploy looked green
+#   - a silently failed Let's Encrypt auto-renewal
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # every ~30 min (GitHub cron is best-effort)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  uptime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apex + www return 200
+        run: |
+          set -e
+          check() {
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -L "$1")
+            echo "$1 -> $code"
+            case "$code" in
+              200) ;;
+              *) echo "::error::$1 returned $code (expected 200)"; exit 1 ;;
+            esac
+          }
+          check https://thomasraypublishing.com/
+          check https://www.thomasraypublishing.com/
+
+  tls-expiry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Certificate has > 21 days remaining
+        run: |
+          set -e
+          check_cert() {
+            host="$1"
+            if echo | openssl s_client -servername "$host" -connect "$host":443 2>/dev/null \
+                 | openssl x509 -noout -checkend $((21*86400)) >/dev/null; then
+              days=$(echo | openssl s_client -servername "$host" -connect "$host":443 2>/dev/null \
+                 | openssl x509 -noout -enddate | cut -d= -f2)
+              echo "$host cert OK (expires $days)"
+            else
+              echo "::error::$host TLS certificate expires within 21 days — auto-renewal may have failed"
+              exit 1
+            fi
+          }
+          check_cert thomasraypublishing.com
+          check_cert www.thomasraypublishing.com

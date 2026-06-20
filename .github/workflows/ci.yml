@@ -1,0 +1,71 @@
+name: Site CI
+
+# Link health, store-link integrity, and Lighthouse budgets.
+# Runs on every push/PR and weekly (to catch upstream App Store / Amazon
+# links that rot with no commit on our side).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '17 9 * * 1'   # Mondays ~09:17 UTC — catch link rot
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  store-link-integrity:
+    # The site's whole job is driving store conversions. A wrong App Store
+    # link has shipped here before — pin the exact app IDs so a bad edit
+    # fails the build instead of reaching users.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert App Store links point at the correct apps
+        run: |
+          set -e
+          assert() { grep -qF "$1" index.html || { echo "::error::Expected App Store link '$1' missing from index.html"; exit 1; }; }
+          assert 'apps.apple.com/us/app/pomagotchi/id6759592794'
+          assert 'apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897'
+          assert 'apps.apple.com/us/app/hush-hush-snap-snap/id6763808286'
+          echo "All three App Store links verified."
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check links with lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Accept redirects (a.co + App Store both redirect); retry flaky
+          # hosts; treat the run as advisory on network hiccups but fail on
+          # genuinely dead links.
+          args: >-
+            --no-progress
+            --max-retries 3
+            --retry-wait-time 2
+            --accept 200,206,301,302,307,308,403,429
+            --exclude-path tools
+            --exclude 'mailto:'
+            "**/*.html"
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+      - name: Serve site
+        run: |
+          python3 -m http.server 8080 --bind 127.0.0.1 &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8080/index.html >/dev/null && break; sleep 0.5; done
+      - name: Run Lighthouse (warn-level budgets)
+        run: lhci autorun
