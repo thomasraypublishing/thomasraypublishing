@@ -338,7 +338,7 @@ function initPrompt() {
       goTo('privacy-safety');
     },
     beta() {
-      say('*** The beta section is just below — request an invite');
+      say('*** Now accepting testers — the TestFlight link is below');
       closeOut();
       goTo('beta');
     },
