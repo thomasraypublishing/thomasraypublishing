@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <title>Trade RC — Talk first. Match later.</title>
+    <meta name="description" content="Trade RC is a dating and chat-room app for gay and queer adults, 18+. IRC-style chat rooms, daily matches with reasons, and on-device icebreakers. iOS and macOS, from Thomas Ray Publishing.">
+    <meta name="theme-color" content="#1F0A28">
+    <link rel="canonical" href="https://thomasraypublishing.com/trade-rc/">
+    <link rel="icon" type="image/png" href="images/icon.png">
+    <link rel="apple-touch-icon" href="images/icon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Trade RC">
+    <meta property="og:title" content="Trade RC — Talk first. Match later.">
+    <meta property="og:description" content="A dating and chat-room app for gay and queer adults, 18+. IRC-style rooms, daily matches, on-device icebreakers. iOS and macOS.">
+    <meta property="og:url" content="https://thomasraypublishing.com/trade-rc/">
+    <meta property="og:image" content="https://thomasraypublishing.com/trade-rc/images/og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preload" href="../assets/fonts/jetbrains-mono-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../assets/fonts/jetbrains-mono-normal-500.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="../assets/fonts/fonts.css">
+    <link rel="stylesheet" href="trade-rc.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Trade RC",
+      "operatingSystem": "iOS, macOS",
+      "applicationCategory": "SocialNetworkingApplication",
+      "contentRating": "Mature 17+",
+      "description": "A dating and chat-room app for gay and queer adults that pulls IRC's text-first culture into a modern social product.",
+      "url": "https://thomasraypublishing.com/trade-rc/",
+      "publisher": { "@id": "https://thomasraypublishing.com/#org" }
+    }
+    </script>
+</head>
+<body>
+
+<a class="skip-link" href="#motd-h">Skip to content</a>
+
+<header class="mast">
+    <a class="mark" href="#motd-h" aria-label="Trade RC home">
+        <img src="images/icon.png" alt="" width="28" height="28">
+        <span>Trade RC</span>
+    </a>
+    <span class="mast-chan" aria-hidden="true">#trade-rc</span>
+    <span class="mast-cta"><a class="btn btn-ghost" href="#beta">Join the beta</a></span>
+</header>
+
+<main class="log" id="top">
+
+    <!-- ================= MOTD / hero ================= -->
+    <section class="motd" aria-labelledby="motd-h">
+        <p class="srv"><span class="sig" aria-hidden="true">***</span> Connected to Trade RC — a dating &amp; chat app for gay and queer adults. 18+.</p>
+        <h1 id="motd-h"><span class="h-acid">Talk first.</span><br>Match later.<span class="cursor" aria-hidden="true"></span></h1>
+        <p class="lede">
+            IRC-style chat rooms meet a modern dating app. Join a room, talk before
+            anyone swipes, match when it's actually mutual.
+        </p>
+        <div class="cta-row">
+            <a class="btn btn-acid" href="#beta">Join the TestFlight beta</a>
+            <a href="#chat-rooms">See what's inside &darr;</a>
+        </div>
+        <p class="microline">iOS &amp; macOS &middot; Free &middot; Plus and Premium optional</p>
+    </section>
+
+    <div class="dither" aria-hidden="true"></div>
+
+    <!-- ================= #chat-rooms ================= -->
+    <section id="chat-rooms" aria-labelledby="rooms-h">
+        <div class="topic" data-reveal>
+            <span class="srv"><span class="sig" aria-hidden="true">***</span> ChanServ changed the topic of <span class="chan">#chat-rooms</span> to: talk is the whole point</span>
+            <h2 id="rooms-h">Rooms with real <em>IRC</em> bones.</h2>
+        </div>
+        <p class="blurb" data-reveal>
+            Topic channels with sigils you can read at a glance — <span class="chan">#room</span> names,
+            <span class="mono">+voice</span>, <span class="mono">@op</span>. The old commands still work.
+            Lurk first, jump in when you're ready — your call.
+        </p>
+        <div class="xchg pane" data-reveal id="rooms-demo">
+            <div class="pane-bar"><span class="chan">#first-dates</span> &middot; 342 users &middot; modes: +nt</div>
+            <div class="pane-body" data-typer>
+                <p class="ln"><span class="ts">[21:04]</span> <span class="nick n-sage">&lt;marco&gt;</span> ok but a museum is a strong first date</p>
+                <p class="ln"><span class="ts">[21:04]</span> <span class="nick n-acid">&lt;jesse&gt;</span> counterpoint: aquarium. the fish do the small talk</p>
+                <p class="ln ln-srv">*** dyl4n has joined #first-dates</p>
+                <p class="ln"><span class="ts">[21:05]</span> <span class="nick n-sage">&lt;dyl4n&gt;</span> lurking, continue</p>
+                <p class="ln"><span class="ts">[21:05]</span> <span class="nick n-sage">&lt;marco&gt;</span> jesse this is why we matched</p>
+            </div>
+        </div>
+        <div class="cmd-row" data-reveal aria-label="Slash commands that work in Trade RC">
+            <span class="kbd">/me</span>
+            <span class="kbd">/msg</span>
+            <span class="kbd">/topic</span>
+            <span class="kbd">/ignore</span>
+            <span class="kbd">/slap</span>
+            <span class="kbd">/help</span>
+        </div>
+        <p class="blurb" data-reveal>
+            Free accounts create rooms too. Plus and Premium raise how many you can
+            run, and unlock channel modes Free doesn't get.
+        </p>
+    </section>
+
+    <div class="dither" aria-hidden="true"></div>
+
+    <!-- ================= #daily-matches ================= -->
+    <section id="daily-matches" aria-labelledby="matches-h">
+        <div class="topic" data-reveal>
+            <span class="srv"><span class="sig" aria-hidden="true">***</span> ChanServ changed the topic of <span class="chan">#daily-matches</span> to: a short list, not a slot machine</span>
+            <h2 id="matches-h">A handful a day, with <em>reasons</em>.</h2>
+        </div>
+        <p class="blurb" data-reveal>
+            Every day Trade RC surfaces a few compatibility matches with a clear
+            breakdown of why you fit. Icebreakers are generated on-device with
+            Apple's Foundation Models — <strong>your match data never leaves your
+            phone for AI suggestions</strong>.
+        </p>
+        <div class="vig" id="match-scene">
+            <p class="ln ln-srv" data-reveal>*** Daily matches have arrived</p>
+            <div class="match-card" data-reveal aria-label="Example of a daily match card">
+                <p class="mc-head">DAILY MATCH &middot; TODAY'S LIST</p>
+                <p class="mc-name">sam_from_oakland <span class="pct">&middot; 92% fit</span></p>
+                <ul>
+                    <li>You both said talk-first dating</li>
+                    <li>Night-shift schedules line up</li>
+                    <li>Two shared rooms: <span class="chan">#books</span>, <span class="chan">#gym-rats</span></li>
+                </ul>
+            </div>
+            <p class="ln" data-reveal><span class="ts">[09:02]</span> <span class="nick n-acid">&lt;you&gt;</span> okay, that's a good reason list</p>
+        </div>
+    </section>
+
+    <div class="dither" aria-hidden="true"></div>
+
+    <!-- ================= #profiles ================= -->
+    <section id="profiles" aria-labelledby="profiles-h">
+        <div class="topic" data-reveal>
+            <span class="srv"><span class="sig" aria-hidden="true">***</span> ChanServ changed the topic of <span class="chan">#profiles</span> to: sound like yourself</span>
+            <h2 id="profiles-h">Profiles that <em>talk</em> back.</h2>
+        </div>
+        <p class="blurb" data-reveal>
+            Photos, prompts, a short bio, a looking-for tag — plus an optional voice
+            prompt with on-device transcription, and birth-data fields if
+            compatibility readings are your thing.
+        </p>
+        <figure class="portrait" data-reveal>
+            <div class="frame">
+                <img id="portrait-img" src="images/portrait-dither.webp" width="800" height="729"
+                     alt="Pixel-art portrait of a bearded man in aviator sunglasses, rendered in 1-bit dither and dissolving into scattered pixels at the shoulders">
+            </div>
+            <figcaption class="mono">profile.render &mdash; 1-bit dither &middot; 800&times;729</figcaption>
+        </figure>
+
+        <div class="query-scene" id="query-scene">
+            <p class="ln ln-srv" data-reveal>*** You have opened a query with sam_from_oakland</p>
+            <div class="query-split" data-reveal>
+                <div class="pane q-chan" aria-label="The chat room, continuing">
+                    <div class="pane-bar"><span class="chan">#books</span> &middot; 57 users</div>
+                    <div class="pane-body">
+                        <p class="ln"><span class="ts">[21:11]</span> <span class="nick n-sage">&lt;ren&gt;</span> chapter 12 broke me, no spoilers</p>
+                        <p class="ln"><span class="ts">[21:11]</span> <span class="nick n-sage">&lt;theo&gt;</span> spoilers: everyone in this room cried</p>
+                        <p class="ln ln-me">* marco quietly re-shelves his heart</p>
+                    </div>
+                </div>
+                <div class="pane q-dm" aria-label="The direct query, one on one">
+                    <div class="pane-bar">query: sam_from_oakland</div>
+                    <div class="pane-body">
+                        <p class="ln"><span class="ts">[21:12]</span> <span class="nick n-acid">&lt;you&gt;</span> escaping the room chaos. hi</p>
+                        <p class="ln"><span class="ts">[21:12]</span> <span class="nick n-sage">&lt;sam&gt;</span> hi. so. museum or aquarium</p>
+                    </div>
+                </div>
+            </div>
+            <p class="blurb" data-reveal>
+                Move a conversation out of the room and into a query — a direct
+                line, one on one. Plus and Premium get faster DM rate limits than Free.
+            </p>
+        </div>
+    </section>
+
+    <!-- ================= privacy & safety (full-bleed midnight) ================= -->
+    <div class="band-wrap" id="privacy-safety">
+        <section class="band" aria-labelledby="privacy-h">
+            <div class="topic" data-reveal>
+                <span class="srv"><span class="sig" aria-hidden="true">***</span> MOTD — the rules of the server</span>
+                <h2 id="privacy-h">Private by <em>architecture</em>.</h2>
+            </div>
+            <div class="modes">
+                <div class="mode-list" data-reveal>
+                    <p class="mode-label">/mode +privacy</p>
+                    <ul>
+                        <li>Coarse location only — rounded to a geohash cell before it leaves your device</li>
+                        <li>Sign in with Apple as the primary login; your Apple ID stays private</li>
+                        <li>Analytics are anonymous, and there's an off switch in Settings</li>
+                        <li>Photos are screened on-device with SafetyKit before they reach our servers</li>
+                    </ul>
+                </div>
+                <div class="mode-list" data-reveal>
+                    <p class="mode-label">/mode +safety</p>
+                    <ul>
+                        <li>Block, report, and mute on every profile and message surface</li>
+                        <li>18+ self-attestation required at sign-up</li>
+                        <li>Server-side moderation review of every report</li>
+                    </ul>
+                </div>
+                <div class="mode-list" data-reveal>
+                    <p class="mode-label">/mode +a11y</p>
+                    <ul>
+                        <li>Full VoiceOver support</li>
+                        <li>Dynamic Type at every size, including AX1&ndash;AX5</li>
+                        <li>Reduce Motion, Increase Contrast, Bold Text</li>
+                        <li>Color-independent UI — we test every release against these settings</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= tiers ================= -->
+    <section id="tiers" aria-labelledby="tiers-h">
+        <div class="topic" data-reveal>
+            <span class="srv"><span class="sig" aria-hidden="true">***</span> ChanServ grants modes</span>
+            <h2 id="tiers-h">Free to talk. <em>Paid to run the room.</em></h2>
+        </div>
+        <div class="tiers">
+            <div class="tier t-free" data-reveal>
+                <p class="t-name">Free</p>
+                <p class="t-sub">THE WHOLE CONVERSATION</p>
+                <ul>
+                    <li>Join every room</li>
+                    <li>Daily matches, with reasons</li>
+                    <li>Create rooms of your own</li>
+                    <li>Full profiles, voice prompt included</li>
+                </ul>
+            </div>
+            <div class="tier t-plus" data-reveal>
+                <p class="t-name">Plus</p>
+                <p class="t-sub">MORE ROOM TO RUN</p>
+                <ul>
+                    <li>Everything in Free</li>
+                    <li>More rooms you can create</li>
+                    <li>Advanced channel modes</li>
+                    <li>Faster DM rate limits</li>
+                </ul>
+            </div>
+            <div class="tier t-prem" data-reveal>
+                <p class="t-name">Premium</p>
+                <p class="t-sub">KEYS TO THE SERVER</p>
+                <ul>
+                    <li>Everything in Plus</li>
+                    <li>Moderated and secret channel modes</li>
+                </ul>
+                <div class="t-modes" aria-hidden="true">
+                    <span class="kbd">+m</span>
+                    <span class="kbd">+s</span>
+                </div>
+            </div>
+        </div>
+        <p class="tiers-note" data-reveal>
+            Weekly, monthly, quarterly, and annual. An optional 7-day free trial on the
+            monthly, quarterly, and annual products for eligible new subscribers.
+            Verify your profile with a one-time selfie check on any tier.
+        </p>
+    </section>
+
+    <div class="dither" aria-hidden="true"></div>
+
+    <!-- ================= beta ================= -->
+    <section class="beta" id="beta" aria-labelledby="beta-h">
+        <span class="srv"><span class="sig" aria-hidden="true">***</span> Now accepting beta testers</span>
+        <h2 id="beta-h">Start the conversation.</h2>
+        <a class="btn btn-acid" href="mailto:thomasraypublishing@gmail.com?subject=Trade%20RC%20TestFlight%20Invite">Request a beta invite</a>
+        <p class="beta-note">
+            Trade RC is in TestFlight beta on iOS and macOS. The public invite link
+            isn't live yet — request an invite and we'll send it the moment it opens.
+        </p>
+        <p class="microline">18+ &middot; iOS &amp; macOS</p>
+    </section>
+
+</main>
+
+<!-- ================= footer ================= -->
+<footer class="foot">
+    <div class="foot-inner">
+        <pre class="ascii" aria-hidden="true">
+ _    ____    ____
+| |_ |  _ \  / ___|
+| __|| |_) || |
+| |_ |  _ &lt; | |___
+ \__||_| \_\ \____|</pre>
+        <span class="visually-hidden">Trade RC</span>
+        <div class="whois">
+            <div><span aria-hidden="true">***</span> whois traderc</div>
+            <div><span aria-hidden="true">***</span> registered to <a href="../">Thomas Ray Publishing LLC</a></div>
+        </div>
+        <div class="foot-links">
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="support.html">Support</a>
+            <a href="mailto:thomasraypublishing@gmail.com">Contact</a>
+        </div>
+        <p class="foot-fine">&copy; 2026 Thomas Ray Publishing LLC &middot; Trade RC is for adults 18 and over. RC stands for Relay Chat.</p>
+    </div>
+</footer>
+
+<!-- ================= the prompt (JS reveals) ================= -->
+<div class="promptbar" id="promptbar" hidden>
+    <div class="prompt-out" id="prompt-out" hidden>
+        <div class="prompt-out-inner" id="prompt-log" role="log" aria-live="polite"></div>
+    </div>
+    <form id="prompt-form">
+        <label class="p-label" for="prompt-input"><span aria-hidden="true">[#trade-rc] &gt;</span><span class="visually-hidden">Try a slash command, like /help</span></label>
+        <input id="prompt-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="try /help" maxlength="64">
+    </form>
+</div>
+
+<script defer src="../assets/vendor/gsap.min.js"></script>
+<script defer src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script type="module" src="trade-rc.js"></script>
+</body>
+</html>
