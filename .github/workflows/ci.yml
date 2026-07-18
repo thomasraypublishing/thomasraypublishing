@@ -84,14 +84,22 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Serve site
         run: |
           python3 -m http.server 8080 --bind 127.0.0.1 &
           for i in $(seq 1 20); do curl -sf http://127.0.0.1:8080/index.html >/dev/null && break; sleep 0.5; done
-      - name: Run axe-core (Chrome is preinstalled on ubuntu-latest)
+      - name: Install matched Chrome for Testing + ChromeDriver
+        # The runner's system Chrome and npx-fetched chromedriver drift apart
+        # (first run failed on 150 vs 151). browser-driver-manager installs a
+        # version-synced pair and writes their paths to ~/.browser-driver-manager/.env
+        run: npx --yes browser-driver-manager install chrome
+      - name: Run axe-core
         run: |
+          source ~/.browser-driver-manager/.env
           npx @axe-core/cli \
+            --chrome-path "$CHROME_TEST_PATH" \
+            --chromedriver-path "$CHROMEDRIVER_TEST_PATH" \
             http://127.0.0.1:8080/index.html \
             http://127.0.0.1:8080/support.html \
             http://127.0.0.1:8080/privacy.html \
