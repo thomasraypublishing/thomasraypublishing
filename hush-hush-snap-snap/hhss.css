@@ -436,3 +436,68 @@ h1 em, h2 em { font-style: normal; color: var(--hh-pink-tx); }
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ---------- Motion tokens + cross-document view transition ----------
+   The page hero receives the shared morph name; the home page assigns
+   the same name to the clicked card at activation time. Opt-in exists
+   only when motion is allowed; suppression is the second guard. */
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 220ms;
+  --motion-emphasis: 360ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .dot-field { view-transition-name: hero-work; }
+  ::view-transition-old(hero-work),
+  ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
+
+/* ---------- the frame counter — quiet section stepping ---------- */
+html { scroll-padding-bottom: 72px; }
+.frame-counter {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+  z-index: 60;
+  display: flex; align-items: center; gap: 2px;
+  background: var(--hh-card);
+  border: 1.5px solid var(--hh-rule); border-radius: 999px;
+  padding: 2px 6px;
+  box-shadow: 0 10px 30px rgba(28, 26, 25, 0.10);
+}
+.frame-counter button {
+  font: inherit; font-size: 20px; line-height: 1;
+  color: var(--hh-ink); background: none; border: none; cursor: pointer;
+  min-width: 44px; min-height: 44px; border-radius: 999px;
+  -webkit-appearance: none; appearance: none;
+}
+.frame-counter button:hover { background: var(--hh-paper-2); }
+.frame-counter .fc-label {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.06em; color: var(--hh-ink-2);
+  padding: 0 6px; white-space: nowrap;
+}
+/* ---------- Forced colors (Windows High Contrast) ----------
+   .frame-counter is a borderless pill (pre-existing rule, kept as is).
+   .btn, .store-badge, and .skip-link are also filled, borderless CTAs —
+   once forced-colors neutralizes their background fill they need a
+   border to keep a visible boundary. The cue switches are a borderless
+   track whose checked state is background-color only (the thumb's
+   translateX position also differentiates on/off, but add a boundary
+   plus a SelectedItem fill so the track itself reads without color too). */
+@media (forced-colors: active) {
+  .frame-counter { border: 1px solid ButtonText; }
+  .btn, .store-badge, .skip-link { border: 1px solid ButtonText; }
+  .cue-row .switch { border: 1px solid ButtonText; }
+  .cue-row .switch[aria-checked="true"] { background: SelectedItem; }
+  .cue-row .switch[aria-checked="true"]::after { background: SelectedItemText; }
+}

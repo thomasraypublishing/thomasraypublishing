@@ -125,7 +125,7 @@
                 </div>
                 <span class="visually-hidden" id="demo-status" role="status"></span>
             </div>
-            <div class="caught" id="caught" aria-label="Photos captured by the demo"></div>
+            <div class="caught" id="caught" role="group" aria-label="Photos captured by the demo"></div>
             <p class="law-note" data-reveal>
                 Silent everywhere the law allows: in Japan and Korea the system
                 shutter sound is required, so Hush Hush plays it — and the audio cue
@@ -319,5 +319,16 @@
 <script defer src="../assets/vendor/gsap.min.js"></script>
 <script defer src="../assets/vendor/ScrollTrigger.min.js"></script>
 <script type="module" src="hhss.js"></script>
+
+<nav class="frame-counter" id="frame-counter" aria-label="Page sections" hidden>
+    <button type="button" id="frame-prev" aria-label="Previous section">&lsaquo;</button>
+    <span class="fc-label" id="frame-label">frame 01 / 07</span>
+    <button type="button" id="frame-next" aria-label="Next section">&rsaquo;</button>
+    <span class="visually-hidden" id="frame-status" role="status"></span>
+</nav>
+
+<script type="speculationrules">
+{ "prefetch": [ { "urls": ["../"] } ] }
+</script>
 </body>
 </html>

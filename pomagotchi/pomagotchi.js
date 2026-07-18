@@ -249,3 +249,49 @@ function initReveals() {
 initTimeOfDay();
 initPom();
 initReveals();
+
+
+/* ========================================================================
+   The bookmark — chapter ribbon. Scrolling untouched; links are native
+   anchors. Hidden without JS.
+   ======================================================================== */
+
+function initBookmark() {
+  const nav = document.getElementById('bookmark');
+  const fill = document.getElementById('bm-fill');
+  if (!nav) return;
+  const links = Array.from(nav.querySelectorAll('a'));
+  const sections = links
+    .map((a) => ({ a, el: document.querySelector(a.getAttribute('href')) }))
+    .filter((x) => x.el);
+  if (sections.length < 2) return;
+
+  nav.hidden = false;
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        sections.forEach((x) => {
+          const on = x.el === entry.target;
+          if (on) x.a.setAttribute('aria-current', 'true');
+          else x.a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-35% 0px -55% 0px' });
+    sections.forEach((x) => io.observe(x.el));
+  }
+
+  let raf = null;
+  window.addEventListener('scroll', () => {
+    if (raf || !fill) return;
+    raf = requestAnimationFrame(() => {
+      raf = null;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? (window.scrollY / max) * 100 : 0;
+      nav.style.setProperty('--bm-progress', p.toFixed(1) + '%');
+    });
+  }, { passive: true });
+}
+
+initBookmark();

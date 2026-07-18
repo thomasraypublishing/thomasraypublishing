@@ -387,7 +387,7 @@ footer {
 .foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
 @media (max-width: 820px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
 .foot-brand .serif-big { font-family: 'Newsreader', serif; font-size: 1.75rem; letter-spacing: -0.02em; line-height: 1.05; margin-top: 12px; max-width: 18ch; }
-.foot-col h5 { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; font-weight: 500; }
+.foot-col h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; font-weight: 500; }
 .foot-col a { display: block; padding: 5px 0; font-size: 0.875rem; color: var(--ink-2); }
 .foot-col a:hover { color: var(--ink); }
 .foot-bottom { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-3); flex-wrap: wrap; gap: 8px; }
@@ -444,7 +444,7 @@ footer {
     padding: 24px 28px; margin: 32px 0;
     text-align: center;
 }
-.prose .card-callout h3 {
+.prose .card-callout h2 {
     font-family: 'Newsreader', serif; font-weight: 400; font-size: 1.375rem;
     line-height: 1.2; margin: 0 0 8px;
 }
@@ -478,7 +478,7 @@ footer {
 :root { --chapter-accent: #C75A2B; }
 [data-theme="cosmic"] { --chapter-accent: #F5B07A; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; } /* nav.top height (64px) + 8px, matches nav.js's anchor offset */
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* Atmosphere canvas sits exactly where .atmo does */
@@ -718,6 +718,57 @@ nav.top { z-index: 70; }
 }
 
 /* ========================================
+   Coming next — home hero line + coming-soon.html cards
+   ======================================== */
+.coming-line {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem; letter-spacing: 0.04em;
+    color: var(--ink-3); text-decoration: none;
+    min-height: 44px;
+}
+.coming-line:hover { color: var(--chapter-accent, var(--ginger)); }
+.coming-line .arrow { transition: transform var(--motion-fast, 120ms) ease; }
+.coming-line:hover .arrow { transform: translateX(3px); }
+.prose .coming-card {
+    border: 1px solid var(--rule); border-radius: 14px;
+    padding: 22px 24px; margin: 22px 0;
+    background: var(--paper-2);
+}
+.prose .coming-card h2 { margin: 6px 0 8px; }
+.prose .coming-card p:last-child { margin-bottom: 0; }
+.prose .after-note { margin-top: 28px; color: var(--ink-3); text-transform: none; letter-spacing: 0.02em; }
+
+/* ========================================
+   Motion tokens + cross-document view transitions
+   Tokens zero out under Reduce Motion; the view-transition opt-in only
+   exists when motion is allowed, with animation suppression as a second
+   guard. The morph pair is named at click time (see inline script in
+   index.html) so exactly one element pairs per navigation.
+   ======================================== */
+:root {
+    --motion-fast: 120ms;
+    --motion-standard: 220ms;
+    --motion-emphasis: 360ms;
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --ease-emphasis: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+    :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+    ::view-transition-old(hero-work),
+    ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
+}
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ========================================
    App-card "visit page" links
    ======================================== */
 .app-card .card-more {
@@ -733,3 +784,31 @@ nav.top { z-index: 70; }
 }
 [data-theme="cosmic"] .app-card .card-more { color: var(--chapter-accent, var(--ginger)); }
 .app-card .card-more:hover { color: var(--ink); }
+
+/* ========================================
+   Forced colors (Windows High Contrast)
+   The App Store badge and the prose CTA button are filled, borderless
+   links — once forced-colors neutralizes their background fill they need
+   a border to keep a visible boundary. The chapter rail's current-chapter
+   indicator is color-only (unlike the Pomagotchi bookmark / Device star
+   chart dots, it has no scale/size differentiator) — add an underline
+   plus a SelectedItem rule so the active chapter reads without color.
+   ======================================== */
+@media (forced-colors: active) {
+    .app-store-badge, .prose .card-callout .btn { border: 1px solid ButtonText; }
+    #chapter-rail a.active { border-right: 2px solid SelectedItem; text-decoration: underline; }
+}
+
+
+/* ========================================
+   Blanket reduced-motion fallback (parity with the app pages):
+   catches every small hover/press transition no dedicated rule covers.
+   GSAP effects are gated separately in JS.
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

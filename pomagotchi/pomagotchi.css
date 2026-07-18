@@ -531,3 +531,90 @@ body[data-tod="night"] .store-badge { background: #F2E8F5; color: #241A2E; }
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ---------- Motion tokens + cross-document view transition ----------
+   The page hero receives the shared morph name; the home page assigns
+   the same name to the clicked card at activation time. Opt-in exists
+   only when motion is allowed; suppression is the second guard. */
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 220ms;
+  --motion-emphasis: 360ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .stage-view { view-transition-name: hero-work; }
+  ::view-transition-old(hero-work),
+  ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
+
+/* ---------- the bookmark — a paper ribbon of the day's chapters ---------- */
+.bookmark {
+  position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+  z-index: 60;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 8px;
+  background: var(--pg-card);
+  border: 1.5px solid var(--pg-rule); border-radius: 999px;
+  transition: background 1.2s ease;
+}
+.bookmark .bm-track {
+  position: absolute; left: 50%; top: 14px; bottom: 14px;
+  width: 2px; transform: translateX(-50%);
+  background: var(--pg-rule); border-radius: 2px;
+}
+.bookmark .bm-fill {
+  display: block; width: 100%; height: var(--bm-progress, 0%);
+  background: var(--pg-tx-accent); border-radius: 2px;
+  transition: height 0.25s ease;
+}
+.bookmark a {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  text-decoration: none; border-radius: 50%;
+}
+.bookmark .paw {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--pg-rose);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.bookmark a:hover .paw { transform: scale(1.35); }
+.bookmark a[aria-current="true"] .paw { background: var(--pg-tx-accent); transform: scale(1.35); }
+.bookmark .bm-label {
+  position: absolute; right: 52px; top: 50%; transform: translateY(-50%);
+  font-family: var(--fredoka); font-weight: 500; font-size: 0.8125rem;
+  color: var(--pg-ink); background: var(--pg-card);
+  border: 1px solid var(--pg-rule); border-radius: 999px;
+  padding: 4px 12px; white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.bookmark a:hover .bm-label,
+.bookmark a:focus-visible .bm-label,
+.bookmark a[aria-current="true"] .bm-label { opacity: 1; }
+@media (max-width: 880px) { .bookmark { display: none; } }
+
+/* ---------- Forced colors (Windows High Contrast) ----------
+   .bookmark .paw is a borderless filled dot (pre-existing rule, kept as
+   is). .btn, .store-badge, and .skip-link are also filled, borderless
+   CTAs — once forced-colors neutralizes their background fill they need
+   a border to keep a visible boundary. The time-of-day dial and coat
+   picker signal their pressed state with background/border color alone;
+   add a SelectedItem-based indicator so the state reads without color. */
+@media (forced-colors: active) {
+  .bookmark .paw { border: 1px solid ButtonText; }
+  .btn, .store-badge, .skip-link { border: 1px solid ButtonText; }
+  .tod-dial button[aria-pressed="true"] { background: SelectedItem; color: SelectedItemText; }
+  .coat-row .coat[aria-pressed="true"] { outline: 2px solid SelectedItem; outline-offset: 2px; }
+}

@@ -653,3 +653,40 @@ body.trc-calm { font-size: 1rem; }
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ---------- Motion tokens + cross-document view transition ----------
+   The page hero receives the shared morph name; the home page assigns
+   the same name to the clicked card at activation time. Opt-in exists
+   only when motion is allowed; suppression is the second guard. */
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 220ms;
+  --motion-emphasis: 360ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .mast { view-transition-name: hero-work; }
+  ::view-transition-old(hero-work),
+  ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
+
+/* ---------- Forced colors (Windows High Contrast) ----------
+   .btn-acid and .skip-link are filled, borderless CTAs — once forced-colors
+   neutralizes their background fill they need a border to keep a visible
+   boundary. Trade RC has no pill/toggle control with a color-only pressed
+   or selected state (audited: no aria-pressed/aria-checked/aria-selected
+   controls exist on this page), so no state-only fix is needed here. */
+@media (forced-colors: active) {
+  .btn-acid { border: 1px solid ButtonText; }
+  .skip-link { border: 1px solid ButtonText; }
+}

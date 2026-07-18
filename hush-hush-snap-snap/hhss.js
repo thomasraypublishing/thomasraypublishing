@@ -149,3 +149,78 @@ function initReveals() {
 
 initDemo();
 initReveals();
+
+
+/* ========================================================================
+   Frame counter — the page as a contact sheet. Optional enhancement:
+   scrolling is untouched; Left/Right arrows and the pill buttons step
+   between sections. Hidden entirely without JS.
+   ======================================================================== */
+
+function initFrameCounter() {
+  var bar = document.getElementById('frame-counter');
+  var label = document.getElementById('frame-label');
+  var status = document.getElementById('frame-status');
+  var prev = document.getElementById('frame-prev');
+  var next = document.getElementById('frame-next');
+  if (!bar || !label) { return; }
+
+  var frames = [
+    { id: 'hero-h', name: 'Top' },
+    { id: 'demo-section', name: 'The timer' },
+    { id: 'environments', name: 'Environments' },
+    { id: 'triggers', name: 'Triggers' },
+    { id: 'access', name: 'Accessibility' },
+    { id: 'deep-cuts', name: 'Deep cuts' },
+    { id: 'pro', name: 'Free and Pro' }
+  ].map(function (f) { return { el: document.getElementById(f.id), name: f.name }; })
+   .filter(function (f) { return f.el; });
+  if (frames.length < 2) { return; }
+
+  bar.hidden = false;
+  var current = 0;
+
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var render = function () {
+    label.textContent = 'frame ' + pad(current + 1) + ' / ' + pad(frames.length);
+  };
+
+  var step = function (dir) {
+    var target = Math.min(frames.length - 1, Math.max(0, current + dir));
+    if (target === current) { return; }
+    current = target;
+    frames[current].el.scrollIntoView({ behavior: staticMode ? 'auto' : 'smooth', block: 'start' });
+    render();
+    if (status) {
+      status.textContent = 'Frame ' + (current + 1) + ' of ' + frames.length + ': ' + frames[current].name;
+    }
+  };
+
+  prev.addEventListener('click', function () { step(-1); });
+  next.addEventListener('click', function () { step(1); });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') { return; }
+    if (event.metaKey || event.ctrlKey || event.altKey) { return; }
+    var active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT' || active.getAttribute('role') === 'switch' || active.isContentEditable)) { return; }
+    event.preventDefault();
+    step(event.key === 'ArrowRight' ? 1 : -1);
+  });
+
+  // Scrollspy keeps the counter honest; silent on scroll (no announcements).
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        var idx = frames.findIndex(function (f) { return f.el === entry.target; });
+        if (idx !== -1) { current = idx; render(); }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    frames.forEach(function (f) { io.observe(f.el); });
+  }
+
+  render();
+}
+
+initFrameCounter();

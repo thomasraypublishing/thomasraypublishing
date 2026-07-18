@@ -275,8 +275,12 @@
             <span class="cur" aria-hidden="true"></span>
             <span class="arrow" aria-hidden="true">&rarr;</span>
         </a>
+
+        <a class="coming-line" href="coming-soon.html">Coming next: Aunt Martha's Ant Farm &amp; Nanometer <span class="arrow" aria-hidden="true">&rarr;</span></a>
     </div>
 </header>
+
+<main id="main">
 
 <section class="chapter" id="apps">
     <div class="wrap">
@@ -511,11 +515,11 @@
 
         <div class="about-grid">
             <div class="about-text">
-                <p class="big-quote">
+                <blockquote class="big-quote">
                     We make <span class="mark">curious little things</span>
                     &mdash; books, art volumes, and apps that feel like they arrived
                     from a nearby, fluffier universe.
-                </p>
+                </blockquote>
                 <p>
                     Thomas Ray Publishing LLC is an independent publisher bringing creative
                     stories, art, and digital experiences to life. From illustrated
@@ -548,6 +552,8 @@
     </div>
 </section>
 
+
+</main>
 <footer id="contact" data-world="editorial">
     <div class="wrap">
         <div class="foot-grid">
@@ -559,21 +565,21 @@
                 <div class="serif-big">Stories, art &amp; digital companions.</div>
             </div>
             <div class="foot-col">
-                <h5>Catalog</h5>
+                <h3>Catalog</h3>
                 <a href="#apps">Apps</a>
                 <a href="#books">Books</a>
                 <a href="#stickers">Stickers</a>
                 <a href="#about">About</a>
             </div>
             <div class="foot-col">
-                <h5>Legal</h5>
+                <h3>Legal</h3>
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms of Use</a>
                 <a href="accessibility.html">Accessibility</a>
                 <a href="support.html">App Support</a>
             </div>
             <div class="foot-col">
-                <h5>Contact</h5>
+                <h3>Contact</h3>
                 <a href="mailto:thomasraypublishing@gmail.com">thomasraypublishing@gmail.com</a>
             </div>
         </div>
@@ -595,6 +601,25 @@
     </div>
 </footer>
 
+<script type="speculationrules">
+{ "prerender": [ { "urls": ["pomagotchi/", "thedevice/", "hush-hush-snap-snap/", "trade-rc/"], "eagerness": "moderate" } ] }
+</script>
+<script>
+// Name the morph pair at activation time so exactly one element carries
+// view-transition-name per navigation (keyboard Enter fires click too).
+(function () {
+    'use strict';
+    ['.spec-pom', '.spec-dev', '.spec-hhss', '.irc-line'].forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (!el) { return; }
+        el.addEventListener('click', function (e) {
+            if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
+            var target = el.querySelector('.stage') || el;
+            target.style.viewTransitionName = 'hero-work';
+        });
+    });
+})();
+</script>
 <script defer src="assets/vendor/gsap.min.js"></script>
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/SplitText.min.js"></script>
@@ -602,3 +627,5 @@
 <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
+
+

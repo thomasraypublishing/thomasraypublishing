@@ -288,6 +288,17 @@
         <p class="microline">18+ &middot; iOS &amp; macOS</p>
     </section>
 
+<!-- ================= the prompt (JS reveals) ================= -->
+<div class="promptbar" id="promptbar" hidden>
+    <div class="prompt-out" id="prompt-out" hidden>
+        <div class="prompt-out-inner" id="prompt-log" role="log" aria-live="polite"></div>
+    </div>
+    <form id="prompt-form">
+        <label class="p-label" for="prompt-input"><span aria-hidden="true">[#trade-rc] &gt;</span><span class="visually-hidden">Try a slash command, like /help</span></label>
+        <input id="prompt-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="try /help" maxlength="64">
+    </form>
+</div>
+
 </main>
 
 <!-- ================= footer ================= -->
@@ -314,19 +325,13 @@
     </div>
 </footer>
 
-<!-- ================= the prompt (JS reveals) ================= -->
-<div class="promptbar" id="promptbar" hidden>
-    <div class="prompt-out" id="prompt-out" hidden>
-        <div class="prompt-out-inner" id="prompt-log" role="log" aria-live="polite"></div>
-    </div>
-    <form id="prompt-form">
-        <label class="p-label" for="prompt-input"><span aria-hidden="true">[#trade-rc] &gt;</span><span class="visually-hidden">Try a slash command, like /help</span></label>
-        <input id="prompt-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="try /help" maxlength="64">
-    </form>
-</div>
+
 
 <script defer src="../assets/vendor/gsap.min.js"></script>
 <script defer src="../assets/vendor/ScrollTrigger.min.js"></script>
 <script type="module" src="trade-rc.js"></script>
+<script type="speculationrules">
+{ "prefetch": [ { "urls": ["../"] } ] }
+</script>
 </body>
 </html>

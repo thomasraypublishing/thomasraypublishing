@@ -274,3 +274,37 @@ initStarfield();
 initRitual();
 initChallenge();
 initReveals();
+
+
+/* ========================================================================
+   The star chart — a constellation of sections. Native anchors; hidden
+   without JS; scrolling untouched.
+   ======================================================================== */
+
+function initStarChart() {
+  const nav = document.getElementById('starchart');
+  if (!nav) return;
+  const links = Array.from(nav.querySelectorAll('a'));
+  const sections = links
+    .map((a) => ({ a, el: document.querySelector(a.getAttribute('href')) }))
+    .filter((x) => x.el);
+  if (sections.length < 2) return;
+
+  nav.hidden = false;
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        sections.forEach((x) => {
+          const on = x.el === entry.target;
+          if (on) x.a.setAttribute('aria-current', 'true');
+          else x.a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-30% 0px -55% 0px' });
+    sections.forEach((x) => io.observe(x.el));
+  }
+}
+
+initStarChart();

@@ -502,3 +502,87 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ---------- Motion tokens + cross-document view transition ----------
+   The page hero receives the shared morph name; the home page assigns
+   the same name to the clicked card at activation time. Opt-in exists
+   only when motion is allowed; suppression is the second guard. */
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 220ms;
+  --motion-emphasis: 360ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .pyramid-btn { view-transition-name: hero-work; }
+  ::view-transition-old(hero-work),
+  ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
+
+/* ---------- the star chart — a constellation of sections ---------- */
+.starchart {
+  position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+  z-index: 60;
+  display: flex; flex-direction: column;
+}
+.starchart::before {
+  content: ""; position: absolute; left: 50%; top: 20px; bottom: 20px;
+  width: 1px; transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent, var(--dv-rule) 12%, var(--dv-rule) 88%, transparent);
+}
+.starchart a {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  text-decoration: none;
+}
+.starchart .star {
+  width: 8px; height: 8px; transform: rotate(45deg);
+  background: var(--dv-accent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.starchart a:hover .star { transform: rotate(45deg) scale(1.4); }
+.starchart a[aria-current="true"] .star {
+  background: var(--dv-lav);
+  transform: rotate(45deg) scale(1.5);
+  box-shadow: 0 0 14px var(--dv-glow);
+}
+.starchart .sc-label {
+  position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
+  font-family: var(--smono); font-size: 0.6875rem; letter-spacing: 0.08em;
+  color: var(--dv-ink-2); background: var(--dv-surface);
+  border: 1px solid var(--dv-rule); border-radius: 6px;
+  padding: 4px 10px; white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.starchart a:hover .sc-label,
+.starchart a:focus-visible .sc-label,
+.starchart a[aria-current="true"] .sc-label { opacity: 1; }
+@media (max-width: 880px) { .starchart { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .starchart .star, .starchart .sc-label { transition: none; }
+}
+/* ---------- Forced colors (Windows High Contrast) ----------
+   .starchart .star is a borderless filled shape (pre-existing rule, kept
+   as is). .btn, .store-badge, and .skip-link are also filled, borderless
+   CTAs — once forced-colors neutralizes their background fill they need
+   a border to keep a visible boundary. The memory-game bricks already
+   signal "lit" via scale + opacity (non-color, preserved under forced
+   colors) plus fixed position and an aria-label per stone, so they're
+   reviewed and left as-is rather than risking an outline that may not
+   render consistently on :disabled buttons across browsers. */
+@media (forced-colors: active) {
+  .starchart .star { border: 1px solid ButtonText; }
+  .btn, .store-badge, .skip-link { border: 1px solid ButtonText; }
+}

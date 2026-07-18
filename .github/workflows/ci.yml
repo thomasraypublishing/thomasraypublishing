@@ -77,3 +77,27 @@ jobs:
           for i in $(seq 1 20); do curl -sf http://127.0.0.1:8080/index.html >/dev/null && break; sleep 0.5; done
       - name: Run Lighthouse (warn-level budgets)
         run: lhci autorun
+
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Serve site
+        run: |
+          python3 -m http.server 8080 --bind 127.0.0.1 &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8080/index.html >/dev/null && break; sleep 0.5; done
+      - name: Run axe-core (Chrome is preinstalled on ubuntu-latest)
+        run: |
+          npx @axe-core/cli \
+            http://127.0.0.1:8080/index.html \
+            http://127.0.0.1:8080/support.html \
+            http://127.0.0.1:8080/privacy.html \
+            http://127.0.0.1:8080/coming-soon.html \
+            "http://127.0.0.1:8080/trade-rc/index.html?static=1" \
+            "http://127.0.0.1:8080/pomagotchi/index.html?static=1" \
+            "http://127.0.0.1:8080/thedevice/index.html?static=1" \
+            "http://127.0.0.1:8080/hush-hush-snap-snap/index.html?static=1" \
+            --exit
