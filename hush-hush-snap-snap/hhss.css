@@ -294,6 +294,18 @@ h1 em, h2 em { font-style: normal; color: var(--hh-pink-tx); }
   margin: 16px auto 0; display: block;
   max-width: 170px; border-radius: 14px;
 }
+.card .env-glyph {
+  width: 72px; height: 72px; object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* the hero product shot — white on white, grounded by a soft shadow */
+.hero-shot {
+  display: block; margin: 36px auto 0;
+  width: 100%; max-width: 720px;
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(28, 26, 25, 0.10);
+}
 
 /* deep cuts: cards beside a single tall phone shot */
 .deep-grid {

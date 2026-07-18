@@ -18,7 +18,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
    1. The countdown demo — three independent cues, exactly like the app.
    ======================================================================== */
 
-const POLAROIDS = ['p02', 'p04', 'p05', 'p07', 'p09', 'p11'];
+/* Real captures — shot by Sean, dropped into the demo's photo pool. */
+const POLAROIDS = ['capture-01', 'capture-02', 'capture-03'];
 
 function initDemo() {
   const demo = document.getElementById('demo');
@@ -109,7 +110,7 @@ function initDemo() {
       shot.className = 'shot';
       shot.style.setProperty('--tilt', ((Math.random() * 8) - 4).toFixed(1) + 'deg');
       const img = document.createElement('img');
-      img.src = '../images/photos/opt/' + name + '.webp';
+      img.src = 'images/' + name + '.webp';
       img.alt = 'A photo caught by the demo timer';
       img.width = 96; img.height = 96;
       shot.appendChild(img);

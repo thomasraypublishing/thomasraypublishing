@@ -462,6 +462,29 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   color: var(--dv-ink-2);
 }
 .foot .foot-credit { flex-basis: 100%; opacity: 0.8; }
+
+/* ---------- Sean's line-art glyphs: black-on-white sources become
+   luminous line work via invert + screen (black vanishes on any dark) */
+.glyph img, .eye-divider img {
+  filter: invert(1) brightness(1.02);
+  mix-blend-mode: screen;
+}
+.glyph img { width: 100%; height: 100%; object-fit: contain; opacity: 0.92; }
+.eye-divider {
+  display: flex; justify-content: center;
+  margin-top: clamp(48px, 8vw, 88px);
+  position: relative; z-index: 1;
+}
+.eye-divider img { width: 92px; height: 92px; opacity: 0.5; }
+
+/* the rendered pyramid beside the playable board */
+.challenge-render { margin: 30px auto 0; text-align: center; }
+.challenge-render img {
+  width: min(280px, 64%); height: auto;
+  -webkit-mask-image: radial-gradient(92% 88% at 50% 50%, #000 52%, transparent 74%);
+  mask-image: radial-gradient(92% 88% at 50% 50%, #000 52%, transparent 74%);
+}
+.challenge-render figcaption { margin-top: 4px; }
 .foot .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-left: auto; }
 
 /* ---------- Reduced motion ---------- */

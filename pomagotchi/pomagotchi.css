@@ -397,7 +397,8 @@ body[data-tod="evening"] .stage-view::before {
 .letter-scene { margin-top: 34px; perspective: 1200px; }
 .letter {
   max-width: 560px; margin: 0 auto;
-  background: #FFFCF5; color: #4A3A2E;
+  background: #FFFCF5 url(images/letter-paper.webp) center / cover;
+  color: #4A3A2E;
   border: 1.5px solid rgba(166, 89, 140, 0.25);
   border-radius: 6px;
   padding: clamp(24px, 5vw, 40px);
