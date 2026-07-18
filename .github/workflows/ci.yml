@@ -100,7 +100,7 @@ jobs:
           npx @axe-core/cli \
             --chrome-path "$CHROME_TEST_PATH" \
             --chromedriver-path "$CHROMEDRIVER_TEST_PATH" \
-            http://127.0.0.1:8080/index.html \
+            "http://127.0.0.1:8080/index.html?static=1" \
             http://127.0.0.1:8080/support.html \
             http://127.0.0.1:8080/privacy.html \
             http://127.0.0.1:8080/coming-soon.html \

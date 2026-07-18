@@ -78,6 +78,9 @@ export function initReveals() {
   const quote = document.querySelector('.about-text .big-quote');
   if (quote) {
     const words = new SplitText(quote, { type: 'words' });
+    // SplitText mirrors the text into aria-label, but naming is prohibited
+    // on blockquote's role — the split spans remain readable as-is.
+    quote.removeAttribute('aria-label');
     gsap.from(words.words, {
       scrollTrigger: { trigger: quote, start: 'top 78%' },
       autoAlpha: 0, y: 14, stagger: 0.03, duration: 0.6, ease: 'power2.out',

@@ -3,7 +3,7 @@
     "collect": {
       "numberOfRuns": 1,
       "url": [
-        "http://127.0.0.1:8080/index.html",
+        "http://127.0.0.1:8080/index.html?static=1",
         "http://127.0.0.1:8080/support.html",
         "http://127.0.0.1:8080/privacy.html",
         "http://127.0.0.1:8080/coming-soon.html",

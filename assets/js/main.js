@@ -14,7 +14,10 @@ import { initFortune } from './fortune.js';
 import { initCaptureSpecimen } from './specimen.js';
 import { initCameo } from './cameo.js';
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ?static=1 forces the settled page for CI (Lighthouse/axe) — the same
+// deterministic-render contract every app page carries.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  || new URLSearchParams(window.location.search).has('static');
 const finePointer = window.matchMedia('(pointer: fine)').matches;
 const mobile = window.matchMedia('(max-width: 820px)').matches || !finePointer;
 
