@@ -716,3 +716,20 @@ nav.top { z-index: 70; }
     .irc-line .cur { animation: none; }
     .irc-line .arrow { transition: none; }
 }
+
+/* ========================================
+   App-card "visit page" links
+   ======================================== */
+.app-card .card-more {
+    display: inline-block;
+    margin: 4px 0 14px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.8125rem;
+    letter-spacing: 0.03em;
+    color: #A8481F; /* light theme: darker than --ginger for small-text AA */
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+}
+[data-theme="cosmic"] .app-card .card-more { color: var(--chapter-accent, var(--ginger)); }
+.app-card .card-more:hover { color: var(--ink); }

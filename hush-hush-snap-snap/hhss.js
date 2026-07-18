@@ -1,0 +1,150 @@
+/* ========================================================================
+   hhss.js — enhancement layer for the Hush Hush Snap Snap page.
+   Contract: complete and readable with zero JavaScript; Reduce Motion or
+   ?static=1 gets the settled page. The countdown demo is user-initiated
+   and works in static mode without the flash.
+
+   The page itself never plays audio — by design. The audio cue toggle
+   describes what the app does; this page stays at 0 dB.
+   ======================================================================== */
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
+const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/* ========================================================================
+   1. The countdown demo — three independent cues, exactly like the app.
+   ======================================================================== */
+
+const POLAROIDS = ['p02', 'p04', 'p05', 'p07', 'p09', 'p11'];
+
+function initDemo() {
+  const demo = document.getElementById('demo');
+  if (!demo) return;
+
+  const switches = Array.from(demo.querySelectorAll('.switch'));
+  const startBtn = document.getElementById('demo-start');
+  const countEl = document.getElementById('demo-count');
+  const progressEl = document.getElementById('demo-progress');
+  const captionEl = document.getElementById('demo-caption');
+  const statusEl = document.getElementById('demo-status');
+  const caught = document.getElementById('caught');
+  const flash = document.getElementById('flash');
+  if (!startBtn || !countEl || !progressEl) return;
+
+  const cueState = { visual: true, audio: false, haptic: true };
+
+  switches.forEach((sw) => {
+    sw.addEventListener('click', () => {
+      const cue = sw.dataset.cue;
+      cueState[cue] = !cueState[cue];
+      sw.setAttribute('aria-checked', String(cueState[cue]));
+      if (cue === 'visual') countEl.classList.toggle('dark', !cueState.visual);
+      updateCaption('idle');
+    });
+  });
+
+  function updateCaption(mode) {
+    if (!captionEl) return;
+    if (mode === 'running') {
+      const bits = [];
+      if (cueState.audio) bits.push('the app would speak the count');
+      if (cueState.haptic) bits.push('your wrist would tap along');
+      if (!cueState.visual) bits.push('screen cues off — the room stays dark');
+      captionEl.textContent = bits.length ? bits.join(' · ') : 'every cue off — perfectly invisible';
+    } else {
+      captionEl.textContent = '';
+    }
+  }
+
+  let running = false;
+  let shots = 0;
+
+  startBtn.addEventListener('click', async () => {
+    if (running) return;
+    running = true;
+    startBtn.disabled = true;
+    updateCaption('running');
+    if (statusEl) statusEl.textContent = 'Timer started. Three seconds.';
+
+    const total = 3000;
+    const t0 = performance.now();
+    let raf = null;
+    const tick = () => {
+      const p = Math.min((performance.now() - t0) / total, 1);
+      progressEl.style.width = (p * 100).toFixed(1) + '%';
+      const remaining = Math.max(3 - Math.floor(p * 3), 1);
+      countEl.textContent = String(remaining);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+
+    if (staticMode) {
+      // No animation: step through the states instantly but legibly.
+      for (const n of [3, 2, 1]) {
+        countEl.textContent = String(n);
+        progressEl.style.width = ((4 - n) / 3 * 100).toFixed(0) + '%';
+        await wait(340);
+      }
+    } else {
+      countEl.textContent = '3';
+      raf = requestAnimationFrame(tick);
+      await wait(total);
+      if (raf) cancelAnimationFrame(raf);
+    }
+
+    progressEl.style.width = '100%';
+    countEl.textContent = '';
+
+    if (!staticMode && flash && cueState.visual) {
+      // The flash is a visual cue too — visual off means the room stays dark.
+      flash.classList.add('fire');
+      flash.addEventListener('animationend', () => flash.classList.remove('fire'), { once: true });
+    }
+
+    if (caught && shots < 3) {
+      const name = POLAROIDS[(shots + Math.floor(Math.random() * 2)) % POLAROIDS.length];
+      const shot = document.createElement('div');
+      shot.className = 'shot';
+      shot.style.setProperty('--tilt', ((Math.random() * 8) - 4).toFixed(1) + 'deg');
+      const img = document.createElement('img');
+      img.src = '../images/photos/opt/' + name + '.webp';
+      img.alt = 'A photo caught by the demo timer';
+      img.width = 96; img.height = 96;
+      shot.appendChild(img);
+      caught.appendChild(shot);
+      shots++;
+    }
+
+    if (statusEl) statusEl.textContent = 'Captured — silently. The photo joined the row below the demo.';
+    updateCaption('idle');
+    progressEl.style.width = '0%';
+    countEl.textContent = '3';
+    startBtn.disabled = false;
+    running = false;
+  });
+}
+
+/* ========================================================================
+   2. Scroll reveals — quiet fades only; this page never slides.
+   ======================================================================== */
+
+function initReveals() {
+  if (!hasGsap || staticMode) return;
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.utils.toArray('[data-reveal]').forEach((el) => {
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
+    gsap.set(el, { autoAlpha: 0 });
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 90%',
+      once: true,
+      onEnter: () => gsap.to(el, { autoAlpha: 1, duration: 0.9, ease: 'power1.out' })
+    });
+  });
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+}
+
+initDemo();
+initReveals();

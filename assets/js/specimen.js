@@ -46,6 +46,7 @@ export function initCaptureSpecimen({ motion }) {
   let count = 0;
 
   specimen.addEventListener('click', (e) => {
+    if (!e.target.closest('#hhss-stage')) return;
     e.preventDefault();
 
     // Leaf-shutter blink: a brief dim, never a flash. Silent cameras don't shout.

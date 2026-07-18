@@ -26,6 +26,7 @@ export function initFortune({ atmosphere, motion }) {
   let typing = null;
 
   specimen.addEventListener('click', (e) => {
+    if (!e.target.closest('#device-stage')) return;
     e.preventDefault();
 
     let idx;
