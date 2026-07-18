@@ -121,6 +121,36 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 
 main, header.mast, footer.foot { position: relative; z-index: 1; }
 
+/* ---------- The cosmos — real James Webb plates under the kinetic stars.
+   A deep-field base, a drifting nebula glow blended on top, and a plum
+   veil that keeps every text surface at its verified contrast. ---------- */
+.cosmos { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cosmos .webb-base {
+  position: absolute; inset: -4%; width: 108%; height: 108%;
+  object-fit: cover;
+  filter: brightness(0.5) saturate(0.85);
+  opacity: 0.55;
+}
+.cosmos .webb-glow {
+  position: absolute; inset: -12%; width: 124%; height: 124%;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  opacity: 0.15;
+  filter: saturate(1.15) brightness(0.85);
+  animation: webb-drift 140s ease-in-out infinite alternate;
+}
+@keyframes webb-drift {
+  from { transform: translate3d(-1.6%, -1%, 0) scale(1); }
+  to { transform: translate3d(1.6%, 1.2%, 0) scale(1.07); }
+}
+.cosmos::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(20, 10, 38, 0.62),
+    rgba(20, 10, 38, 0.72) 42%,
+    rgba(20, 10, 38, 0.88) 100%);
+}
+
 /* ---------- Type ---------- */
 
 h1, h2 {
@@ -218,9 +248,15 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   background: none; border: none; padding: 12px; cursor: pointer;
   border-radius: 16px;
 }
-.pyramid-btn svg { display: block; width: min(240px, 56vw); height: auto; }
+/* The pyramid is the app's own art (poster render of the 15 stones);
+   a radial mask feathers its dark plate into the page cosmos. */
+.pyramid-btn img.glass {
+  display: block; width: min(320px, 72vw); height: auto;
+  -webkit-mask-image: radial-gradient(96% 88% at 50% 52%, #000 46%, transparent 70%);
+  mask-image: radial-gradient(96% 88% at 50% 52%, #000 46%, transparent 70%);
+}
 .pyramid-btn .glass { transition: filter 0.4s ease; }
-.pyramid-btn:hover .glass { filter: drop-shadow(0 0 34px rgba(201, 181, 255, 0.65)); }
+.pyramid-btn:hover .glass { filter: drop-shadow(0 0 34px rgba(201, 181, 255, 0.65)) brightness(1.08); }
 .pyramid-btn.consulting .glass { animation: pyramid-pulse 1.1s ease; }
 @keyframes pyramid-pulse {
   0%, 100% { filter: drop-shadow(0 0 18px rgba(201, 181, 255, 0.4)); }
@@ -425,6 +461,7 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   font-family: var(--smono); font-size: 0.75rem; letter-spacing: 0.04em;
   color: var(--dv-ink-2);
 }
+.foot .foot-credit { flex-basis: 100%; opacity: 0.8; }
 .foot .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-left: auto; }
 
 /* ---------- Reduced motion ---------- */
@@ -433,6 +470,7 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   html { scroll-behavior: auto; }
   .starlayer { animation: none !important; }
   .pyramid-btn.consulting .glass { animation: none; }
+  .cosmos .webb-glow { animation: none; }
   .challenge-board.shake { animation: none; }
   .brick, .brick.lit { transition: none; transform: none; }
   *, *::before, *::after {

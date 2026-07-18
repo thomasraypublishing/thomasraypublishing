@@ -196,26 +196,86 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
 .stage-pom {
   position: relative;
   border-radius: 28px;
-  background: radial-gradient(120% 100% at 50% 0%, var(--pg-sky-b), var(--pg-bg2) 78%);
+  background: var(--pg-card);
   border: 1.5px solid var(--pg-rule);
-  padding: clamp(20px, 4vw, 36px);
-  overflow: hidden;
+  padding: clamp(14px, 2.6vw, 22px);
   touch-action: manipulation;
   transition: background 1.2s ease;
 }
-.stage-pom .pom-svg {
-  display: block; width: min(320px, 72%); margin: 0 auto;
-  cursor: grab;
+
+/* The yard — real backdrop art from the game, day/night cross-fade */
+.stage-view {
+  position: relative;
+  aspect-ratio: 500 / 272;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--pg-bg2);
 }
-.stage-pom .pom-svg:active { cursor: grabbing; }
+.stage-view .stage-bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  transition: opacity 1.2s ease;
+}
+.stage-view .bg-day { opacity: 1; }
+.stage-view .bg-night { opacity: 0; }
+body[data-tod="night"] .stage-view .bg-day { opacity: 0; }
+body[data-tod="night"] .stage-view .bg-night { opacity: 1; }
+/* dawn + dusk tints over the day art */
+.stage-view::before {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  opacity: 0; transition: opacity 1.2s ease;
+}
+body[data-tod="morning"] .stage-view::before {
+  background: linear-gradient(180deg, rgba(251, 228, 238, 0.42), rgba(251, 228, 238, 0.08) 55%);
+  opacity: 1;
+}
+body[data-tod="evening"] .stage-view::before {
+  background: linear-gradient(180deg, rgba(122, 62, 118, 0.38), rgba(228, 133, 92, 0.20) 60%, rgba(122, 62, 118, 0.16));
+  opacity: 1;
+}
+
+/* the wrapper owns centering; the img owns animation — they never conflict */
+.stage-view .pom-wrap {
+  position: absolute; left: 50%; bottom: 4%; z-index: 2;
+  width: min(46%, 220px);
+  transform: translateX(-50%);
+}
+.stage-view .pom-sprite {
+  display: block; width: 100%; height: auto;
+  cursor: grab;
+  filter: drop-shadow(0 10px 12px rgba(36, 26, 46, 0.35));
+  user-select: none; -webkit-user-drag: none;
+}
+.stage-view .pom-sprite:active { cursor: grabbing; }
+
 .stage-pom .stage-hint {
   text-align: center;
   font-family: var(--fredoka); font-weight: 500; font-size: 0.8125rem;
   color: var(--pg-ink2); margin: 14px 0 0;
 }
 
+/* Coat picker — the real game variants */
+.coat-row {
+  display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 14px;
+}
+.coat-row .coat {
+  width: 48px; height: 48px; padding: 3px;
+  border-radius: 50%; cursor: pointer;
+  border: 2px solid var(--pg-rule);
+  background: var(--pg-card);
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+.coat-row .coat img { width: 100%; height: 100%; border-radius: 50%; }
+.coat-row .coat:hover { transform: translateY(-2px); }
+.coat-row .coat[aria-pressed="true"] {
+  border-color: var(--pg-tx-accent);
+  box-shadow: 0 0 0 2px var(--pg-tx-accent);
+}
+
 /* the Pom herself */
-.pom { transform-origin: 50% 78%; }
+.pom { transform-origin: 50% 88%; }
 .pom.wiggle { animation: pom-wiggle 0.5s ease; }
 .pom.bounce { animation: pom-bounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .pom.sit { animation: pom-sit 0.6s ease; }
@@ -237,16 +297,16 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
   0% { transform: rotate(0); } 100% { transform: rotate(360deg); }
 }
 
-/* idle breathing — gentle, killed under reduced motion */
-.pom .body-group { animation: pom-breathe 3.6s ease-in-out infinite; transform-origin: 50% 80%; }
+/* idle breathing — gentle, killed under reduced motion and paused during tricks */
+.pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.spin) { animation: pom-breathe 3.6s ease-in-out infinite; }
 @keyframes pom-breathe {
   0%, 100% { transform: scale(1, 1); }
-  50% { transform: scale(1.015, 0.985); }
+  50% { transform: scale(1.012, 0.988); }
 }
 
-/* floating hearts (JS spawns .heart spans inside .stage-pom) */
+/* floating hearts (JS spawns .heart spans inside .stage-view) */
 .heart {
-  position: absolute; width: 18px; height: 18px;
+  position: absolute; width: 18px; height: 18px; z-index: 3;
   pointer-events: none;
   animation: heart-float 1.4s ease-out forwards;
 }
@@ -259,7 +319,7 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
 
 /* speech bubble */
 .speech {
-  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 10px; left: 50%; z-index: 3; transform: translateX(-50%);
   background: var(--pg-card); color: var(--pg-ink);
   border: 1.5px solid var(--pg-rule); border-radius: 16px;
   font-family: var(--fredoka); font-weight: 500; font-size: 0.9375rem;
@@ -461,7 +521,7 @@ body[data-tod="night"] .store-badge { background: #F2E8F5; color: #241A2E; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .pom .body-group { animation: none; }
+  .pom-sprite { animation: none; }
   .pom.wiggle, .pom.bounce, .pom.sit, .pom.spin { animation: none; }
   .heart { animation: none; opacity: 0; }
   *, *::before, *::after {

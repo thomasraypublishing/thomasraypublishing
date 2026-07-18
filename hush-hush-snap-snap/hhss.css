@@ -290,6 +290,25 @@ h1 em, h2 em { font-style: normal; color: var(--hh-pink-tx); }
   border: 1.5px solid var(--hh-rule); border-radius: 18px;
   padding: 24px 22px;
 }
+.card .card-shot {
+  margin: 16px auto 0; display: block;
+  max-width: 170px; border-radius: 14px;
+}
+
+/* deep cuts: cards beside a single tall phone shot */
+.deep-grid {
+  display: grid; grid-template-columns: 1.4fr 0.6fr;
+  gap: 22px; margin-top: 30px; align-items: start;
+}
+.deep-grid .cards { margin-top: 0; }
+.deep-shot {
+  border-radius: 22px; border: 1.5px solid var(--hh-rule);
+  max-width: 300px; justify-self: center;
+}
+@media (max-width: 780px) {
+  .deep-grid { grid-template-columns: 1fr; }
+  .deep-shot { justify-self: center; }
+}
 .card .c-title { font-weight: 650; font-size: 1.0625rem; margin: 0 0 6px; }
 .card p { margin: 0; font-size: 0.9375rem; color: var(--hh-ink-2); }
 

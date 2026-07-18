@@ -41,6 +41,7 @@ function initTimeOfDay() {
         ? 'Matched to your clock — tap to see her other hours.'
         : 'Your Pom keeps your hours in the app.';
     }
+    document.dispatchEvent(new CustomEvent('trp:tod', { detail: tod }));
   };
 
   // Deterministic in static mode (Lighthouse), live otherwise.
@@ -63,15 +64,45 @@ const BARKS = {
   pet: ['boof.', 'yes. more of this.', 'fluff status: maximal', 'you may continue.'],
   sit: ['sitting. professionally.', 'a very good sit.'],
   spin: ['wheee.', 'the room moved.'],
-  speak: ['boof. (that’s hello.)', 'BOOF.', 'ahem. boof.']
+  speak: ['boof. (that’s hello.)', 'BOOF.', 'ahem. boof.'],
+  coat: ['reporting for duty.', 'new fluff, who dis— boof.', 'a fresh coat. literally.'],
+  sleepy: ['(she is extremely asleep)', 'zzz. boof. zzz.']
+};
+
+const COAT_NAMES = {
+  sable: 'sable',
+  classicOrange: 'classic orange',
+  creamWhite: 'cream white',
+  redRust: 'red rust',
+  chocolateBrown: 'chocolate brown',
+  black: 'black'
 };
 
 function initPom() {
   const stage = document.querySelector('.stage-pom');
+  const view = document.getElementById('stage-view');
   const pom = document.getElementById('pom');
   const speech = document.getElementById('pom-speech');
   const status = document.getElementById('pom-status');
-  if (!stage || !pom) return;
+  if (!stage || !view || !pom) return;
+
+  let coat = 'sable';
+  let moodTimer = null;
+
+  const idleMood = () =>
+    document.body.getAttribute('data-tod') === 'night' ? 'exhausted' : 'content';
+
+  const setSprite = (mood) => {
+    pom.src = `images/pom/${coat}_${mood}.webp`;
+    pom.alt = `Your Pomeranian — the ${COAT_NAMES[coat]} coat, as she appears in the game — standing in the backyard`;
+  };
+
+  // Show a mood briefly, then settle back to the idle mood.
+  const flashMood = (mood, holdMs) => {
+    clearTimeout(moodTimer);
+    setSprite(mood);
+    moodTimer = setTimeout(() => setSprite(idleMood()), holdMs || 1500);
+  };
 
   let speechTimer = null;
   const say = (lines) => {
@@ -88,24 +119,33 @@ function initPom() {
   const animate = (cls) => {
     if (staticMode) return;
     pom.classList.remove('wiggle', 'bounce', 'sit', 'spin');
-    void pom.getBBox && pom.getBoundingClientRect(); // restart animation
+    void pom.getBoundingClientRect(); // restart animation
     pom.classList.add(cls);
     pom.addEventListener('animationend', () => pom.classList.remove(cls), { once: true });
   };
 
   const spawnHeart = (x, y) => {
     if (staticMode) return;
-    if (stage.querySelectorAll('.heart').length >= 6) return;
+    if (view.querySelectorAll('.heart').length >= 6) return;
     const h = document.createElement('span');
     h.className = 'heart';
     h.setAttribute('aria-hidden', 'true');
     h.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 21c-4.8-3.8-9-7-9-11.2C3 6.5 5.4 4 8.4 4c1.5 0 2.8.7 3.6 1.8C12.8 4.7 14.1 4 15.6 4 18.6 4 21 6.5 21 9.8 21 14 16.8 17.2 12 21z"/></svg>';
-    const r = stage.getBoundingClientRect();
+    const r = view.getBoundingClientRect();
     h.style.left = (x - r.left - 9) + 'px';
     h.style.top = (y - r.top - 9) + 'px';
-    stage.appendChild(h);
+    view.appendChild(h);
     h.addEventListener('animationend', () => h.remove());
   };
+
+  // Warm the four moods of a coat so sprite swaps never flash.
+  const preloadCoat = (c) => {
+    ['content', 'happy', 'ecstatic', 'exhausted'].forEach((m) => {
+      const img = new Image();
+      img.src = `images/pom/${c}_${m}.webp`;
+    });
+  };
+  preloadCoat(coat);
 
   // Petting: press-and-move over her fluff.
   let petting = false;
@@ -114,6 +154,7 @@ function initPom() {
     petting = true;
     animate('wiggle');
     spawnHeart(event.clientX, event.clientY);
+    flashMood('happy');
     say(BARKS.pet);
   });
   window.addEventListener('pointerup', () => { petting = false; });
@@ -124,36 +165,42 @@ function initPom() {
       lastHeart = now;
       animate('wiggle');
       spawnHeart(event.clientX, event.clientY);
+      flashMood('happy');
     }
   });
 
-  // Eyes follow the cursor (fine pointers only, never in static mode).
-  const pupils = pom.querySelectorAll('.pupil');
-  if (!staticMode && pupils.length && window.matchMedia('(pointer: fine)').matches) {
-    let raf = null;
-    stage.addEventListener('mousemove', (event) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        const r = stage.getBoundingClientRect();
-        const dx = ((event.clientX - r.left) / r.width - 0.5) * 6;
-        const dy = ((event.clientY - r.top) / r.height - 0.5) * 4;
-        pupils.forEach((p) => { p.setAttribute('transform', `translate(${dx.toFixed(1)} ${dy.toFixed(1)})`); });
+  // Coat picker — choose which Pom performs.
+  document.querySelectorAll('.coat-row .coat').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.coat;
+      if (!COAT_NAMES[next] || next === coat) return;
+      coat = next;
+      preloadCoat(coat);
+      document.querySelectorAll('.coat-row .coat').forEach((b) => {
+        b.setAttribute('aria-pressed', String(b === btn));
       });
+      clearTimeout(moodTimer);
+      setSprite(idleMood());
+      animate('bounce');
+      say(BARKS.coat);
     });
-    stage.addEventListener('mouseleave', () => {
-      pupils.forEach((p) => p.setAttribute('transform', 'translate(0 0)'));
-    });
-  }
+  });
 
   // Trick buttons.
   document.querySelectorAll('.trick-row .trick').forEach((btn) => {
     btn.addEventListener('click', () => {
       const trick = btn.dataset.trick;
-      if (trick === 'sit') { animate('sit'); say(BARKS.sit); }
-      else if (trick === 'spin') { animate('spin'); say(BARKS.spin); }
-      else { animate('bounce'); say(BARKS.speak); }
+      if (trick === 'sit') { animate('sit'); flashMood('happy'); say(BARKS.sit); }
+      else if (trick === 'spin') { animate('spin'); flashMood('ecstatic'); say(BARKS.spin); }
+      else { animate('bounce'); flashMood('ecstatic'); say(BARKS.speak); }
     });
+  });
+
+  // Night makes her sleepy; day wakes her up.
+  document.addEventListener('trp:tod', () => {
+    clearTimeout(moodTimer);
+    setSprite(idleMood());
+    if (idleMood() === 'exhausted') say(BARKS.sleepy);
   });
 }
 
