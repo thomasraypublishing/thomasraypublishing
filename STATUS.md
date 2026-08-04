@@ -35,3 +35,7 @@ custom domain, strict same-origin CSP, no third-party runtime requests.
   waiting on new artwork.
 - Trade RC section swaps its TestFlight framing for App Store links at
   launch.
+- POM portal redesign chartered (P Play / O Orbit-provisional / M Municipate;
+  plan in `Research/TRP_POM_PORTAL_REDESIGN_PLAN.md`). Phase 1 WebGL
+  letterpress prototype built and self-tested at `prototypes/pom-portal.html`
+  — awaiting Sean's design gate before any live page changes.
