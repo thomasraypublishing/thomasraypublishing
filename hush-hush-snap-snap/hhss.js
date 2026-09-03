@@ -2,7 +2,9 @@
    hhss.js — enhancement layer for the Hush Hush Snap Snap page.
    Contract: complete and readable with zero JavaScript; Reduce Motion or
    ?static=1 gets the settled page. The countdown demo is user-initiated
-   and works in static mode without the flash.
+   and works in static mode without the flash. The page has one motion
+   moment (the cross-document hero morph, in CSS); nothing reveals on
+   scroll.
 
    The page itself never plays audio — by design. The audio cue toggle
    describes what the app does; this page stays at 0 dB.
@@ -10,7 +12,6 @@
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
-const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -53,8 +54,8 @@ function initDemo() {
       const bits = [];
       if (cueState.audio) bits.push('the app would speak the count');
       if (cueState.haptic) bits.push('your wrist would tap along');
-      if (!cueState.visual) bits.push('screen cues off — the room stays dark');
-      captionEl.textContent = bits.length ? bits.join(' · ') : 'every cue off — perfectly invisible';
+      if (!cueState.visual) bits.push('screen cues off, the room stays dark');
+      captionEl.textContent = bits.length ? bits.join(' / ') : 'every cue off, perfectly invisible';
     } else {
       captionEl.textContent = '';
     }
@@ -118,7 +119,7 @@ function initDemo() {
       shots++;
     }
 
-    if (statusEl) statusEl.textContent = 'Captured — silently. The photo joined the row below the demo.';
+    if (statusEl) statusEl.textContent = 'Captured, silently. The photo joined the row below the demo.';
     updateCaption('idle');
     progressEl.style.width = '0%';
     countEl.textContent = '3';
@@ -127,32 +128,10 @@ function initDemo() {
   });
 }
 
-/* ========================================================================
-   2. Scroll reveals — quiet fades only; this page never slides.
-   ======================================================================== */
-
-function initReveals() {
-  if (!hasGsap || staticMode) return;
-  gsap.registerPlugin(ScrollTrigger);
-  gsap.utils.toArray('[data-reveal]').forEach((el) => {
-    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
-    gsap.set(el, { autoAlpha: 0 });
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => gsap.to(el, { autoAlpha: 1, duration: 0.9, ease: 'power1.out' })
-    });
-  });
-  window.addEventListener('load', () => ScrollTrigger.refresh());
-}
-
 initDemo();
-initReveals();
-
 
 /* ========================================================================
-   Frame counter — the page as a contact sheet. Optional enhancement:
+   2. Frame counter — the page as a contact sheet. Optional enhancement:
    scrolling is untouched; Left/Right arrows and the pill buttons step
    between sections. Hidden entirely without JS.
    ======================================================================== */
@@ -167,12 +146,14 @@ function initFrameCounter() {
 
   var frames = [
     { id: 'hero-h', name: 'Top' },
-    { id: 'demo-section', name: 'The timer' },
-    { id: 'environments', name: 'Environments' },
-    { id: 'triggers', name: 'Triggers' },
-    { id: 'access', name: 'Accessibility' },
+    { id: 'quiet', name: 'Quiet when it matters' },
+    { id: 'camera', name: 'The camera underneath' },
+    { id: 'handsoff', name: 'Be in the picture' },
+    { id: 'everyone', name: 'Made for everyone' },
     { id: 'deep-cuts', name: 'Deep cuts' },
-    { id: 'pro', name: 'Free and Pro' }
+    { id: 'snappy-kit', name: 'The Snappy Kit' },
+    { id: 'private', name: 'Private by design' },
+    { id: 'plans', name: 'Plans' }
   ].map(function (f) { return { el: document.getElementById(f.id), name: f.name }; })
    .filter(function (f) { return f.el; });
   if (frames.length < 2) { return; }
