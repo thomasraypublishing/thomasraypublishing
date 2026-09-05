@@ -5,6 +5,7 @@
    instant transitions when gsap is absent.
    ======================================================================== */
 
+import { isStatic } from './motion.js'; // sets html[data-motion]; smooth scrolling keys off it
 import { initNav } from './nav.js';
 
-initNav({ motion: !window.matchMedia('(prefers-reduced-motion: reduce)').matches });
+initNav({ motion: () => !isStatic() });

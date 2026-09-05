@@ -41,7 +41,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html[data-motion="full"] { scroll-behavior: smooth; } /* motion is opt-in; see assets/js/motion.js */
 
 body {
   margin: 0;
@@ -135,8 +135,8 @@ body.trc-calm::before, body.trc-calm::after { content: none; }
   margin-left: 0.08em;
   background: var(--trc-acid);
   vertical-align: text-bottom;
-  animation: trc-blink 1.1s steps(1) infinite;
 }
+html[data-motion="full"] .cursor { animation: trc-blink 1.1s steps(1) infinite; }
 @keyframes trc-blink { 50% { opacity: 0; } }
 
 /* Presence dot */

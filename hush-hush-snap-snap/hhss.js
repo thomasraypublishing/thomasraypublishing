@@ -6,9 +6,9 @@
    cross-document hero morph and the scroll-driven lights-down/aperture
    reveals — lives entirely in hhss.css; this file only reports capability.
 
-   Diagnostics (on-device, zero network): sets html[data-motion] to
-   'full' | 'reduced' | 'static' and html[data-scroll-timeline] to 'yes' |
-   'no', which the CSS keys off of. window.__hhssMotion (frozen) mirrors
+   Diagnostics (on-device, zero network): the shared policy sets
+   html[data-motion]; this file adds html[data-scroll-timeline] ('yes' |
+   'no'), which the CSS keys off of. window.__hhssMotion (frozen) mirrors
    both, plus View Transition support, for QA tooling. ?debug=1 prints one
    console.debug line with that object; nothing else logs, ever.
 
@@ -16,22 +16,16 @@
    describes what the app does; this page stays at 0 dB.
    ======================================================================== */
 
-/* Capability gate + diagnostics. The CSS motion is opt-in on
-   html[data-motion="full"], so this attribute is the switch: absent (no
-   JS, or before this script runs), 'static', and 'reduced' all mean the
-   settled page. A live Reduce Motion change flips the attribute without a
-   reload; the CSS media query already covers its own side. isStatic() is
-   read at use time by the demo and the frame counter for the same reason. */
+/* The motion gate is the site-wide policy in assets/js/motion.js: it sets
+   html[data-motion] ('full' | 'reduced' | 'static' | 'paused'), the CSS
+   motion here is opt-in on 'full', and a live change flips the attribute
+   without a reload. isStatic() is read at use time by the demo and the
+   frame counter for the same reason. This file adds the page's own
+   capability diagnostics. */
+import { isStatic } from '../assets/js/motion.js';
+
 const params = new URLSearchParams(window.location.search);
-const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-const staticParam = params.has('static');
-const isStatic = () => motionQuery.matches || staticParam;
 const supportsScrollTimeline = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()');
-function applyMotionState() {
-  document.documentElement.dataset.motion = motionQuery.matches ? 'reduced' : (staticParam ? 'static' : 'full');
-}
-applyMotionState();
-motionQuery.addEventListener('change', applyMotionState);
 document.documentElement.dataset.scrollTimeline = supportsScrollTimeline ? 'yes' : 'no';
 window.__hhssMotion = Object.freeze({
   get motion() { return document.documentElement.dataset.motion; },

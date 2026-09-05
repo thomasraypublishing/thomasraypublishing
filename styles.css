@@ -56,17 +56,22 @@ img { max-width: 100%; display: block; }
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     overflow: hidden;
 }
+/* Motion policy: every ambient animation on this sheet is opt-in on
+   html[data-motion="full"], which only assets/js/motion.js sets. No JS,
+   first paint, ?static=1, Reduce Motion, and the visitor's own pause all
+   get the same still page. Resting values below are that still page. */
 .atmo .star {
     position: absolute; width: 2px; height: 2px; border-radius: 50%;
-    background: var(--cosmos-2); opacity: 0; animation: twinkle 6s infinite ease-in-out;
+    background: var(--cosmos-2); opacity: .5;
 }
+html[data-motion="full"] .atmo .star { animation: twinkle 6s infinite ease-in-out; }
 .atmo .fluff {
     position: absolute; border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7), rgba(255,200,170,0.18) 55%, transparent 75%);
     filter: blur(2px);
-    animation: drift 38s linear infinite;
     opacity: .55;
 }
+html[data-motion="full"] .atmo .fluff { animation: drift 38s linear infinite; }
 [data-theme="cosmic"] .atmo .fluff { opacity: .2; background: radial-gradient(circle at 35% 35%, rgba(183,172,235,.35), rgba(91,79,176,.12) 55%, transparent 75%); }
 @keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: .75; } }
 @keyframes drift {
@@ -169,16 +174,16 @@ nav.top .wrap {
     position: relative; z-index: 2; max-height: 92%; max-width: 88%;
     filter: drop-shadow(0 20px 28px rgba(0,0,0,.22));
     transform: translateY(2px);
-    animation: bob 4.6s ease-in-out infinite;
 }
+html[data-motion="full"] .spec-pom .stage img { animation: bob 4.6s ease-in-out infinite; }
 @keyframes bob { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .spec-pom .stage img { animation: none; } }
 .spec-pom .fluff-deco {
     position: absolute; border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.85), rgba(255,220,190,.25) 55%, transparent 78%);
     filter: blur(1.2px); opacity: .85;
-    animation: drift 22s linear infinite;
 }
+html[data-motion="full"] .spec-pom .fluff-deco { animation: drift 22s linear infinite; }
 
 /* Device specimen */
 .spec-dev .stage {
@@ -199,8 +204,9 @@ nav.top .wrap {
       radial-gradient(1px 1px at 85% 20%, rgba(255,255,255,.65), transparent 50%),
       radial-gradient(1px 1px at 10% 70%, rgba(255,255,255,.55), transparent 50%),
       radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,.7), transparent 50%);
-    opacity: .8; animation: starshift 18s linear infinite;
+    opacity: .8;
 }
+html[data-motion="full"] .spec-dev .stars { animation: starshift 18s linear infinite; }
 @keyframes starshift { 0% { transform: translateY(0); } 100% { transform: translateY(-12px); } }
 @media (prefers-reduced-motion: reduce) { .spec-dev .stars { animation: none; } }
 .spec-dev .fortune {
@@ -510,7 +516,8 @@ footer {
 :root { --chapter-accent: #C75A2B; }
 [data-theme="cosmic"] { --chapter-accent: #F5B07A; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 72px; } /* nav.top height (64px) + 8px, matches nav.js's anchor offset */
+html { scroll-padding-top: 72px; } /* nav.top height (64px) + 8px: native anchors land under the sticky bar */
+html[data-motion="full"] { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* Atmosphere canvas sits exactly where .atmo does */
@@ -746,8 +753,8 @@ nav.top { z-index: 70; }
 .irc-line .cur {
     flex: none; width: 0.55em; height: 1em; background: #7FFF6B;
     align-self: center;
-    animation: irc-blink 1.1s steps(1) infinite;
 }
+html[data-motion="full"] .irc-line .cur { animation: irc-blink 1.1s steps(1) infinite; }
 .irc-line .arrow {
     flex: none; align-self: center;
     opacity: 0; transform: translateX(-4px);

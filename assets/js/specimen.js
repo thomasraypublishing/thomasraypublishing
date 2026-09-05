@@ -18,6 +18,7 @@ const CAPTIONS = [
 ];
 
 export function initCaptureSpecimen({ motion }) {
+  const motionOn = () => (typeof motion === 'function' ? motion() : Boolean(motion));
   const specimen = document.getElementById('hhss-specimen');
   const tray = document.getElementById('hhss-polaroids');
   const status = document.getElementById('hhss-status');
@@ -75,7 +76,7 @@ export function initCaptureSpecimen({ motion }) {
     // Keep the tray to three prints; the oldest slides away.
     while (tray.children.length > 3) tray.removeChild(tray.firstChild);
 
-    if (motion && window.gsap) {
+    if (motionOn() && window.gsap) {
       gsap.from(card, { y: 26, autoAlpha: 0, rotation: 0, duration: 0.55, ease: 'power3.out' });
     }
 

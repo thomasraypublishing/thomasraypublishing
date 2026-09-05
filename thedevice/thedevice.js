@@ -9,8 +9,8 @@
    nothing here claims accuracy or evolution.
    ======================================================================== */
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
+import { isStatic, onMotionChange, settleGsap } from '../assets/js/motion.js';
+
 const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -20,7 +20,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
    ======================================================================== */
 
 function initStarfield() {
-  if (staticMode) return;
+  if (isStatic()) return;
   const layers = Array.from(document.querySelectorAll('.starlayer'));
   if (!layers.length || !window.matchMedia('(pointer: fine)').matches) return;
   let raf = null;
@@ -118,7 +118,7 @@ function initRitual() {
     }
     consulted = true;
 
-    if (!staticMode) {
+    if (!isStatic()) {
       btn.classList.add('consulting');
       btn.addEventListener('animationend', () => btn.classList.remove('consulting'), { once: true });
     }
@@ -136,7 +136,7 @@ function initRitual() {
     // Screen readers get the whole line exactly once; the typewriter is visual.
     announce(`Tonight: ${phase}, ${weekday}, ${season}, number ${n}. ${raw}`);
 
-    if (staticMode) {
+    if (isStatic()) {
       lineEl.textContent = raw;
       return;
     }
@@ -192,9 +192,9 @@ function initChallenge() {
     await wait(700);
     if (!alive(mine)) return;
     for (const idx of sequence) {
-      await light(bricks[idx], staticMode ? 300 : 420, mine);
+      await light(bricks[idx], isStatic() ? 300 : 420, mine);
       if (!alive(mine)) return;
-      await wait(staticMode ? 120 : 170);
+      await wait(isStatic() ? 120 : 170);
       if (!alive(mine)) return;
     }
     accepting = true;
@@ -247,7 +247,7 @@ function initChallenge() {
       } else {
         accepting = false;
         setBricksEnabled(false);
-        if (!staticMode) {
+        if (!isStatic()) {
           board.classList.add('shake');
           board.addEventListener('animationend', () => board.classList.remove('shake'), { once: true });
         }
@@ -265,7 +265,7 @@ function initChallenge() {
    ======================================================================== */
 
 function initReveals() {
-  if (!hasGsap || staticMode) return;
+  if (!hasGsap || isStatic()) return;
   gsap.registerPlugin(ScrollTrigger);
   gsap.utils.toArray('[data-reveal]').forEach((el) => {
     if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
@@ -322,3 +322,11 @@ function initStarChart() {
 }
 
 initStarChart();
+
+/* A live policy change (Reduce Motion toggled mid-session, or the visitor's
+   pause) settles the scroll choreography without a reload; the CSS gate
+   stills the ambient animation and user-triggered flourishes read
+   isStatic() when they fire. */
+onMotionChange((state) => {
+  if (state !== 'full' && hasGsap) settleGsap({ clear: ['[data-reveal]'] });
+});

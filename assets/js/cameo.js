@@ -11,6 +11,7 @@ const HOLD_SECONDS = 3.2;
 const FIRST_VISIT_DELAY_MS = 32_000;
 
 export function initCameo({ motion }) {
+  const motionOn = () => (typeof motion === 'function' ? motion() : Boolean(motion));
   let el = null;
   let busy = false;
 
@@ -30,7 +31,7 @@ export function initCameo({ motion }) {
     busy = true;
     const henry = ensureEl();
 
-    if (motion && window.gsap) {
+    if (motionOn() && window.gsap) {
       gsap.timeline({ onComplete: () => { busy = false; } })
         .set(henry, { y: 0, yPercent: 100, autoAlpha: 1, rotation: 4 })
         .to(henry, { yPercent: 8, rotation: 0, duration: 1.1, ease: 'power3.out' })
@@ -48,7 +49,8 @@ export function initCameo({ motion }) {
   }
 
   // The scheduled visit — motion users only; he shouldn't startle anyone.
-  if (motion) setTimeout(peek, FIRST_VISIT_DELAY_MS);
+  // The scheduled visit checks the policy when it fires, not when it was booked.
+  if (motionOn()) setTimeout(() => { if (motionOn()) peek(); }, FIRST_VISIT_DELAY_MS);
 
   // The summons: type his name anywhere.
   let buffer = '';

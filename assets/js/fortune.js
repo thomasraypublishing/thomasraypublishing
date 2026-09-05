@@ -18,6 +18,7 @@ const FORTUNES = [
 ];
 
 export function initFortune({ atmosphere, motion }) {
+  const motionOn = () => (typeof motion === 'function' ? motion() : Boolean(motion));
   const specimen = document.getElementById('device-specimen');
   const fortuneEl = document.getElementById('fortune-text');
   if (!specimen || !fortuneEl) return;
@@ -39,7 +40,7 @@ export function initFortune({ atmosphere, motion }) {
     fortuneEl.classList.add('show');
     if (typing) typing.kill();
 
-    if (motion && window.gsap) {
+    if (motionOn() && window.gsap) {
       fortuneEl.textContent = '';
       const chars = text.split('');
       const obj = { n: 0 };

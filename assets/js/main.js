@@ -16,11 +16,14 @@ import { initNav } from './nav.js';
 import { initFortune } from './fortune.js';
 import { initCaptureSpecimen } from './specimen.js';
 import { initCameo } from './cameo.js';
+import { isStatic, onMotionChange, settleGsap } from './motion.js';
 
-// ?static=1 forces the settled page for CI (Lighthouse/axe) — the same
-// deterministic-render contract every app page carries.
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  || new URLSearchParams(window.location.search).has('static');
+// The motion policy (assets/js/motion.js) owns html[data-motion]: Reduce
+// Motion, ?static=1 (the CI render) and the visitor's own pause all read
+// as "static". Decisions made at boot use the value now; handlers that run
+// later read it again at use time.
+const settled = isStatic();
+const motion = () => !isStatic();
 const finePointer = window.matchMedia('(pointer: fine)').matches;
 const mobile = window.matchMedia('(max-width: 820px)').matches || !finePointer;
 
@@ -77,19 +80,19 @@ const atmosphere = {
 };
 
 // 1. Essential navigation — first, and independent of every decoration.
-initNav({ motion: !reduceMotion });
+initNav({ motion });
 
 // 2. Interactive specimens (content, not decoration: they work in static mode too).
-initFortune({ atmosphere, motion: !reduceMotion });
-initCaptureSpecimen({ motion: !reduceMotion });
-initCameo({ motion: !reduceMotion });
+initFortune({ atmosphere, motion });
+initCaptureSpecimen({ motion });
+initCameo({ motion });
 
 // 3. Scroll choreography — needs GSAP + ScrollTrigger (+ SplitText for the reveals).
 let chapters = null;
-if (!reduceMotion && hasScrollTrigger) {
-  chapters = initChapters({ atmosphere, motion: true });
+if (!settled && hasScrollTrigger) {
+  chapters = initChapters({ atmosphere, motion });
 }
-if (!reduceMotion && hasScrollTrigger && hasSplitText) {
+if (!settled && hasScrollTrigger && hasSplitText) {
   initReveals();
   if (finePointer && !mobile) initTilt();
 }
@@ -97,7 +100,7 @@ if (!reduceMotion && hasScrollTrigger && hasSplitText) {
 // 4. The WebGL sky — lazy, optional, last. Any failure keeps the CSS sky.
 async function loadSky() {
   const canvas = document.getElementById('atmo-canvas');
-  if (reduceMotion || !canvas) return null;
+  if (settled || !canvas) return null;
   try {
     const { createAtmosphere } = await import('./atmosphere.js');
     return createAtmosphere(canvas, { mobile });
@@ -110,10 +113,31 @@ loadSky().then((instance) => {
   if (instance) {
     sky.current = instance;
     document.getElementById('atmo')?.remove();
-    // Catch up with wherever the reader has scrolled to meanwhile.
+    // Catch up with wherever the reader has scrolled to meanwhile, and with
+    // a policy change that may have arrived while Three.js was loading.
     if (chapters) instance.setWorld(chapters.getWorld());
+    if (isStatic()) instance.pause();
   } else {
     document.getElementById('atmo-canvas')?.remove();
     seedCssAtmo();
   }
 });
+
+// 5. A live policy change (Reduce Motion toggled, or the visitor's pause)
+// settles every running system without a reload: the sky stops on its
+// current frame, scroll choreography finishes, the chapter palette stays
+// (a colour change, not motion), and the CSS gate stills the rest.
+const REVEAL_TARGETS = [
+  '.hero .eyebrow .line', '.hero .eyebrow .mono', '.hero p.lede', '.hero-meta-row .item',
+  '.specimens .specimen', '.chapter-head > *', '.app-card .copy > *', '.app-card .screen',
+  '.app-card .shutter-line', '.app-card .frame', '.catalog .book', '.stickers .stk',
+  '.about-text .big-quote div', '.about-collage .card',
+];
+onMotionChange((state) => {
+  if (state === 'full') { atmosphere.play(); return; }
+  atmosphere.pause();
+  settleGsap({ keep: (id) => id.startsWith('chapter:'), clear: REVEAL_TARGETS });
+});
+
+// On-device diagnostic for QA tooling (zero network): is the sky rendering?
+window.__trpSky = Object.freeze({ get running() { return sky.current ? sky.current.running : null; } });

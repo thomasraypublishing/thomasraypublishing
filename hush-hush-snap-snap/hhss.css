@@ -33,7 +33,8 @@
 /* ---------- Base ---------- */
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: clip; }
+html { overflow-x: clip; }
+html[data-motion="full"] { scroll-behavior: smooth; }
 
 body {
   margin: 0;

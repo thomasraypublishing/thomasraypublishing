@@ -17,6 +17,7 @@ const PALETTES = {
 };
 
 export function initChapters({ atmosphere, motion }) {
+  const motionOn = () => (typeof motion === 'function' ? motion() : Boolean(motion));
   // Palettes go on <body>: the cosmic theme defines its custom properties
   // there, so body-level values are what the cascade actually uses.
   const root = document.body;
@@ -40,7 +41,7 @@ export function initChapters({ atmosphere, motion }) {
     atmosphere?.setWorld(world);
     gsap.to(root, {
       ...PALETTES[world],
-      duration: motion ? 1.4 : 0,
+      duration: motionOn() ? 1.4 : 0,
       ease: 'power2.out',
       overwrite: 'auto',
     });
@@ -49,6 +50,7 @@ export function initChapters({ atmosphere, motion }) {
 
   sections.forEach((el) => {
     ScrollTrigger.create({
+      id: 'chapter:' + el.dataset.world,
       trigger: el,
       start: 'top 55%',
       end: 'bottom 55%',
@@ -60,6 +62,7 @@ export function initChapters({ atmosphere, motion }) {
   // Feed raw scroll position to the canvas for parallax.
   if (atmosphere) {
     ScrollTrigger.create({
+      id: 'chapter:scroll',
       start: 0,
       end: 'max',
       onUpdate: (self) => atmosphere.setScroll(self.scroll()),

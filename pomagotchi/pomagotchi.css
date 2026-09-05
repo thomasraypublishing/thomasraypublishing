@@ -67,7 +67,7 @@ body[data-tod="night"] {
 /* ---------- Base ---------- */
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html[data-motion="full"] { scroll-behavior: smooth; } /* motion is opt-in; see assets/js/motion.js */
 
 body {
   margin: 0;
@@ -306,7 +306,7 @@ body[data-tod="evening"] .stage-view::before {
 }
 
 /* idle breathing — gentle, killed under reduced motion and paused during tricks */
-.pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.spin) { animation: pom-breathe 3.6s ease-in-out infinite; }
+html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.spin) { animation: pom-breathe 3.6s ease-in-out infinite; }
 @keyframes pom-breathe {
   0%, 100% { transform: scale(1, 1); }
   50% { transform: scale(1.012, 0.988); }

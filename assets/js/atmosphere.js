@@ -217,13 +217,19 @@ export function createAtmosphere(canvas, { mobile = false } = {}) {
     renderer.render(scene, camera);
   }
 
-  function play()  { if (!raf) { clock.start(); frame(); } }
-  function pause() { if (raf)  { cancelAnimationFrame(raf); raf = null; } }
+  // Two reasons to stop: the tab is hidden, or the motion policy (Reduce
+  // Motion arriving mid-session, or the visitor's pause) says so. Only the
+  // policy is remembered, so a hidden tab never resumes a paused sky.
+  let wanted = true;
+  function startLoop() { if (!raf) { clock.start(); frame(); } }
+  function stopLoop()  { if (raf)  { cancelAnimationFrame(raf); raf = null; } }
+  function sync()      { (wanted && !document.hidden) ? startLoop() : stopLoop(); }
+  function play()  { wanted = true; sync(); }
+  function pause() { wanted = false; sync(); }
 
-  document.addEventListener('visibilitychange', () =>
-    document.hidden ? pause() : play());
+  document.addEventListener('visibilitychange', sync);
 
-  play();
+  sync();
 
   return {
     setWorld,
@@ -236,5 +242,6 @@ export function createAtmosphere(canvas, { mobile = false } = {}) {
       uniforms.uPulse.value.set(ndcX * halfH * camera.aspect, ndcY * halfH, strength);
     },
     pause, play,
+    get running() { return raf !== null; },
   };
 }

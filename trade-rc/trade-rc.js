@@ -5,10 +5,8 @@
    effect below is additive, and Reduce Motion gets the settled page.
    ======================================================================== */
 
-/* staticMode = the settled page: honored for Reduce Motion, and forceable
-   with ?static=1 for CI/Lighthouse runs that need a deterministic render. */
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
+import { isStatic, onMotionChange, settleGsap } from '../assets/js/motion.js';
+
 const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
 /* ---------- helpers ---------- */
@@ -35,7 +33,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
    ======================================================================== */
 
 async function bootSequence() {
-  if (staticMode || window.location.hash || sessionGet('trc-booted')) return;
+  if (isStatic() || window.location.hash || sessionGet('trc-booted')) return;
   sessionSet('trc-booted', '1');
 
   const boot = document.createElement('div');
@@ -96,7 +94,7 @@ async function bootSequence() {
    ======================================================================== */
 
 function initReveals() {
-  if (!hasGsap || staticMode) return;
+  if (!hasGsap || isStatic()) return;
   gsap.registerPlugin(ScrollTrigger);
 
   gsap.utils.toArray('[data-reveal]').forEach((el) => {
@@ -137,7 +135,7 @@ function initReveals() {
    ======================================================================== */
 
 function initTyper() {
-  if (staticMode || !('IntersectionObserver' in window)) return;
+  if (isStatic() || !('IntersectionObserver' in window)) return;
   const pane = document.querySelector('[data-typer]');
   if (!pane) return;
   // Deep-linked past it already? Leave the static transcript alone.
@@ -192,7 +190,7 @@ const BAYER8 = [
 ];
 
 function initDither() {
-  if (staticMode || !('IntersectionObserver' in window)) return;
+  if (isStatic() || !('IntersectionObserver' in window)) return;
   const img = document.getElementById('portrait-img');
   if (!img) return;
 
@@ -307,7 +305,7 @@ function initPrompt() {
   const goTo = (id) => {
     const target = document.getElementById(id);
     if (!target) return false;
-    target.scrollIntoView({ behavior: staticMode ? 'auto' : 'smooth', block: 'start' });
+    target.scrollIntoView({ behavior: isStatic() ? 'auto' : 'smooth', block: 'start' });
     const heading = target.querySelector('h1, h2') || target;
     heading.setAttribute('tabindex', '-1');
     heading.focus({ preventScroll: true });
@@ -423,3 +421,11 @@ initTyper();
 initDither();
 initPrompt();
 initTitleFlip();
+
+/* A live policy change (Reduce Motion toggled mid-session, or the visitor's
+   pause) settles the scroll choreography without a reload; the CSS gate
+   stills the ambient animation and user-triggered flourishes read
+   isStatic() when they fire. */
+onMotionChange((state) => {
+  if (state !== 'full' && hasGsap) settleGsap({ clear: ['[data-reveal]', '#query-scene .q-dm'] });
+});

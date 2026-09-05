@@ -6,8 +6,8 @@
    mode — it changes colors, not motion.
    ======================================================================== */
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
+import { isStatic, onMotionChange, settleGsap } from '../assets/js/motion.js';
+
 const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
 /* ========================================================================
@@ -45,7 +45,7 @@ function initTimeOfDay() {
   };
 
   // Deterministic in static mode (Lighthouse), live otherwise.
-  apply(staticMode ? 'afternoon' : todForHour(new Date().getHours()), true);
+  apply(isStatic() ? 'afternoon' : todForHour(new Date().getHours()), true);
 
   if (dial) {
     dial.addEventListener('click', (event) => {
@@ -117,7 +117,7 @@ function initPom() {
   };
 
   const animate = (cls) => {
-    if (staticMode) return;
+    if (isStatic()) return;
     pom.classList.remove('wiggle', 'bounce', 'sit', 'spin');
     void pom.getBoundingClientRect(); // restart animation
     pom.classList.add(cls);
@@ -125,7 +125,7 @@ function initPom() {
   };
 
   const spawnHeart = (x, y) => {
-    if (staticMode) return;
+    if (isStatic()) return;
     if (view.querySelectorAll('.heart').length >= 6) return;
     const h = document.createElement('span');
     h.className = 'heart';
@@ -209,7 +209,7 @@ function initPom() {
    ======================================================================== */
 
 function initReveals() {
-  if (!hasGsap || staticMode) return;
+  if (!hasGsap || isStatic()) return;
   gsap.registerPlugin(ScrollTrigger);
 
   gsap.utils.toArray('[data-reveal]').forEach((el) => {
@@ -295,3 +295,11 @@ function initBookmark() {
 }
 
 initBookmark();
+
+/* A live policy change (Reduce Motion toggled mid-session, or the visitor's
+   pause) settles the scroll choreography without a reload; the CSS gate
+   stills the ambient animation and user-triggered flourishes read
+   isStatic() when they fire. */
+onMotionChange((state) => {
+  if (state !== 'full' && hasGsap) settleGsap({ clear: ['[data-reveal]', '.letter'] });
+});
