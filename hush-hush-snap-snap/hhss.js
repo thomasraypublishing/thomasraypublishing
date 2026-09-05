@@ -16,18 +16,30 @@
    describes what the app does; this page stays at 0 dB.
    ======================================================================== */
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
-
-/* Diagnostics only — CSS drives the motion; see the header comment. */
+/* Capability gate + diagnostics. The CSS motion is opt-in on
+   html[data-motion="full"], so this attribute is the switch: absent (no
+   JS, or before this script runs), 'static', and 'reduced' all mean the
+   settled page. A live Reduce Motion change flips the attribute without a
+   reload; the CSS media query already covers its own side. isStatic() is
+   read at use time by the demo and the frame counter for the same reason. */
+const params = new URLSearchParams(window.location.search);
+const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const staticParam = params.has('static');
+const isStatic = () => motionQuery.matches || staticParam;
 const supportsScrollTimeline = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()');
-const motion = reduceMotion ? 'reduced' : (staticMode ? 'static' : 'full');
-document.documentElement.dataset.motion = motion;
+function applyMotionState() {
+  document.documentElement.dataset.motion = motionQuery.matches ? 'reduced' : (staticParam ? 'static' : 'full');
+}
+applyMotionState();
+motionQuery.addEventListener('change', applyMotionState);
 document.documentElement.dataset.scrollTimeline = supportsScrollTimeline ? 'yes' : 'no';
-window.__hhssMotion = Object.freeze({ motion, scrollTimeline: supportsScrollTimeline,
+window.__hhssMotion = Object.freeze({
+  get motion() { return document.documentElement.dataset.motion; },
+  scrollTimeline: supportsScrollTimeline,
   sameDocumentVT: 'startViewTransition' in document,
-  crossDocumentVT: typeof CSS !== 'undefined' && CSS.supports('view-transition-name: hero-work') });
-if (new URLSearchParams(location.search).has('debug')) console.debug('[hhss] motion', window.__hhssMotion);
+  crossDocumentVT: 'CSSViewTransitionRule' in window
+});
+if (params.has('debug')) console.debug('[hhss] motion', { ...window.__hhssMotion });
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -98,7 +110,7 @@ function initDemo() {
       if (p < 1) raf = requestAnimationFrame(tick);
     };
 
-    if (staticMode) {
+    if (isStatic()) {
       // No animation: step through the states instantly but legibly.
       for (const n of [3, 2, 1]) {
         countEl.textContent = String(n);
@@ -115,7 +127,7 @@ function initDemo() {
     progressEl.style.width = '100%';
     countEl.textContent = '';
 
-    if (!staticMode && flash && cueState.visual) {
+    if (!isStatic() && flash && cueState.visual) {
       // The flash is a visual cue too — visual off means the room stays dark.
       flash.classList.add('fire');
       flash.addEventListener('animationend', () => flash.classList.remove('fire'), { once: true });
@@ -186,7 +198,7 @@ function initFrameCounter() {
     var target = Math.min(frames.length - 1, Math.max(0, current + dir));
     if (target === current) { return; }
     current = target;
-    frames[current].el.scrollIntoView({ behavior: staticMode ? 'auto' : 'smooth', block: 'start' });
+    frames[current].el.scrollIntoView({ behavior: isStatic() ? 'auto' : 'smooth', block: 'start' });
     render();
     if (status) {
       status.textContent = 'Frame ' + (current + 1) + ' of ' + frames.length + ': ' + frames[current].name;

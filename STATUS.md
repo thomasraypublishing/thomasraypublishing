@@ -1,5 +1,5 @@
 ---
-phase: live_with_review_findings
+phase: live
 ship_ready: false
 needs_decision: true
 last_updated: 2026-09-04

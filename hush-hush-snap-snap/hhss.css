@@ -143,7 +143,9 @@ h3 .tier-tag, .c-title .tier-tag, .trigger .tier-tag { margin-left: 8px; }
 }
 .mast .mark img { width: 34px; height: 34px; border-radius: 8px; }
 .mast .mast-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-.mast .mast-right .btn { min-height: 44px; padding: 10px 20px; font-size: 0.9375rem; }
+.mast .mast-right .btn { min-height: 44px; padding: 10px 20px; font-size: 0.9375rem; white-space: nowrap; }
+/* the decorative dB chip gives its width back to the CTA on narrow phones */
+@media (max-width: 400px) { .db-chip { display: none; } }
 
 /* ---------- Layout ---------- */
 
@@ -209,9 +211,16 @@ figure.bleed figcaption { max-width: var(--col); margin: 12px auto 0; padding: 0
   border: 1.5px solid var(--hh-ring);
   border-radius: 50%;
 }
-.dot-field .ring.r1 { animation: ripple 5.5s ease-out infinite; }
-.dot-field .ring.r2 { animation: ripple 5.5s ease-out 1.8s infinite; }
-.dot-field .ring.r3 { animation: ripple 5.5s ease-out 3.6s infinite; }
+/* settled layout by default; the ripple is opt-in with the rest of the
+   motion (html[data-motion="full"], set only by hhss.js), so no-JS,
+   ?static=1, and first paint all show the same still rings */
+.dot-field .ring { opacity: 1; }
+.dot-field .ring.r1 { transform: scale(0.55); }
+.dot-field .ring.r2 { transform: scale(0.8); }
+.dot-field .ring.r3 { transform: scale(1.05); }
+html[data-motion="full"] .dot-field .ring.r1 { animation: ripple 5.5s ease-out infinite; }
+html[data-motion="full"] .dot-field .ring.r2 { animation: ripple 5.5s ease-out 1.8s infinite; }
+html[data-motion="full"] .dot-field .ring.r3 { animation: ripple 5.5s ease-out 3.6s infinite; }
 @keyframes ripple {
   0% { transform: scale(0.42); opacity: 0; }
   12% { opacity: 1; }
@@ -546,6 +555,7 @@ dl.caps dd { margin: 0; color: var(--hh-paper-2); font-size: 0.9375rem; }
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
   .dot-field { view-transition-name: hero-work; }
+  ::view-transition-group(hero-work),
   ::view-transition-old(hero-work),
   ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
 }
@@ -556,22 +566,27 @@ dl.caps dd { margin: 0; color: var(--hh-paper-2); font-size: 0.9375rem; }
 }
 
 /* ---------- Motion: lights down + aperture reveals ----------
-   Scroll-driven, CSS only. Triple-gated: OS allows motion, the browser
-   supports view timelines, and the page is not in static mode (?static=1,
-   the CI render, sets html[data-motion="static"] from hhss.js). Images and
-   decor only; text never animates. Unsupported browsers see the settled
-   page. overflow: clip on the photo figures contains the aperture
-   keyframe's transient scale(1.03) so it never paints past the rounded
-   corners. */
+   Scroll-driven, CSS only. The scroll-driven pieces are OPT-IN: they run
+   only once hhss.js has set html[data-motion="full"], which it does only
+   when the OS allows motion and the page is not in static mode. So the
+   no-JavaScript render, the ?static=1 CI render, Reduce Motion, and the
+   first paint before the module script runs are all the settled page.
+   The @supports guard keeps older browsers settled too. The arrival
+   transition (the root rules at the end) is a cross-document effect and
+   is gated by the Reduce Motion media query alone: a direct ?static=1
+   load never traverses, so CI never sees it. Images and decor only; text
+   never animates. overflow: clip on the photo figures contains the
+   aperture keyframe's transient scale(1.03) so it never paints past the
+   rounded corners. */
 figure.photo, figure.bleed { overflow: clip; }
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    html:not([data-motion="static"]) .hero-photo img {
+  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 30%) {
+    html[data-motion="full"] .hero-photo img {
       animation: lights-down linear both;
       animation-timeline: view();
       animation-range: exit 0% exit 85%;
     }
-    html:not([data-motion="static"]) .dot-field::before {
+    html[data-motion="full"] .dot-field::before {
       content: ""; position: absolute; inset: -40%; border-radius: 50%;
       background: radial-gradient(circle, rgba(232, 167, 181, 0.55) 0%, rgba(232, 167, 181, 0) 60%);
       opacity: 0; pointer-events: none; z-index: 0;
@@ -579,11 +594,17 @@ figure.photo, figure.bleed { overflow: clip; }
       animation-timeline: view();
       animation-range: exit 0% exit 100%;
     }
-    html:not([data-motion="static"]) img.capture {
+    html[data-motion="full"] img.capture {
       animation: aperture linear both;
       animation-timeline: view();
-      animation-range: entry 5% entry 55%;
+      /* opens over the first 30% of the image's entry, so a frame-counter
+         step or a hash landing never parks a photo half-open */
+      animation-range: entry 0% entry 30%;
     }
+  }
+  /* the glow is decoration; under increased contrast it goes */
+  @media (prefers-contrast: more) {
+    html[data-motion="full"] .dot-field::before { display: none; }
   }
   @keyframes lights-down { to { opacity: 0.1; transform: scale(0.985); } }
   @keyframes last-light { from { opacity: 0; } to { opacity: 1; } }
@@ -600,6 +621,7 @@ figure.photo, figure.bleed { overflow: clip; }
 
 /* ---------- the frame counter — quiet section stepping ---------- */
 html { scroll-padding-bottom: 72px; }
+.frame-counter[hidden] { display: none; }
 .frame-counter {
   position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
   z-index: 60;

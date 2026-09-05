@@ -614,8 +614,17 @@
         if (!el) { return; }
         el.addEventListener('click', function (e) {
             if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
+            // Exactly one element may carry the name, so clear any stale one
+            // first (a cancelled navigation or a bfcache restore can leave it).
+            document.querySelectorAll('[style*="view-transition-name"]').forEach(function (n) { n.style.viewTransitionName = ''; });
             var target = el.querySelector('.stage') || el;
             target.style.viewTransitionName = 'hero-work';
+            // The interactive specimens' own handlers run after this one and
+            // preventDefault for a demo click; once dispatch has finished, a
+            // click that did not navigate must not leave the name behind.
+            setTimeout(function () {
+                if (e.defaultPrevented) { target.style.viewTransitionName = ''; }
+            }, 0);
         });
     });
 })();
