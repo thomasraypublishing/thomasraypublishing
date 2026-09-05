@@ -88,8 +88,11 @@ nav.top {
 }
 nav.top .wrap {
     display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
+    min-height: 64px;
 }
+.brand { min-width: 0; }
+/* the tagline is the first thing to go on a narrow bar: at 320px the brand + Menu button need the room */
+@media (max-width: 420px) { .brand .divider, .brand .small { display: none; } }
 .brand {
     display: flex; align-items: center; gap: 10px; font-family: 'Newsreader', serif;
     font-size: 1.125rem; letter-spacing: -0.01em;
@@ -362,7 +365,7 @@ section.chapter { position: relative; z-index: 1; padding: 96px 0 96px; border-b
 .about-stats .stat .l { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px; }
 
 .about-collage {
-    position: relative; aspect-ratio: 1 / 1; min-height: 340px;
+    position: relative; aspect-ratio: 1 / 1; min-height: min(340px, 100%);
     background: var(--paper-2); border: 1px solid var(--rule);
     overflow: hidden;
 }
@@ -385,10 +388,12 @@ footer {
     border-top: 1px solid var(--rule);
 }
 .foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+.foot-grid > * { min-width: 0; }
 @media (max-width: 820px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
 .foot-brand .serif-big { font-family: 'Newsreader', serif; font-size: 1.75rem; letter-spacing: -0.02em; line-height: 1.05; margin-top: 12px; max-width: 18ch; }
 .foot-col h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; font-weight: 500; }
-.foot-col a { display: block; padding: 5px 0; font-size: 0.875rem; color: var(--ink-2); }
+.foot-col a { display: block; padding: 5px 0; font-size: 0.875rem; color: var(--ink-2); overflow-wrap: anywhere; }
 .foot-col a:hover { color: var(--ink); }
 .foot-bottom { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-3); flex-wrap: wrap; gap: 8px; }
 
@@ -427,11 +432,20 @@ footer {
 .prose a { color: var(--ink); border-bottom: 1px solid var(--rule); }
 .prose a:hover { border-bottom-color: var(--ink); }
 .prose strong { color: var(--ink); font-weight: 600; }
+/* Tables reflow with the column by default. A genuinely two-dimensional
+   table sits in .table-scroll (role="region", labelled, tabindex="0"): it
+   keeps its minimum width and scrolls sideways inside a keyboard-reachable
+   region instead of widening the page. */
 .prose .table-scroll { overflow-x: auto; margin: 0 0 20px; }
+.prose .table-scroll:focus-visible { outline: 2px solid var(--chapter-accent); outline-offset: 3px; border-radius: 2px; }
 .prose table {
-    border-collapse: collapse; width: 100%; min-width: 520px;
+    border-collapse: collapse; width: 100%;
     font-size: 0.9375rem;
 }
+/* header labels never break mid-word (the table grows or scrolls instead);
+   inside a scroll region every cell keeps natural wrapping */
+.prose th { overflow-wrap: normal; }
+.prose .table-scroll table { min-width: 520px; overflow-wrap: normal; }
 .prose thead th {
     font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
     letter-spacing: .12em; text-transform: uppercase; text-align: left;
@@ -514,6 +528,14 @@ body, nav.top, footer, .specimen, .stk, .about-collage {
     body, nav.top, footer, .specimen, .stk, .about-collage { transition: none; }
 }
 
+/* -------- Reflow (WCAG 1.4.10): nothing widens the page --------
+   Grid and flex children may shrink below their longest word; long words
+   in headings and prose then wrap instead of pushing the page sideways.
+   Legal pages get the stronger rule (long addresses, identifiers, code). */
+.app-card > *, .about-grid > *, .about-stats > *, .specimen > *, .chapter-head > *, .catalog > *, .stickers > * { min-width: 0; }
+h1, h2, h3, .lede { overflow-wrap: break-word; }
+.prose { overflow-wrap: anywhere; }
+
 /* -------- Skip link (shared pages; the app pages carry their own) -------- */
 .skip-link {
     position: absolute; left: 12px; top: -52px; z-index: 10001;
@@ -533,8 +555,8 @@ a:focus-visible, button:focus-visible {
 
 /* -------- Condensed nav -------- */
 nav.top { transition: background-color .3s ease; }
-nav.top .wrap { transition: height .3s ease; }
-nav.top.condensed .wrap { height: 54px; }
+nav.top .wrap { transition: min-height .3s ease; }
+nav.top.condensed .wrap { min-height: 54px; }
 nav.top.condensed { background: color-mix(in oklab, var(--paper), transparent 6%); }
 
 /* -------- Mobile menu button -------- */

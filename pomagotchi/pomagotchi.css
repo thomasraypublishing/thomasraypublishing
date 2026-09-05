@@ -168,6 +168,13 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
 .mast .mark img { width: 36px; height: 36px; border-radius: 9px; }
 .mast .mast-cta { margin-left: auto; }
 .mast .mast-cta .btn { min-height: 44px; padding: 10px 20px; font-size: 0.9375rem; }
+/* narrow phones: a tighter CTA and dial, and both may wrap rather than overflow the page */
+.mast { flex-wrap: wrap; }
+@media (max-width: 360px) {
+  .mast { gap: 10px; }
+  .mast .mast-cta .btn { padding: 10px 14px; }
+  .tod-dial button { padding: 8px 9px; }
+}
 
 /* ---------- Layout ---------- */
 
@@ -180,6 +187,7 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
   display: grid; grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(24px, 5vw, 56px); align-items: center;
 }
+.hero .wrap > * { min-width: 0; } /* the copy column may shrink below its widest child (the time-of-day dial) */
 .hero .microline {
   margin-top: 16px;
   font-size: 0.875rem; color: var(--pg-ink2);
@@ -342,7 +350,7 @@ body[data-tod="evening"] .stage-view::before {
 /* ---------- Time-of-day dial ---------- */
 
 .tod-dial {
-  display: inline-flex; gap: 4px;
+  display: inline-flex; flex-wrap: wrap; gap: 4px; max-width: 100%;
   background: var(--pg-card);
   border: 1.5px solid var(--pg-rule); border-radius: 999px;
   padding: 4px;
@@ -517,6 +525,9 @@ body[data-tod="evening"] .stage-view::before {
 .store-badge .lbl .t { font-size: 0.6875rem; }
 .store-badge .lbl .b { font-family: var(--fredoka); font-weight: 500; font-size: 1.0625rem; }
 body[data-tod="night"] .store-badge { background: #F2E8F5; color: #241A2E; }
+
+/* ---------- Reflow: enlarged text wraps long words instead of widening the page ---------- */
+h1, h2, h3, .lede { overflow-wrap: break-word; }
 
 /* ---------- Reduced motion ---------- */
 

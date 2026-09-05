@@ -487,6 +487,9 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
 .challenge-render figcaption { margin-top: 4px; }
 .foot .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-left: auto; }
 
+/* ---------- Reflow: enlarged text wraps long words instead of widening the page ---------- */
+h1, h2, h3, .lede { overflow-wrap: break-word; }
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {

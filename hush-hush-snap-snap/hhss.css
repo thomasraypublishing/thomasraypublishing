@@ -521,6 +521,9 @@ dl.caps dd { margin: 0; color: var(--hh-paper-2); font-size: 0.9375rem; }
 .foot .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-left: auto; }
 .foot .foot-credit { flex-basis: 100%; }
 
+/* ---------- Reflow: enlarged text wraps long words instead of widening the page ---------- */
+h1, h2, h3, .lede { overflow-wrap: break-word; }
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {

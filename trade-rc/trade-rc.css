@@ -579,6 +579,10 @@ body.trc-calm { font-size: 1rem; }
   color: var(--trc-ink-2); vertical-align: top;
 }
 .calm-main .table-scroll { overflow-x: auto; }
+.calm-main .table-scroll:focus-visible { outline: 2px solid var(--trc-acid); outline-offset: 3px; }
+.calm-main th { overflow-wrap: normal; }
+.calm-main .table-scroll table { min-width: 520px; overflow-wrap: normal; }
+.calm-main { overflow-wrap: anywhere; } /* long addresses, identifiers, code: wrap rather than widen the page */
 .calm-back {
   display: inline-block; margin-bottom: 36px;
   font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em;
@@ -641,6 +645,9 @@ body.trc-calm { font-size: 1rem; }
   .cta-row .btn { width: 100%; }
   .promptbar .p-label { font-size: 0.75rem; }
 }
+
+/* ---------- Reflow: enlarged text wraps long words instead of widening the page ---------- */
+h1, h2, h3, .lede { overflow-wrap: break-word; }
 
 /* ---------- Reduced motion: everything settles ---------- */
 
