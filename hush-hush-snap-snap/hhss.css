@@ -555,6 +555,49 @@ dl.caps dd { margin: 0; color: var(--hh-paper-2); font-size: 0.9375rem; }
   ::view-transition-new(*) { animation: none !important; }
 }
 
+/* ---------- Motion: lights down + aperture reveals ----------
+   Scroll-driven, CSS only. Triple-gated: OS allows motion, the browser
+   supports view timelines, and the page is not in static mode (?static=1,
+   the CI render, sets html[data-motion="static"] from hhss.js). Images and
+   decor only; text never animates. Unsupported browsers see the settled
+   page. overflow: clip on the photo figures contains the aperture
+   keyframe's transient scale(1.03) so it never paints past the rounded
+   corners. */
+figure.photo, figure.bleed { overflow: clip; }
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    html:not([data-motion="static"]) .hero-photo img {
+      animation: lights-down linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 85%;
+    }
+    html:not([data-motion="static"]) .dot-field::before {
+      content: ""; position: absolute; inset: -40%; border-radius: 50%;
+      background: radial-gradient(circle, rgba(232, 167, 181, 0.55) 0%, rgba(232, 167, 181, 0) 60%);
+      opacity: 0; pointer-events: none; z-index: 0;
+      animation: last-light linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+    html:not([data-motion="static"]) img.capture {
+      animation: aperture linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 55%;
+    }
+  }
+  @keyframes lights-down { to { opacity: 0.1; transform: scale(0.985); } }
+  @keyframes last-light { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes aperture {
+    from { clip-path: circle(0% at 50% 50%); transform: scale(1.03); }
+    to   { clip-path: circle(72% at 50% 50%); transform: none; }
+  }
+  /* arrival from the home page: paper fades first, black holds, content rises */
+  ::view-transition-old(root) { animation: vt-dim 380ms ease-in both; }
+  ::view-transition-new(root) { animation: vt-rise 460ms ease-out 140ms both; }
+  @keyframes vt-dim  { to { opacity: 0; } }
+  @keyframes vt-rise { from { opacity: 0; } }
+}
+
 /* ---------- the frame counter — quiet section stepping ---------- */
 html { scroll-padding-bottom: 72px; }
 .frame-counter {

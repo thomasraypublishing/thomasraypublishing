@@ -2,9 +2,15 @@
    hhss.js — enhancement layer for the Hush Hush Snap Snap page.
    Contract: complete and readable with zero JavaScript; Reduce Motion or
    ?static=1 gets the settled page. The countdown demo is user-initiated
-   and works in static mode without the flash. The page has one motion
-   moment (the cross-document hero morph, in CSS); nothing reveals on
-   scroll.
+   and works in static mode without the flash. Motion itself — the
+   cross-document hero morph and the scroll-driven lights-down/aperture
+   reveals — lives entirely in hhss.css; this file only reports capability.
+
+   Diagnostics (on-device, zero network): sets html[data-motion] to
+   'full' | 'reduced' | 'static' and html[data-scroll-timeline] to 'yes' |
+   'no', which the CSS keys off of. window.__hhssMotion (frozen) mirrors
+   both, plus View Transition support, for QA tooling. ?debug=1 prints one
+   console.debug line with that object; nothing else logs, ever.
 
    The page itself never plays audio — by design. The audio cue toggle
    describes what the app does; this page stays at 0 dB.
@@ -12,6 +18,16 @@
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const staticMode = reduceMotion || new URLSearchParams(window.location.search).has('static');
+
+/* Diagnostics only — CSS drives the motion; see the header comment. */
+const supportsScrollTimeline = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()');
+const motion = reduceMotion ? 'reduced' : (staticMode ? 'static' : 'full');
+document.documentElement.dataset.motion = motion;
+document.documentElement.dataset.scrollTimeline = supportsScrollTimeline ? 'yes' : 'no';
+window.__hhssMotion = Object.freeze({ motion, scrollTimeline: supportsScrollTimeline,
+  sameDocumentVT: 'startViewTransition' in document,
+  crossDocumentVT: typeof CSS !== 'undefined' && CSS.supports('view-transition-name: hero-work') });
+if (new URLSearchParams(location.search).has('debug')) console.debug('[hhss] motion', window.__hhssMotion);
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
