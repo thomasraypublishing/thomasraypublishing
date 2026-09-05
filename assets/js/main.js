@@ -4,9 +4,12 @@
    zero JavaScript. Everything here is enhancement, layered in by
    capability: Reduce Motion gets a calm static page; no-WebGL gets the
    CSS atmosphere; touch devices skip pointer-tilt; desktops get it all.
+   Order matters for resilience: essential navigation binds first and
+   depends on nothing; the WebGL sky (Three.js, the one heavy optional
+   module) is imported last and lazily, so a blocked or failed fetch
+   leaves the CSS sky in place instead of taking the menu down.
    ======================================================================== */
 
-import { createAtmosphere } from './atmosphere.js';
 import { initChapters } from './chapters.js';
 import { initReveals, initTilt } from './reveals.js';
 import { initNav } from './nav.js';
@@ -21,8 +24,14 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 const finePointer = window.matchMedia('(pointer: fine)').matches;
 const mobile = window.matchMedia('(max-width: 820px)').matches || !finePointer;
 
-if (window.gsap) {
-  gsap.registerPlugin(ScrollTrigger, SplitText);
+// GSAP and its plugins are classic deferred scripts; any one of them can be
+// missing (blocked, failed, or not cached yet) without breaking the page.
+// Register only what actually arrived and gate each effect on what it needs.
+const hasGsap = typeof window.gsap !== 'undefined';
+const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
+const hasSplitText = hasGsap && typeof window.SplitText !== 'undefined';
+if (hasGsap) {
+  gsap.registerPlugin(...[window.ScrollTrigger, window.SplitText].filter(Boolean));
 }
 
 /* CSS-particle fallback (the original atmosphere) — used when WebGL is
@@ -56,33 +65,55 @@ function seedCssAtmo() {
   }
 }
 
-let atmosphere = null;
+// The sky arrives later (or never); everything that talks to it goes
+// through this forwarding handle so nothing has to wait for Three.js.
+const sky = { current: null };
+const atmosphere = {
+  setWorld: (name) => sky.current?.setWorld(name),
+  setScroll: (px) => sky.current?.setScroll(px),
+  pulse: (x, y, strength) => sky.current?.pulse(x, y, strength),
+  pause: () => sky.current?.pause(),
+  play: () => sky.current?.play(),
+};
 
-if (!reduceMotion) {
-  const canvas = document.getElementById('atmo-canvas');
-  if (canvas) atmosphere = createAtmosphere(canvas, { mobile });
-}
-
-if (atmosphere) {
-  document.getElementById('atmo')?.remove();
-} else {
-  document.getElementById('atmo-canvas')?.remove();
-  seedCssAtmo();
-}
-
-// Interactive specimens bind before nav so their preventDefault wins.
-initFortune({ atmosphere, motion: !reduceMotion });
-
-let chapters = null;
-if (!reduceMotion && window.gsap) {
-  chapters = initChapters({ atmosphere, motion: true });
-}
-
-initCaptureSpecimen({ motion: !reduceMotion });
+// 1. Essential navigation — first, and independent of every decoration.
 initNav({ motion: !reduceMotion });
+
+// 2. Interactive specimens (content, not decoration: they work in static mode too).
+initFortune({ atmosphere, motion: !reduceMotion });
+initCaptureSpecimen({ motion: !reduceMotion });
 initCameo({ motion: !reduceMotion });
 
-if (!reduceMotion && window.gsap) {
+// 3. Scroll choreography — needs GSAP + ScrollTrigger (+ SplitText for the reveals).
+let chapters = null;
+if (!reduceMotion && hasScrollTrigger) {
+  chapters = initChapters({ atmosphere, motion: true });
+}
+if (!reduceMotion && hasScrollTrigger && hasSplitText) {
   initReveals();
   if (finePointer && !mobile) initTilt();
 }
+
+// 4. The WebGL sky — lazy, optional, last. Any failure keeps the CSS sky.
+async function loadSky() {
+  const canvas = document.getElementById('atmo-canvas');
+  if (reduceMotion || !canvas) return null;
+  try {
+    const { createAtmosphere } = await import('./atmosphere.js');
+    return createAtmosphere(canvas, { mobile });
+  } catch {
+    return null;
+  }
+}
+
+loadSky().then((instance) => {
+  if (instance) {
+    sky.current = instance;
+    document.getElementById('atmo')?.remove();
+    // Catch up with wherever the reader has scrolled to meanwhile.
+    if (chapters) instance.setWorld(chapters.getWorld());
+  } else {
+    document.getElementById('atmo-canvas')?.remove();
+    seedCssAtmo();
+  }
+});

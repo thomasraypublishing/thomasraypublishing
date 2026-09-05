@@ -514,6 +514,16 @@ body, nav.top, footer, .specimen, .stk, .about-collage {
     body, nav.top, footer, .specimen, .stk, .about-collage { transition: none; }
 }
 
+/* -------- Skip link (shared pages; the app pages carry their own) -------- */
+.skip-link {
+    position: absolute; left: 12px; top: -52px; z-index: 10001;
+    background: var(--ink); color: var(--paper);
+    font-family: 'Inter Tight', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500;
+    padding: 10px 18px; border-radius: 4px; text-decoration: none;
+    transition: top 0.15s ease;
+}
+.skip-link:focus { top: 12px; }
+
 /* -------- Focus visibility (keyboard) -------- */
 a:focus-visible, button:focus-visible {
     outline: 2px solid var(--chapter-accent);
@@ -813,7 +823,7 @@ nav.top { z-index: 70; }
    plus a SelectedItem rule so the active chapter reads without color.
    ======================================== */
 @media (forced-colors: active) {
-    .app-store-badge, .prose .card-callout .btn { border: 1px solid ButtonText; }
+    .app-store-badge, .prose .card-callout .btn, .skip-link { border: 1px solid ButtonText; }
     #chapter-rail a.active { border-right: 2px solid SelectedItem; text-decoration: underline; }
 }
 

@@ -1,0 +1,15 @@
+/* ========================================================================
+   nojs.css — linked only inside <noscript>, so it applies when scripting
+   is off. The overlay menu needs JavaScript; without it the primary links
+   show as a compact rail under the brand on narrow screens and the inert
+   Menu button goes away. Every page is otherwise complete without JS.
+   ======================================================================== */
+@media (max-width: 720px) {
+    nav.top .wrap {
+        flex-wrap: wrap; height: auto; min-height: 64px;
+        padding-top: 12px; padding-bottom: 12px; row-gap: 4px;
+    }
+    nav.top .navlinks { display: flex; flex-wrap: wrap; gap: 4px 20px; width: 100%; }
+    nav.top .menu-btn { display: none; }
+}
+.menu-overlay { display: none; }

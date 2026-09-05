@@ -27,6 +27,7 @@
     <link rel="preload" href="assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="assets/fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
+    <noscript><link rel="stylesheet" href="assets/nojs.css"></noscript>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -122,6 +123,8 @@
 </head>
 <body data-theme="cosmic">
 
+<a class="skip-link" href="#main">Skip to content</a>
+
 <canvas id="atmo-canvas" aria-hidden="true"></canvas>
 <div class="atmo" id="atmo" aria-hidden="true"></div>
 
@@ -146,7 +149,7 @@
     </div>
 </nav>
 
-<div class="menu-overlay" id="menu-overlay" aria-hidden="false">
+<div class="menu-overlay" id="menu-overlay">
     <div class="close-hint">Esc to close</div>
     <a href="#apps"><em>I</em> &mdash; Apps</a>
     <a href="#books"><em>II</em> &mdash; Books</a>
