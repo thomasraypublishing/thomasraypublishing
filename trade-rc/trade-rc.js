@@ -6,6 +6,7 @@
    ======================================================================== */
 
 import { isStatic, onMotionChange, settleGsap } from '../assets/js/motion.js';
+import { initQuietControl } from '../assets/js/quiet.js';
 
 const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
@@ -415,6 +416,7 @@ function initTitleFlip() {
    boot order
    ======================================================================== */
 
+initQuietControl();
 bootSequence();
 initReveals();
 initTyper();

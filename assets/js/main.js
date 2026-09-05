@@ -17,6 +17,7 @@ import { initFortune } from './fortune.js';
 import { initCaptureSpecimen } from './specimen.js';
 import { initCameo } from './cameo.js';
 import { isStatic, onMotionChange, settleGsap } from './motion.js';
+import { initQuietControl } from './quiet.js';
 
 // The motion policy (assets/js/motion.js) owns html[data-motion]: Reduce
 // Motion, ?static=1 (the CI render) and the visitor's own pause all read
@@ -81,6 +82,7 @@ const atmosphere = {
 
 // 1. Essential navigation — first, and independent of every decoration.
 initNav({ motion });
+initQuietControl();
 
 // 2. Interactive specimens (content, not decoration: they work in static mode too).
 initFortune({ atmosphere, motion });

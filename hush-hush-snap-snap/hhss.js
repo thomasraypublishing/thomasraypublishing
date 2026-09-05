@@ -23,6 +23,7 @@
    frame counter for the same reason. This file adds the page's own
    capability diagnostics. */
 import { isStatic } from '../assets/js/motion.js';
+import { initQuietControl } from '../assets/js/quiet.js';
 
 const params = new URLSearchParams(window.location.search);
 const supportsScrollTimeline = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()');
@@ -150,6 +151,7 @@ function initDemo() {
   });
 }
 
+initQuietControl();
 initDemo();
 
 /* ========================================================================

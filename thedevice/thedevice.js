@@ -10,6 +10,7 @@
    ======================================================================== */
 
 import { isStatic, onMotionChange, settleGsap } from '../assets/js/motion.js';
+import { initQuietControl } from '../assets/js/quiet.js';
 
 const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
@@ -284,6 +285,7 @@ function initReveals() {
    boot
    ======================================================================== */
 
+initQuietControl();
 initStarfield();
 initRitual();
 initChallenge();

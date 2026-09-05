@@ -224,7 +224,25 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   color: var(--dv-ink); text-decoration: none;
 }
 .mast .mark img { width: 34px; height: 34px; border-radius: 8px; }
-.mast .mast-cta { margin-left: auto; }
+.mast .mast-cta { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; }
+.mast { flex-wrap: wrap; }
+/* Motion toggle (WCAG 2.2.2): pauses the site's ambient motion; hidden by quiet.js when nothing can be paused */
+.motion-toggle {
+  flex: none; /* never below its 44pt target: a tight bar wraps instead */
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 14px;
+  font-family: var(--smono); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.06em;
+  color: var(--dv-accent); background: transparent;
+  border: 1px solid var(--dv-rule); border-radius: 8px; cursor: pointer;
+}
+.motion-toggle:hover { border-color: var(--dv-accent); }
+.motion-toggle .ico { flex: none; fill: currentColor; }
+.motion-toggle .ico-play, .motion-toggle[data-state="paused"] .ico-pause { display: none; }
+.motion-toggle[data-state="paused"] .ico-play { display: block; }
+@media (max-width: 560px) {
+  .motion-toggle { width: 44px; padding: 0; }
+  .motion-toggle .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 .mast .mast-cta .btn { min-height: 44px; padding: 10px 20px; }
 
 /* ---------- Layout ---------- */
