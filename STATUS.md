@@ -35,9 +35,13 @@ existing production site remains live.
   v1.4.0, which is in App Store review; Sean ruled to publish ahead of
   approval. Photographs are Sean's own (Fujifilm / Canon), credited as
   such, never presented as app captures.
-- **HHSS lights-down/aperture motion is local at `256abb3`.** Existing
-  uncommitted work was preserved as the review baseline. The latest
-  verified Pages deployment is `188bece`; this review did not push.
+- **HHSS lights-down/aperture motion was preserved at `256abb3`, then
+  revised at `13b1d0e`.** The later source includes opt-in motion gates,
+  static rings, live preference diagnostics, corrected portrait descriptors,
+  hidden-counter/CTA rules, and homepage transition-name cleanup. Its diff
+  was inspected while drafting the studio plan; new browser/device closure
+  was not established in that drafting pass. The last Pages deployment
+  verified in the earlier review was `188bece`; refresh before publishing.
 - **Website review completed 2026-09-04.** All 259 baseline project files
   were inventoried (219 tracked); 19 public routes received 38 local
   Chrome/axe scans, with additional failure, keyboard, reflow, and
@@ -56,12 +60,20 @@ existing production site remains live.
 
 ## Open items
 
+- Claude Code implementation brief for the proposed studio experience:
+  `Research/CLAUDE_CODE_STUDIO_EXPERIENCE_IMPLEMENTATION_PLAN_2026-09-04.md`.
+  It covers the editorial studio identity, direct product discovery,
+  meaningful demos, POM destinations, Studio Notes, founder/support content,
+  delivery phases, and design/deployment gates. This is a draft proposal,
+  not approval to implement new UI or publish changes. It accounts for
+  `13b1d0e`; do not repeat older fixes without inspecting current behavior.
 - Recommended continuation and implementation plan:
   `Research/WEBSITE_REVIEW_AND_CONTINUATION_PLAN_2026-09-04.md`.
   Evidence and complete baseline inventory:
   `Research/reviews/2026-09-04/EVIDENCE.md`.
-  These are Git-ignored local artifacts; attach the report when handing
-  work to an agent outside this checkout.
+  These are Git-ignored local artifacts; attach the studio implementation
+  brief and relevant review evidence when handing work to an agent outside
+  this checkout.
 - Triage review tickets W01–W13. Approve any new UI/game behavior before
   implementation, preserve existing design decisions, and verify product
   claims against authoritative app/legal sources. No redesign or deployment
