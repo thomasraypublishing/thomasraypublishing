@@ -167,56 +167,68 @@ function initChallenge() {
   let inputIndex = 0;
   let round = 0;
   let accepting = false;
-  let playing = false;
+  // Every Start/Restart opens a new session. Async continuations carry the
+  // session they started in and bail once it is stale, so a restart during
+  // playback, the success delay, or the retry delay can never overlap a
+  // new round (W09).
+  let session = 0;
+  const alive = (mine) => mine === session;
 
   const setBricksEnabled = (on) => bricks.forEach((b) => { b.disabled = !on; });
+  const clearLit = () => bricks.forEach((b) => b.classList.remove('lit'));
   setBricksEnabled(false);
 
-  const light = async (brick, ms) => {
+  const light = async (brick, ms, mine) => {
     brick.classList.add('lit');
     await wait(ms);
+    if (!alive(mine)) return;
     brick.classList.remove('lit');
   };
 
-  const playback = async () => {
-    playing = true;
+  const playback = async (mine) => {
     accepting = false;
     setBricksEnabled(false);
     status.textContent = `Round ${round + 1} — watch the pyramid.`;
     await wait(700);
+    if (!alive(mine)) return;
     for (const idx of sequence) {
-      await light(bricks[idx], staticMode ? 300 : 420);
+      await light(bricks[idx], staticMode ? 300 : 420, mine);
+      if (!alive(mine)) return;
       await wait(staticMode ? 120 : 170);
+      if (!alive(mine)) return;
     }
-    playing = false;
     accepting = true;
     inputIndex = 0;
     setBricksEnabled(true);
     status.textContent = `Round ${round + 1} — your turn. ${sequence.length} stones.`;
   };
 
-  const startRound = async () => {
+  const startRound = async (mine) => {
     const extra = [];
     while (extra.length < lengths[round]) {
       const pick = Math.floor(Math.random() * bricks.length);
       if (extra[extra.length - 1] !== pick) extra.push(pick);
     }
     sequence = extra;
-    await playback();
+    await playback(mine);
   };
 
   startBtn.addEventListener('click', () => {
-    if (playing) return;
+    session += 1; // every pending continuation is now stale
+    accepting = false;
+    clearLit();
+    board.classList.remove('shake');
     round = 0;
     startBtn.textContent = 'Restart';
-    startRound();
+    startRound(session);
   });
 
   bricks.forEach((brick, idx) => {
     brick.addEventListener('click', async () => {
       if (!accepting) return;
+      const mine = session;
       if (idx === sequence[inputIndex]) {
-        light(brick, 220);
+        light(brick, 220, mine);
         inputIndex++;
         if (inputIndex === sequence.length) {
           accepting = false;
@@ -228,7 +240,8 @@ function initChallenge() {
           } else {
             status.textContent = 'The pyramid remembers. Next round.';
             await wait(900);
-            startRound();
+            if (!alive(mine)) return;
+            startRound(mine);
           }
         }
       } else {
@@ -240,7 +253,8 @@ function initChallenge() {
         }
         status.textContent = 'The pyramid forgives. Watch once more.';
         await wait(1000);
-        playback();
+        if (!alive(mine)) return;
+        playback(mine);
       }
     });
   });
