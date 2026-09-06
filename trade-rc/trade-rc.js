@@ -56,6 +56,7 @@ async function bootSequence() {
   };
   boot.addEventListener('click', finish);
   window.addEventListener('keydown', finish, { once: true });
+  onMotionChange((state) => { if (state !== 'full') finish(); });
 
   const lines = [
     { text: '* Connecting to irc.thomasraypublishing.com on port 6697…', cls: 'ln-sys' },
@@ -164,11 +165,21 @@ function initTyper() {
   lines.forEach((ln) => { ln.style.visibility = 'hidden'; });
   scripts.forEach((s) => { if (s.node) s.node.nodeValue = ''; });
 
+  // The whole transcript, at once: the settled state, and where a pause
+  // arriving mid-typing lands (the typing auto-starts and runs past five
+  // seconds, so it is the site's motion policy's business).
+  const showAll = () => {
+    lines.forEach((ln) => { ln.style.visibility = ''; });
+    scripts.forEach((s) => { if (s.node) s.node.nodeValue = s.text; });
+  };
+
   const play = async () => {
     for (const s of scripts) {
+      if (isStatic()) { showAll(); return; }
       s.ln.style.visibility = '';
       if (s.node) {
         for (let i = 0; i <= s.text.length; i++) {
+          if (isStatic()) { showAll(); return; }
           s.node.nodeValue = s.text.slice(0, i);
           await wait(24);
         }
@@ -181,10 +192,11 @@ function initTyper() {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       io.disconnect();
-      play();
+      if (isStatic()) showAll(); else play();
     });
   }, { threshold: 0.4 });
   io.observe(pane);
+  onMotionChange((state) => { if (state !== 'full') showAll(); });
 }
 
 /* ========================================================================

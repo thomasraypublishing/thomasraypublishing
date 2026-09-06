@@ -236,6 +236,7 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   border: 1px solid var(--dv-rule); border-radius: 8px; cursor: pointer;
 }
 .motion-toggle:hover { border-color: var(--dv-accent); }
+.motion-toggle[hidden] { display: none; }
 .motion-toggle .ico { flex: none; fill: currentColor; }
 .motion-toggle .ico-play, .motion-toggle[data-state="paused"] .ico-pause { display: none; }
 .motion-toggle[data-state="paused"] .ico-play { display: block; }

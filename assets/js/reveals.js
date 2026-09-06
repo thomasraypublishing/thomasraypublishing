@@ -149,17 +149,27 @@ export function initReveals() {
 /* Pointer tilt on device frames — desktop fine-pointer only, called
    separately so touch devices never pay for the listeners. */
 export function initTilt() {
+  const bound = [];
   document.querySelectorAll('.app-card .screen').forEach((screen) => {
     const frame = screen.querySelector('.frame');
     if (!frame) return;
     const qx = gsap.quickTo(frame, 'rotationY', { duration: 0.6, ease: 'power3.out' });
     const qy = gsap.quickTo(frame, 'rotationX', { duration: 0.6, ease: 'power3.out' });
     gsap.set(frame, { transformPerspective: 900 });
-    screen.addEventListener('pointermove', (e) => {
+    const move = (e) => {
       const r = screen.getBoundingClientRect();
       qx(((e.clientX - r.left) / r.width - 0.5) * 7);
       qy(-((e.clientY - r.top) / r.height - 0.5) * 5);
-    });
-    screen.addEventListener('pointerleave', () => { qx(0); qy(0); });
+    };
+    const leave = () => { qx(0); qy(0); };
+    screen.addEventListener('pointermove', move);
+    screen.addEventListener('pointerleave', leave);
+    bound.push({ screen, frame, move, leave });
+  });
+  // Teardown for a settle: listeners off, frames flat.
+  return () => bound.forEach(({ screen, frame, move, leave }) => {
+    screen.removeEventListener('pointermove', move);
+    screen.removeEventListener('pointerleave', leave);
+    gsap.set(frame, { clearProps: 'transform' });
   });
 }

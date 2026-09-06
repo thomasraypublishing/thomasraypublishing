@@ -156,6 +156,7 @@ h3 .tier-tag, .c-title .tier-tag, .trigger .tier-tag { margin-left: 8px; }
   border: 1.5px solid var(--hh-rule); border-radius: 999px; cursor: pointer;
 }
 .motion-toggle:hover { border-color: var(--hh-paper); }
+.motion-toggle[hidden] { display: none; }
 .motion-toggle .ico { flex: none; fill: currentColor; }
 .motion-toggle .ico-play, .motion-toggle[data-state="paused"] .ico-pause { display: none; }
 .motion-toggle[data-state="paused"] .ico-play { display: block; }

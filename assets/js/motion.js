@@ -65,18 +65,28 @@ export function onMotionChange(fn) {
     state at once. `keep` names ScrollTrigger ids to leave running (e.g. the
     home page's chapter palette, which is a colour change, not motion), and
     `clear` lists selectors whose inline tween styles should be removed. */
-export function settleGsap({ keep = () => false, clear = [] } = {}) {
+export function settleGsap({ keep = () => false, clear = [], clearProps = 'opacity,visibility,transform' } = {}) {
   const g = window.gsap;
   if (!g) return;
   if (window.ScrollTrigger) {
-    window.ScrollTrigger.getAll().forEach((t) => { if (!keep(t.vars.id || '')) t.kill(); });
+    // Finish each trigger's animation BEFORE killing the trigger: kill()
+    // without arguments takes the animation with it at whatever progress
+    // it holds (the About count-up would freeze on a wrong number).
+    window.ScrollTrigger.getAll().forEach((t) => {
+      if (keep(t.vars.id || '')) return;
+      if (t.animation) t.animation.progress(1);
+      t.kill();
+    });
   }
   g.globalTimeline.getChildren(true, true, true).forEach((t) => {
     if (t.scrollTrigger && keep(t.scrollTrigger.vars.id || '')) return;
     t.progress(1);
     t.kill();
   });
-  if (clear.length) g.set(clear.join(', '), { clearProps: 'all' });
+  // Never clearProps:'all' here: GSAP implements it as style.cssText = '',
+  // which also wipes what SplitText wrote inline (display:inline-block on
+  // every word). Only the animated properties go.
+  if (clear.length) g.set(clear.join(', '), { clearProps });
 }
 
 function apply() {

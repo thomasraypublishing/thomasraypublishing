@@ -90,19 +90,28 @@ initCaptureSpecimen({ motion });
 initCameo({ motion });
 
 // 3. Scroll choreography — needs GSAP + ScrollTrigger (+ SplitText for the reveals).
+// The chapter palette and the sky can also boot LATE, on the first 'full'
+// after a settled start (a stored pause, Reduce Motion, ?static=1 that the
+// visitor then lifts). The entrance reveals cannot: by then everything is
+// already visible, and re-hiding it to replay them would be worse.
 let chapters = null;
-if (!settled && hasScrollTrigger) {
+let tiltTeardown = null;
+function bootChapters() {
+  if (chapters || !hasScrollTrigger) return;
   chapters = initChapters({ atmosphere, motion });
 }
-if (!settled && hasScrollTrigger && hasSplitText) {
-  initReveals();
-  if (finePointer && !mobile) initTilt();
+if (!settled) {
+  bootChapters();
+  if (hasScrollTrigger && hasSplitText) {
+    initReveals();
+    if (finePointer && !mobile) tiltTeardown = initTilt();
+  }
 }
 
 // 4. The WebGL sky — lazy, optional, last. Any failure keeps the CSS sky.
 async function loadSky() {
   const canvas = document.getElementById('atmo-canvas');
-  if (settled || !canvas) return null;
+  if (!canvas) return null;
   try {
     const { createAtmosphere } = await import('./atmosphere.js');
     return createAtmosphere(canvas, { mobile });
@@ -111,24 +120,38 @@ async function loadSky() {
   }
 }
 
-loadSky().then((instance) => {
-  if (instance) {
-    sky.current = instance;
-    document.getElementById('atmo')?.remove();
-    // Catch up with wherever the reader has scrolled to meanwhile, and with
-    // a policy change that may have arrived while Three.js was loading.
-    if (chapters) instance.setWorld(chapters.getWorld());
-    if (isStatic()) instance.pause();
-  } else {
-    document.getElementById('atmo-canvas')?.remove();
-    seedCssAtmo();
-  }
-});
+let skyRequested = false;
+function bootSky() {
+  if (skyRequested) return;
+  skyRequested = true;
+  loadSky().then((instance) => {
+    if (instance) {
+      sky.current = instance;
+      document.getElementById('atmo')?.remove();
+      // Catch up with wherever the reader has scrolled to meanwhile, and with
+      // a policy change that may have arrived while Three.js was loading.
+      if (chapters) instance.setWorld(chapters.getWorld());
+      if (isStatic()) instance.pause();
+    } else {
+      document.getElementById('atmo-canvas')?.remove();
+      if (!document.querySelector('#atmo .star')) seedCssAtmo();
+    }
+  });
+}
+
+if (settled) {
+  // Settled boot: the CSS sky, still by the stylesheet gate. The (empty)
+  // canvas stays in place so a later "Play motion" can still build the sky.
+  seedCssAtmo();
+} else {
+  bootSky();
+}
 
 // 5. A live policy change (Reduce Motion toggled, or the visitor's pause)
 // settles every running system without a reload: the sky stops on its
-// current frame, scroll choreography finishes, the chapter palette stays
-// (a colour change, not motion), and the CSS gate stills the rest.
+// current frame, scroll choreography finishes, pointer tilt lets go, the
+// chapter palette stays (a colour change, not motion), and the CSS gate
+// stills the rest. The reverse change boots what a settled start skipped.
 const REVEAL_TARGETS = [
   '.hero .eyebrow .line', '.hero .eyebrow .mono', '.hero p.lede', '.hero-meta-row .item',
   '.specimens .specimen', '.chapter-head > *', '.app-card .copy > *', '.app-card .screen',
@@ -136,8 +159,14 @@ const REVEAL_TARGETS = [
   '.about-text .big-quote div', '.about-collage .card',
 ];
 onMotionChange((state) => {
-  if (state === 'full') { atmosphere.play(); return; }
+  if (state === 'full') {
+    bootChapters();
+    bootSky();
+    atmosphere.play();
+    return;
+  }
   atmosphere.pause();
+  if (tiltTeardown) { tiltTeardown(); tiltTeardown = null; }
   settleGsap({ keep: (id) => id.startsWith('chapter:'), clear: REVEAL_TARGETS });
 });
 
