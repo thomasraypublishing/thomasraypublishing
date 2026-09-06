@@ -639,9 +639,11 @@ body.menu-open { overflow: hidden; }
     font-family: 'JetBrains Mono', monospace; font-size: 0.625rem;
     letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3);
 }
-/* the dialog's own Close button (nav.js puts it where the hint was) */
+/* the dialog's own Close button (nav.js puts it where the hint was). In the
+   overlay's flow, right-aligned above the links: the sticky bar (z-index 70)
+   covers the overlay's top 64px, so nothing clickable may live up there. */
 .menu-overlay .menu-close {
-    position: absolute; top: 10px; right: 76px;
+    align-self: flex-end; margin: -20px 0 16px;
     display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
     font-family: 'JetBrains Mono', monospace; font-size: 0.625rem;
     letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3);
