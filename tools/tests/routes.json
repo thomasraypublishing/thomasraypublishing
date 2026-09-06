@@ -1,0 +1,24 @@
+{
+  "_comment": "The manifest of every public route on the site. routes.test.js fails the build if a tracked *.html file (outside tools/) is missing from this list, so a new page can't ship uncovered. Flags: static = the page accepts ?static=1 and settles under it (the five landings); sharedNav = the page carries the shared nav.top bar and #menu-btn/#menu-overlay dialog; motion = the page has ambient motion plus the [data-motion-toggle] control (the five landings).",
+  "routes": [
+    { "path": "404.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "accessibility.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "coming-soon.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "hush-hush-snap-snap/index.html", "static": true, "sharedNav": false, "motion": true },
+    { "path": "hush-hush-snap-snap/privacy.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "hush-hush-snap-snap/terms.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "index.html", "static": true, "sharedNav": true, "motion": true },
+    { "path": "pomagotchi/index.html", "static": true, "sharedNav": false, "motion": true },
+    { "path": "pomagotchi/privacy.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "pomagotchi/terms.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "privacy.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "reset-password.html", "static": false, "sharedNav": false, "motion": false },
+    { "path": "support.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "terms.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "thedevice/index.html", "static": true, "sharedNav": false, "motion": true },
+    { "path": "trade-rc/index.html", "static": true, "sharedNav": false, "motion": true },
+    { "path": "trade-rc/privacy.html", "static": false, "sharedNav": false, "motion": false },
+    { "path": "trade-rc/support.html", "static": false, "sharedNav": false, "motion": false },
+    { "path": "trade-rc/terms.html", "static": false, "sharedNav": false, "motion": false }
+  ]
+}

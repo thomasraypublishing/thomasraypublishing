@@ -78,34 +78,29 @@ jobs:
       - name: Run Lighthouse (warn-level budgets)
         run: lhci autorun
 
-  a11y:
+  verify:
+    # The full W13 verification suite (tools/tests/): every public route at
+    # 1280/375 (errors, overflow, settled motion, axe on
+    # wcag2a/wcag2aa/wcag21aa/wcag22aa/best-practice), the mobile menu's
+    # focus trap, the site's one motion policy, the reset-password flow
+    # (stubbed SDK and the real SDK with the network blocked), The Device's
+    # restart race, every internal link and fragment, and the three App
+    # Store CTAs. Replaces the old standalone a11y (axe-core CLI) job —
+    # routes.test.js covers the same pages plus terms/accessibility/reset,
+    # at both breakpoints, with the same axe-core engine.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Serve site
-        run: |
-          python3 -m http.server 8080 --bind 127.0.0.1 &
-          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8080/index.html >/dev/null && break; sleep 0.5; done
-      - name: Install matched Chrome for Testing + ChromeDriver
-        # The runner's system Chrome and npx-fetched chromedriver drift apart
-        # (first run failed on 150 vs 151). browser-driver-manager installs a
-        # version-synced pair and writes their paths to ~/.browser-driver-manager/.env
-        run: npx --yes browser-driver-manager install chrome
-      - name: Run axe-core
-        run: |
-          source ~/.browser-driver-manager/.env
-          npx @axe-core/cli \
-            --chrome-path "$CHROME_TEST_PATH" \
-            --chromedriver-path "$CHROMEDRIVER_TEST_PATH" \
-            "http://127.0.0.1:8080/index.html?static=1" \
-            http://127.0.0.1:8080/support.html \
-            http://127.0.0.1:8080/privacy.html \
-            http://127.0.0.1:8080/coming-soon.html \
-            "http://127.0.0.1:8080/trade-rc/index.html?static=1" \
-            "http://127.0.0.1:8080/pomagotchi/index.html?static=1" \
-            "http://127.0.0.1:8080/thedevice/index.html?static=1" \
-            "http://127.0.0.1:8080/hush-hush-snap-snap/index.html?static=1" \
-            --exit
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright's Chromium
+        # No Google Chrome on this runner, so tools/tests/lib/browser.js
+        # uses Playwright's own bundled Chromium instead (its CI branch
+        # keys off the CI env var, which GitHub Actions sets on every job).
+        run: npx playwright install --with-deps chromium
+      - name: Run the verification suite
+        run: npm test

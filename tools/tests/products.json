@@ -1,0 +1,38 @@
+{
+  "_comment": "Canonical App Store URLs for the three shipping products, and the CSS container selector(s) on each page whose apps.apple.com links must ALL equal that product's canonical URL exactly. cta.test.js also scans every tracked *.html file for any apps.apple.com URL whose path contains one of the three `slug` values below (in an href/src attribute OR in plain text, which catches JSON-LD installUrl strings too) and asserts it matches that product's canonicalUrl byte-for-byte — catching a wrong id or a country/locale drift anywhere on the site, not just inside the listed containers. Other apps.apple.com links (the five iMessage sticker packs on index.html, apps.apple.com/redeem, apps.apple.com/account/subscriptions) are a different Apple destination on purpose and are intentionally out of scope — see tools/tests/README.md.",
+  "products": [
+    {
+      "id": "pomagotchi",
+      "name": "Pomagotchi",
+      "appStoreId": "6759592794",
+      "slug": "pomagotchi",
+      "canonicalUrl": "https://apps.apple.com/us/app/pomagotchi/id6759592794",
+      "ctaContainers": {
+        "index.html": ["#pomagotchi"],
+        "pomagotchi/index.html": ["header.mast", ".cta-row", ".final"]
+      }
+    },
+    {
+      "id": "the-device",
+      "name": "The Device",
+      "appStoreId": "6759922897",
+      "slug": "the-device-cosmic-pyramid",
+      "canonicalUrl": "https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897",
+      "ctaContainers": {
+        "index.html": ["#the-device"],
+        "thedevice/index.html": ["header.mast", ".cta-row", ".final"]
+      }
+    },
+    {
+      "id": "hush-hush-snap-snap",
+      "name": "Hush Hush Snap Snap",
+      "appStoreId": "6763808286",
+      "slug": "hush-hush-snap-snap",
+      "canonicalUrl": "https://apps.apple.com/us/app/hush-hush-snap-snap/id6763808286",
+      "ctaContainers": {
+        "index.html": ["#hush-hush-snap-snap"],
+        "hush-hush-snap-snap/index.html": ["header.mast", ".cta-row", "#get"]
+      }
+    }
+  ]
+}

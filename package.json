@@ -1,0 +1,19 @@
+{
+  "name": "thomasraypublishing-site-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned, repo-tracked verification suite for the static site (ticket W13). No production dependency: this package exists only to run tools/tests/.",
+  "scripts": {
+    "test": "node --no-warnings --experimental-vm-modules --test tools/tests/*.test.js",
+    "test:routes": "node --test tools/tests/routes.test.js",
+    "test:behavior": "node --test tools/tests/behavior.test.js",
+    "test:links": "node --test tools/tests/links.test.js",
+    "test:cta": "node --test tools/tests/cta.test.js",
+    "test:modules": "node --no-warnings --experimental-vm-modules --test tools/tests/modules.test.js",
+    "serve": "node tools/tests/serve.js"
+  },
+  "devDependencies": {
+    "axe-core": "4.13.0",
+    "playwright": "1.63.0"
+  }
+}
