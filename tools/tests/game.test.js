@@ -115,15 +115,19 @@ describe('game.test.js — The Device restart race (Playwright)', () => {
       });
 
       it('five rapid restarts collapse to exactly one active session', async () => {
-        await restart();
+        // Four plain presses, then the fifth resets the counters as it presses:
+        // only the LAST restart's round is measured. On a loaded runner the
+        // gap between presses can exceed the round's 700 ms lead-in, so an
+        // earlier session may legitimately light a stone before the next
+        // restart; counting from the first press would call that a defect.
         for (let i = 0; i < 4; i++) {
-          await page.waitForTimeout(60);
           await page.click('#challenge-start');
+          await page.waitForTimeout(60);
         }
+        await restart();
         await page.waitForTimeout(playFull);
         const r = await read();
-        // Five sessions each announce "watch" synchronously; only the last
-        // may reach "your turn" and light stones.
+        assert.equal(r.watch, 1, `expected exactly 1 "watch" announcement after the last restart, got ${r.watch}`);
         assert.equal(r.turn, 1, `expected exactly 1 "your turn" announcement, got ${r.turn}`);
         assert.equal(r.lit.length, 3, `expected 3 lit stone(s), got ${r.lit.length}`);
         assert.equal(r.litStuck, 0, `${r.litStuck} stone(s) stuck lit after five rapid restarts`);
