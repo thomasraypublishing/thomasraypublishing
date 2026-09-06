@@ -40,6 +40,9 @@ export function initNav({ motion }) {
   function show() {
     overlay.style.display = 'flex';
     if (motionOn() && window.gsap) {
+      // hide() leaves visibility:hidden inline; GSAP renders on its next
+      // frame, and links[0].focus() below runs before that, so lift it now.
+      overlay.style.visibility = 'visible';
       gsap.timeline()
         .to(overlay, { autoAlpha: 1, duration: 0.3, ease: 'power2.out' })
         // opacity, not autoAlpha: a visibility:hidden link cannot take the initial focus
@@ -106,8 +109,10 @@ export function initNav({ motion }) {
     closeBtn.className = 'menu-close';
     closeBtn.setAttribute('aria-label', 'Close menu');
     closeBtn.textContent = 'Close';
+    // Always first in DOM order: mid-cycle Tab order is DOM order.
     const hint = overlay.querySelector('.close-hint');
-    if (hint) hint.replaceWith(closeBtn); else overlay.prepend(closeBtn);
+    if (hint) hint.remove();
+    overlay.prepend(closeBtn);
     closeBtn.addEventListener('click', () => setOpen(false));
 
     btn.addEventListener('click', () => setOpen(!open));
@@ -115,7 +120,14 @@ export function initNav({ motion }) {
     // A chosen link closes the menu and then navigates natively; focus is
     // left to the browser so it lands at the destination, not on the button.
     links.forEach((a) => a.addEventListener('click', () => setOpen(false, { restoreFocus: false })));
-    narrow.addEventListener('change', (e) => { if (!e.matches && open) setOpen(false, { restoreFocus: false }); });
+    // Leaving the narrow layout closes the dialog; focus moves to the first
+    // desktop link, the nearest equivalent of where the reader was.
+    narrow.addEventListener('change', (e) => {
+      if (e.matches || !open) return;
+      setOpen(false, { restoreFocus: false });
+      const first = bar ? bar.querySelector('.navlinks a') : null;
+      if (first && first.offsetParent !== null) first.focus();
+    });
   }
 
   // Condense the bar once the reader is into the page, and publish its

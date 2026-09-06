@@ -643,6 +643,7 @@ body.menu-open { overflow: hidden; }
    overlay's flow, right-aligned above the links: the sticky bar (z-index 70)
    covers the overlay's top 64px, so nothing clickable may live up there. */
 .menu-overlay .menu-close {
+    position: sticky; top: calc(var(--nav-h, 64px) + 12px); z-index: 1;
     align-self: flex-end; margin: -20px 0 16px;
     display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
     font-family: 'JetBrains Mono', monospace; font-size: 0.625rem;

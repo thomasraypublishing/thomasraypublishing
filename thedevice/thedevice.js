@@ -277,7 +277,7 @@ function initReveals() {
     let trigger = null;
     const reveal = () => {
       if (trigger) trigger.kill();
-      gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', overwrite: true });
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' });
     };
     trigger = ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: reveal });
     el.addEventListener('focusin', () => {
