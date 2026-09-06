@@ -83,7 +83,8 @@ VoiceOver closure remains his.
   `[device-only]`: VoiceOver through the menu dialog and the reveals on a
   phone, and a real password recovery against a test account (the
   accessibility trees and the stubbed flow are verified; the real run is
-  not). Simulator screenshots follow when the shared simulator lock frees.
+  not). WebKit captures at iPhone size of every punch-list item are in the
+  verification report (the shared simulator lock stayed with another session).
 - **CI `verify` job:** first run on `91d02db` was 142/143 (a timing gap in
   the game test on the slower runner, fixed test-only in `632c73d`); the
   `632c73d` run: `verify` green (143/143), store links and Lighthouse green,
