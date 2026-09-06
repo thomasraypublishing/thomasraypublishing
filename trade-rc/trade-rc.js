@@ -98,25 +98,33 @@ function initReveals() {
   if (!hasGsap || isStatic()) return;
   gsap.registerPlugin(ScrollTrigger);
 
+  // Hidden means opacity 0, never visibility hidden: the section stays in
+  // the accessibility tree before it scrolls into view, and focus arriving
+  // inside it (a keyboard user tabbing to a link) reveals it at once (W14).
   gsap.utils.toArray('[data-reveal]').forEach((el) => {
     // Skip anything already in view (deep links) — never hide visible content.
     if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
-    gsap.set(el, { autoAlpha: 0, y: 18 });
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' })
-    });
+    gsap.set(el, { opacity: 0, y: 18 });
+    let trigger = null;
+    const reveal = () => {
+      if (trigger) trigger.kill();
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', overwrite: true });
+    };
+    trigger = ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: reveal });
+    el.addEventListener('focusin', () => {
+      if (trigger) trigger.kill();
+      gsap.killTweensOf(el);
+      gsap.set(el, { clearProps: 'opacity,transform' });
+    }, { once: true });
   });
 
   // The /msg moment: the query pane slides in beside the room as you scroll.
   const dm = document.querySelector('#query-scene .q-dm');
   if (dm && window.matchMedia('(min-width: 881px)').matches &&
       dm.getBoundingClientRect().top > window.innerHeight) {
-    gsap.set(dm, { autoAlpha: 0, x: 44 });
-    gsap.to(dm, {
-      autoAlpha: 1,
+    gsap.set(dm, { opacity: 0, x: 44 });
+    const slide = gsap.to(dm, {
+      opacity: 1,
       x: 0,
       ease: 'none',
       scrollTrigger: {
@@ -126,6 +134,11 @@ function initReveals() {
         scrub: 0.4
       }
     });
+    dm.addEventListener('focusin', () => {
+      if (slide.scrollTrigger) slide.scrollTrigger.kill();
+      slide.kill();
+      gsap.set(dm, { clearProps: 'all' });
+    }, { once: true });
   }
 
   window.addEventListener('load', () => ScrollTrigger.refresh());

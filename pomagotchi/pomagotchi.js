@@ -213,23 +213,31 @@ function initReveals() {
   if (!hasGsap || isStatic()) return;
   gsap.registerPlugin(ScrollTrigger);
 
+  // Hidden means opacity 0, never visibility hidden: the section stays in
+  // the accessibility tree before it scrolls into view, and focus arriving
+  // inside it (a keyboard user tabbing to a link) reveals it at once (W14).
   gsap.utils.toArray('[data-reveal]').forEach((el) => {
     if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
-    gsap.set(el, { autoAlpha: 0, y: 20 });
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' })
-    });
+    gsap.set(el, { opacity: 0, y: 20 });
+    let trigger = null;
+    const reveal = () => {
+      if (trigger) trigger.kill();
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', overwrite: true });
+    };
+    trigger = ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: reveal });
+    el.addEventListener('focusin', () => {
+      if (trigger) trigger.kill();
+      gsap.killTweensOf(el);
+      gsap.set(el, { clearProps: 'opacity,transform' });
+    }, { once: true });
   });
 
   const letter = document.querySelector('.letter');
   if (letter && letter.getBoundingClientRect().top > window.innerHeight) {
-    gsap.set(letter, { rotationX: -62, autoAlpha: 0.35 });
-    gsap.to(letter, {
+    gsap.set(letter, { rotationX: -62, opacity: 0.35 });
+    const unfold = gsap.to(letter, {
       rotationX: 0,
-      autoAlpha: 1,
+      opacity: 1,
       ease: 'none',
       scrollTrigger: {
         trigger: '.letter-scene',
@@ -238,6 +246,11 @@ function initReveals() {
         scrub: 0.4
       }
     });
+    letter.addEventListener('focusin', () => {
+      if (unfold.scrollTrigger) unfold.scrollTrigger.kill();
+      unfold.kill();
+      gsap.set(letter, { clearProps: 'all' });
+    }, { once: true });
   }
 
   window.addEventListener('load', () => ScrollTrigger.refresh());

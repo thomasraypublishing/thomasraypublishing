@@ -2,9 +2,42 @@
    reveals.js — scroll choreography.
    Every initial "hidden" state is set HERE in JS, never in CSS, so the
    page is fully readable with JS disabled or Reduce Motion on.
+   Hidden means opacity 0, never visibility hidden: the content stays in
+   the accessibility tree, so headings and links exist for assistive tech
+   before they scroll into view (W14). A keyboard user who tabs into a
+   section that has not revealed yet gets it revealed at once.
    ======================================================================== */
 
+/* element -> the tween or timeline that still owns its opacity */
+const pending = new Map();
+
+function track(targets, owner) {
+  const list = typeof targets === 'string'
+    ? Array.from(document.querySelectorAll(targets))
+    : (targets.length !== undefined ? Array.from(targets) : [targets]);
+  const entry = { owner, list };
+  list.forEach((el) => pending.set(el, entry));
+  owner.eventCallback('onComplete', () => list.forEach((el) => pending.delete(el)));
+  return owner;
+}
+
+/* Focus arriving inside an unrevealed element finishes its reveal now. */
+function revealOnFocus(e) {
+  let node = e.target;
+  while (node && node !== document.body) {
+    const entry = pending.get(node);
+    if (entry) {
+      entry.list.forEach((el) => pending.delete(el));
+      entry.owner.progress(1);
+      return;
+    }
+    node = node.parentElement;
+  }
+}
+
 export function initReveals() {
+  document.addEventListener('focusin', revealOnFocus);
+
   // ---- hero: masked line reveal -------------------------------------------
   const h1 = document.querySelector('.hero h1');
   if (h1) {
@@ -21,18 +54,19 @@ export function initReveals() {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.from(inner, { yPercent: 110, duration: 1.0, stagger: 0.09 }, 0.1)
       .from('.hero .eyebrow .line', { scaleX: 0, transformOrigin: 'left', duration: 0.7 }, 0.1)
-      .from('.hero .eyebrow .mono', { autoAlpha: 0, x: -8, duration: 0.6 }, 0.3)
-      .from('.hero p.lede', { autoAlpha: 0, y: 18, duration: 0.8 }, 0.55)
-      .from('.hero-meta-row .item', { autoAlpha: 0, y: 12, stagger: 0.07, duration: 0.5 }, 0.7)
-      .from('.specimens .specimen', { autoAlpha: 0, y: 36, stagger: 0.12, duration: 0.9 }, 0.8);
+      .from('.hero .eyebrow .mono', { opacity: 0, x: -8, duration: 0.6 }, 0.3)
+      .from('.hero p.lede', { opacity: 0, y: 18, duration: 0.8 }, 0.55)
+      .from('.hero-meta-row .item', { opacity: 0, y: 12, stagger: 0.07, duration: 0.5 }, 0.7)
+      .from('.specimens .specimen', { opacity: 0, y: 36, stagger: 0.12, duration: 0.9 }, 0.8);
+    track('.hero .eyebrow .mono, .hero p.lede, .hero-meta-row .item, .specimens .specimen', tl);
   }
 
   // ---- chapter heads -------------------------------------------------------
   document.querySelectorAll('.chapter-head').forEach((head) => {
-    gsap.from(head.children, {
+    track(head.children, gsap.from(head.children, {
       scrollTrigger: { trigger: head, start: 'top 78%' },
-      autoAlpha: 0, y: 28, stagger: 0.12, duration: 0.9, ease: 'power3.out',
-    });
+      opacity: 0, y: 28, stagger: 0.12, duration: 0.9, ease: 'power3.out',
+    }));
   });
 
   // ---- app cards: copy column + screen -------------------------------------
@@ -43,8 +77,9 @@ export function initReveals() {
       scrollTrigger: { trigger: card, start: 'top 70%' },
       defaults: { ease: 'power3.out' },
     });
-    tl.from(copyKids, { autoAlpha: 0, y: 24, stagger: 0.08, duration: 0.7 }, 0)
-      .from(screen, { autoAlpha: 0, y: 40, duration: 1.0 }, 0.15);
+    tl.from(copyKids, { opacity: 0, y: 24, stagger: 0.08, duration: 0.7 }, 0)
+      .from(screen, { opacity: 0, y: 40, duration: 1.0 }, 0.15);
+    track([...copyKids, ...(screen ? [screen] : [])], tl);
 
     // The HHSS card gets its shutter-line wipe.
     if (card.classList.contains('hhss')) {
@@ -62,17 +97,21 @@ export function initReveals() {
   });
 
   // ---- books ---------------------------------------------------------------
-  gsap.from('.catalog .book', {
-    scrollTrigger: { trigger: '.catalog', start: 'top 75%' },
-    autoAlpha: 0, y: 36, stagger: 0.1, duration: 0.85, ease: 'power3.out',
-  });
+  if (document.querySelector('.catalog .book')) {
+    track('.catalog .book', gsap.from('.catalog .book', {
+      scrollTrigger: { trigger: '.catalog', start: 'top 75%' },
+      opacity: 0, y: 36, stagger: 0.1, duration: 0.85, ease: 'power3.out',
+    }));
+  }
 
   // ---- stickers: springy pop ------------------------------------------------
-  gsap.from('.stickers .stk', {
-    scrollTrigger: { trigger: '.stickers', start: 'top 78%' },
-    autoAlpha: 0, scale: 0.82, y: 20, stagger: 0.07, duration: 0.7,
-    ease: 'back.out(1.7)',
-  });
+  if (document.querySelector('.stickers .stk')) {
+    track('.stickers .stk', gsap.from('.stickers .stk', {
+      scrollTrigger: { trigger: '.stickers', start: 'top 78%' },
+      opacity: 0, scale: 0.82, y: 20, stagger: 0.07, duration: 0.7,
+      ease: 'back.out(1.7)',
+    }));
+  }
 
   // ---- about: quote + stats count-up ----------------------------------------
   const quote = document.querySelector('.about-text .big-quote');
@@ -81,10 +120,10 @@ export function initReveals() {
     // SplitText mirrors the text into aria-label, but naming is prohibited
     // on blockquote's role — the split spans remain readable as-is.
     quote.removeAttribute('aria-label');
-    gsap.from(words.words, {
+    track(words.words, gsap.from(words.words, {
       scrollTrigger: { trigger: quote, start: 'top 78%' },
-      autoAlpha: 0, y: 14, stagger: 0.03, duration: 0.6, ease: 'power2.out',
-    });
+      opacity: 0, y: 14, stagger: 0.03, duration: 0.6, ease: 'power2.out',
+    }));
   }
   document.querySelectorAll('.about-stats .stat .n').forEach((el) => {
     const end = parseInt(el.dataset.count ?? el.textContent, 10);
@@ -100,10 +139,10 @@ export function initReveals() {
 
   // ---- collage drift --------------------------------------------------------
   document.querySelectorAll('.about-collage .card').forEach((card, i) => {
-    gsap.from(card, {
+    track(card, gsap.from(card, {
       scrollTrigger: { trigger: '.about-collage', start: 'top 80%' },
-      autoAlpha: 0, y: 30, rotation: 0, duration: 0.9, delay: i * 0.12, ease: 'power3.out',
-    });
+      opacity: 0, y: 30, rotation: 0, duration: 0.9, delay: i * 0.12, ease: 'power3.out',
+    }));
   });
 }
 
