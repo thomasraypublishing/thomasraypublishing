@@ -19,7 +19,7 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const { start, stop } = require('./lib/server');
-const { launch, newPage, injectAxe, runAxe, AXE_TAGS } = require('./lib/browser');
+const { launch, newPage, injectAxe, runAxe, AXE_TAGS, settleAnimations } = require('./lib/browser.js');
 const { routes } = require('./routes.json');
 
 const ROOT = path.resolve(__dirname, '..', '..');
@@ -92,6 +92,7 @@ describe('route rendering (Playwright)', () => {
             // Let a settling transition (e.g. the nav condense check, any
             // load-time class toggle) finish before reading final state.
             await page.waitForTimeout(400);
+            await settleAnimations(page);
             await injectAxe(page);
             const [state, axeResults] = await Promise.all([
               page.evaluate(() => ({

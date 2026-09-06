@@ -87,4 +87,25 @@ function runAxe(page, tags) {
 
 const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa', 'best-practice'];
 
-module.exports = { launch, newPage, injectAxe, runAxe, AXE_TAGS };
+/**
+ * Wait until no CSS animation or transition is running, or give up after
+ * `timeout` ms and let the caller's assertion report what is still running.
+ * Polled on requestAnimationFrame, which also forces the renderer to produce
+ * frames: on a loaded CI runner a headless page can go hundreds of
+ * milliseconds without painting, and Reduce Motion's 0.01 ms transitions
+ * then still read as "running" after any fixed sleep (first CI flake: 19
+ * reveal sections x 2 transitioned properties = 38 "running" after 700 ms).
+ */
+async function settleAnimations(page, timeout = 4000) {
+  try {
+    await page.waitForFunction(
+      () => document.getAnimations().filter((a) => a.playState === 'running').length === 0,
+      null,
+      { timeout, polling: 'raf' },
+    );
+  } catch {
+    /* the caller's count decides */
+  }
+}
+
+module.exports = { launch, newPage, injectAxe, runAxe, settleAnimations, AXE_TAGS };

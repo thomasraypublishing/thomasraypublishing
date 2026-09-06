@@ -18,7 +18,7 @@
 const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { start, stop } = require('./lib/server');
-const { launch, newPage } = require('./lib/browser');
+const { launch, newPage, settleAnimations } = require('./lib/browser.js');
 
 const LANDINGS = [
   'index.html',
@@ -198,7 +198,8 @@ describe('behavior (Playwright)', () => {
           await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
           await page.waitForTimeout(1500);
           await page.emulateMedia({ reducedMotion: 'reduce' });
-          await page.waitForTimeout(700);
+          await page.waitForTimeout(300);
+          await settleAnimations(page);
           const after = await page.evaluate(() => ({
             motion: document.documentElement.dataset.motion || null,
             animations: document.getAnimations().filter((a) => a.playState === 'running').length,
@@ -244,6 +245,7 @@ describe('behavior (Playwright)', () => {
           });
           await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
           await page.waitForTimeout(1500);
+          await settleAnimations(page);
           const state = await page.evaluate(() => ({
             motion: document.documentElement.dataset.motion || null,
             animations: document.getAnimations().filter((a) => a.playState === 'running').length,
@@ -268,8 +270,9 @@ describe('behavior (Playwright)', () => {
           await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
           await page.waitForTimeout(1200);
 
-          const snap = () =>
-            page.evaluate(() => {
+          const snap = async () => {
+            await settleAnimations(page, 1500);
+            return page.evaluate(() => {
               const b = document.querySelector('[data-motion-toggle]');
               const st = document.querySelector('[role="status"]');
               return {
@@ -287,6 +290,7 @@ describe('behavior (Playwright)', () => {
                 })(),
               };
             });
+          };
 
           const normal = await snap();
           assert.ok(normal.present, `${route}: [data-motion-toggle] not found`);
