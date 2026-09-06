@@ -2,7 +2,7 @@
 phase: live
 ship_ready: false
 needs_decision: true
-last_updated: 2026-09-05
+last_updated: 2026-09-06
 ---
 
 # thomasraypublishing.com — Status
@@ -11,19 +11,19 @@ The studio's marketing site: hand-authored static HTML/CSS/JS on GitHub Pages,
 custom domain, and self-hosted marketing assets. Password recovery connects
 to Supabase. There is no production framework or build pipeline in this checkout.
 
-`ship_ready: false` records that the 2026-09-05 defect fixes are committed
-locally and unpushed, and that three review tickets still need Sean's wording
-or design rulings. The existing production site remains live.
+`ship_ready: false` records that five review-driven fix commits are local and
+unpushed while their defects are on the live site, and that three review
+tickets still need Sean's wording or design rulings.
 
 ## Where it stands
 
-- **Live at `13b1d0e`** (Pages build verified 2026-09-05). Home page plus
-  standalone pages for Trade RC, Pomagotchi, The Device, and Hush Hush Snap
-  Snap, each with its own design system; Coming Next page; support, privacy,
-  and reset-password pages; per-app legal pages.
-- **Defect track shipped locally 2026-09-05 (eight commits, unpushed).**
-  Sean approved starting it ahead of the home-direction decision. Fixed and
-  verified: W01 reset diagnostics no longer render URL/token material; W02
+- **Live at `c754c6a`** (Sean pushed the defect track 2026-09-06 04:02 UTC;
+  Site CI green: a11y, store links, Lighthouse). Home page plus standalone
+  pages for Trade RC, Pomagotchi, The Device, and Hush Hush Snap Snap, each
+  with its own design system; Coming Next page; support, privacy, and
+  reset-password pages; per-app legal pages.
+- **Defect track shipped 2026-09-05, live 2026-09-06.** Sean approved
+  starting it ahead of the home-direction decision. Fixed and verified: W01 reset diagnostics no longer render URL/token material; W02
   navigation works with Three.js, ScrollTrigger or GSAP blocked and without
   JavaScript; W03 the mobile menu is a focus-contained dialog with native
   anchors, plus skip links on every shared page; W04 no public route widens
@@ -33,14 +33,27 @@ or design rulings. The existing production site remains live.
   restart is deterministic; W12 reset decoding, no-SDK/no-JS states, and the
   terms/accessibility heading order and aside labels. The **Pause motion**
   control (Sean's call: top-bar text toggle) closes the WCAG 2.2.2 gap.
-- **Verification (local, 2026-09-05):** Playwright probes against the
-  installed Chrome (`Research/reviews/2026-09-05/scripts/`): all 19 routes
-  0 px overflow at 375 and 320, 0 running animations under `?static=1` and
-  no-JS, gate/live/paused states asserted; reset page against a stubbed SDK
-  (11 scenarios) and the real SDK with network blocked; axe 0 violations on
-  every CI route and changed page; Lighthouse 0.97–1.00 on home, HHSS,
-  privacy, Device. Not established: physical iPhone/iPad/Mac Safari,
-  VoiceOver, real password recovery.
+- **Review pass 2026-09-05/06 (five commits, local, unpushed).** Opus code
+  review and a Fable adversarial pass of the shipped track, each with a
+  second pass on the fixes, found and reproduced real defects that are now
+  live at `c754c6a`: one click of "Pause motion" breaks the home's About
+  quote to one word per line; the mobile menu becomes unclosable if the
+  viewport crosses 720 px while open; the Pause button renders under Reduce
+  Motion, `?static=1` and with JavaScript off (an author `display` beat the
+  UA `[hidden]` rule); the reset page's failsafe could spend a one-time link
+  and the SDK's own URL cleanup left the tokens in history. All fixed, plus
+  W14 (scroll reveals kept headings and links out of the accessibility tree
+  until scrolled) and W13 (`tools/tests/`: 143 pinned Playwright + axe tests,
+  `npm test`, wired into CI as the `verify` job). Record:
+  `Research/reviews/2026-09-05/VERIFICATION_REPORT.md`.
+- **Verification (local):** every one of the 19 routes 0 px overflow at 375
+  and 320, 0 running animations under `?static=1` and no-JS, gate/live/
+  paused/cross-tab states asserted; reset page against a stubbed SDK (18
+  scenarios) and the real SDK with the network blocked, with a console-leak
+  check; axe 0 violations on all 19 routes at two widths; Lighthouse
+  0.97–1.00 on the CI render, and a normal-mode mobile baseline recorded
+  (home 0.73, Pomagotchi 0.78: byte weight, not script). Not established:
+  physical iPhone/iPad/Mac Safari, VoiceOver, real password recovery.
 - **HHSS page** describes v1.4.0 (in App Store review) by Sean's ruling;
   photographs are Sean's own, credited, never presented as app captures.
 
@@ -55,24 +68,28 @@ or design rulings. The existing production site remains live.
 
 ## Open items
 
-- **Needs Sean — push.** Review the eight local commits (`git log 30e7e9e..`)
-  and approve the push; Pages deploys from `main`. Punch list for a phone:
-  the Pause motion toggle's feel, and the HHSS / Device mastheads now wrap
-  to two rows below ~430 px to keep the 44 pt toggle (`[design-call]`).
-- **Needs Sean — wording (W06, W07).** Root privacy vs Trade RC privacy
-  scope; two Pomagotchi terms versions linked from different pages; the
-  homepage HHSS tier line vs the HHSS page; `accessibility.html` claims
-  Pa11y runs (it does not). No copy changed without rulings.
+- **Needs Sean — push the five fix commits** (`git log c754c6a..`): they
+  correct defects that are live now (above). Punch list for a phone after
+  that: the Pause motion toggle's feel; the new Close button inside the
+  menu; the HHSS / Device mastheads wrap to two rows below ~430 px to keep
+  the 44 pt toggle (`[design-call]`).
+- **Needs Sean — wording (W06, W07).** `Research/CLAIM_REGISTER_2026-09-05.md`
+  logs 19 claims with file:line evidence and 13 precise rulings. Highest
+  impact: the Pomagotchi terms page says the liability cap is the "greater"
+  of $100 or the amount paid while the app's canonical terms of the same
+  version say "lesser"; the root privacy page says no backend holds user
+  data while Trade RC's own policy documents its Supabase and Stream.io
+  backend; `accessibility.html` claims Pa11y runs (it does not; after W13 it
+  should name the real suite). No copy changed without rulings.
 - **Needs Sean — design (W05, home direction).** Demo mechanics for
   keyboard/VoiceOver parity; refined dark vs warm editorial home; compact
   POM signature as sections and anchors, not routes. Atlas stays shelved.
-- **W13** (CI covers 8 of 19 routes; tools unpinned; loose CTA check) is
-  next in the technical spine; the 2026-09-05 probes are its seed.
-- **New, recorded 2026-09-05 (W14):** in normal mode the home's scroll
-  reveals keep every chapter heading and link at `visibility: hidden` until
-  scrolled into view, so assistive tech sees h1 → footer h3 on load (axe
-  heading-order in normal mode only; CI's static render cannot see it).
-  Fix belongs with W05's reveal/demo accessibility pass.
+- **W13 done, W14 done** (both in the unpushed commits). CI will run the
+  new `verify` job on the first push; its first run is the proof.
+- **Performance candidates (recorded, not changed):** the home ships seven
+  font faces (468 KB) and a 182 KB JPEG favicon; Three.js is 166 KB gzip
+  with most of it unused; Pomagotchi's yard backgrounds are 147 + 132 KB.
+  Asset and build decisions for a later pass.
 - HHSS: strike the "arrive with version 1.4.0" plans note and re-check the
   seven prices against App Store Connect once Apple approves 1.4.0; the
   "Made with Hush Hush Snap Snap" gallery still waits on six or more real
