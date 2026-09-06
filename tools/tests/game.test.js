@@ -58,6 +58,13 @@ describe('game.test.js — The Device restart race (Playwright)', () => {
       });
 
       const reset = () => page.evaluate(() => { window.__probe.lit = []; window.__probe.status = []; });
+      // Reset the counters and press Restart in ONE evaluate: as two round
+      // trips, the round still running could light a stone in the gap on a
+      // slow runner and be counted against the new session (CI flake).
+      const restart = () => page.evaluate(() => {
+        window.__probe.lit = []; window.__probe.status = [];
+        document.getElementById('challenge-start').click();
+      });
       const read = () =>
         page.evaluate(() => ({
           lit: window.__probe.lit,
@@ -80,8 +87,7 @@ describe('game.test.js — The Device restart race (Playwright)', () => {
       it('restart mid-playback (after the first stone lights)', async () => {
         await page.click('#challenge-start');
         await page.waitForTimeout(1000);
-        await reset();
-        await page.click('#challenge-start');
+        await restart();
         await page.waitForTimeout(playFull);
         assertClean('restart mid-playback', await read(), 3);
       });
@@ -93,8 +99,7 @@ describe('game.test.js — The Device restart race (Playwright)', () => {
           await page.waitForTimeout(40);
         }
         await page.waitForTimeout(250);
-        await reset();
-        await page.click('#challenge-start');
+        await restart();
         await page.waitForTimeout(playFull);
         assertClean('restart in success delay', await read(), 3);
       });
@@ -104,17 +109,16 @@ describe('game.test.js — The Device restart race (Playwright)', () => {
         const wrong = [...Array(20).keys()].find((i) => i !== seq[0]);
         await page.locator('#challenge-board .brick').nth(wrong).click();
         await page.waitForTimeout(300);
-        await reset();
-        await page.click('#challenge-start');
+        await restart();
         await page.waitForTimeout(playFull);
         assertClean('restart in retry delay', await read(), 3);
       });
 
       it('five rapid restarts collapse to exactly one active session', async () => {
-        await reset();
-        for (let i = 0; i < 5; i++) {
-          await page.click('#challenge-start');
+        await restart();
+        for (let i = 0; i < 4; i++) {
           await page.waitForTimeout(60);
+          await page.click('#challenge-start');
         }
         await page.waitForTimeout(playFull);
         const r = await read();
