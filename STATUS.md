@@ -69,12 +69,21 @@ VoiceOver closure remains his.
 
 ## Open items
 
+- **Second engine + AT exposure (2026-09-06):** Playwright WebKit 26.6
+  against the live site passes every dialog, W14, toggle, Reduce Motion,
+  HHSS and reset check; it exposed one keyboard defect (Shift+Tab from the
+  first link went to body instead of Close) fixed in `83548a9` by driving
+  every Tab from the cycle. Chromium's real accessibility tree shows 544
+  exposed nodes drop to 41 while the dialog is open and return after
+  Escape: the inert claim holds at engine level. Record: verification
+  report §10.
 - **Needs Sean — phone punch list** (`[design-call]`): the Pause motion
   toggle's feel; the new Close button inside the menu; the HHSS / Device
   mastheads wrap to two rows below ~430 px to keep the 44 pt toggle.
-  `[device-only]`: Reduce Motion and the toggle on a physical iPhone,
-  VoiceOver through the menu dialog and the reveals, a real password
-  recovery against a test account.
+  `[device-only]`: VoiceOver through the menu dialog and the reveals on a
+  phone, and a real password recovery against a test account (the
+  accessibility trees and the stubbed flow are verified; the real run is
+  not). Simulator screenshots follow when the shared simulator lock frees.
 - **CI `verify` job:** first run on `91d02db` was 142/143 (a timing gap in
   the game test on the slower runner, fixed test-only in `632c73d`); the
   `632c73d` run: `verify` green (143/143), store links and Lighthouse green,
