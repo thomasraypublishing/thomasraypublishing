@@ -11,17 +11,18 @@ The studio's marketing site: hand-authored static HTML/CSS/JS on GitHub Pages,
 custom domain, and self-hosted marketing assets. Password recovery connects
 to Supabase. There is no production framework or build pipeline in this checkout.
 
-`ship_ready: false` records that five review-driven fix commits are local and
-unpushed while their defects are on the live site, and that three review
-tickets still need Sean's wording or design rulings.
+`ship_ready: false` records that three review tickets still need Sean's
+wording or design rulings (W05, W06, W07) and that physical-device and
+VoiceOver closure remains his.
 
 ## Where it stands
 
-- **Live at `c754c6a`** (Sean pushed the defect track 2026-09-06 04:02 UTC;
-  Site CI green: a11y, store links, Lighthouse). Home page plus standalone
-  pages for Trade RC, Pomagotchi, The Device, and Hush Hush Snap Snap, each
-  with its own design system; Coming Next page; support, privacy, and
-  reset-password pages; per-app legal pages.
+- **Live at `91d02db`** (the defect track went live at `c754c6a`, pushed by
+  Sean 2026-09-06 04:02 UTC; the review fixes, W14 and W13 followed at
+  06:38 UTC on his second go-ahead; Pages built, no error). Home page plus
+  standalone pages for Trade RC, Pomagotchi, The Device, and Hush Hush Snap
+  Snap, each with its own design system; Coming Next page; support,
+  privacy, and reset-password pages; per-app legal pages.
 - **Defect track shipped 2026-09-05, live 2026-09-06.** Sean approved
   starting it ahead of the home-direction decision. Fixed and verified: W01 reset diagnostics no longer render URL/token material; W02
   navigation works with Three.js, ScrollTrigger or GSAP blocked and without
@@ -33,19 +34,19 @@ tickets still need Sean's wording or design rulings.
   restart is deterministic; W12 reset decoding, no-SDK/no-JS states, and the
   terms/accessibility heading order and aside labels. The **Pause motion**
   control (Sean's call: top-bar text toggle) closes the WCAG 2.2.2 gap.
-- **Review pass 2026-09-05/06 (five commits, local, unpushed).** Opus code
-  review and a Fable adversarial pass of the shipped track, each with a
-  second pass on the fixes, found and reproduced real defects that are now
-  live at `c754c6a`: one click of "Pause motion" breaks the home's About
-  quote to one word per line; the mobile menu becomes unclosable if the
-  viewport crosses 720 px while open; the Pause button renders under Reduce
-  Motion, `?static=1` and with JavaScript off (an author `display` beat the
-  UA `[hidden]` rule); the reset page's failsafe could spend a one-time link
-  and the SDK's own URL cleanup left the tokens in history. All fixed, plus
-  W14 (scroll reveals kept headings and links out of the accessibility tree
-  until scrolled) and W13 (`tools/tests/`: 143 pinned Playwright + axe tests,
-  `npm test`, wired into CI as the `verify` job). Record:
-  `Research/reviews/2026-09-05/VERIFICATION_REPORT.md`.
+- **Review pass 2026-09-05/06, live.** Opus code review and a Fable
+  adversarial pass of the shipped track, each with a second pass on the
+  fixes, found and reproduced real defects in `c754c6a` (a Pause click broke
+  the home's About quote; the mobile menu could strand itself across the
+  720 px breakpoint; the Pause button rendered under Reduce Motion because
+  an author `display` beat the UA `[hidden]` rule; the reset page's failsafe
+  could spend a one-time link and the SDK's URL cleanup left tokens in
+  history). All fixed and deployed, plus W14 (scroll reveals keep headings
+  and links in the accessibility tree) and W13 (`tools/tests/`: 143 pinned
+  Playwright + axe tests, `npm test`, CI `verify` job). Post-deploy: all 19
+  routes 200, deployed files carry the fixes, axe 0 on 11 live routes, every
+  probe green against production. Record:
+  `Research/reviews/2026-09-05/VERIFICATION_REPORT.md` §9.
 - **Verification (local):** every one of the 19 routes 0 px overflow at 375
   and 320, 0 running animations under `?static=1` and no-JS, gate/live/
   paused/cross-tab states asserted; reset page against a stubbed SDK (18
@@ -68,11 +69,16 @@ tickets still need Sean's wording or design rulings.
 
 ## Open items
 
-- **Needs Sean — push the five fix commits** (`git log c754c6a..`): they
-  correct defects that are live now (above). Punch list for a phone after
-  that: the Pause motion toggle's feel; the new Close button inside the
-  menu; the HHSS / Device mastheads wrap to two rows below ~430 px to keep
-  the 44 pt toggle (`[design-call]`).
+- **Needs Sean — phone punch list** (`[design-call]`): the Pause motion
+  toggle's feel; the new Close button inside the menu; the HHSS / Device
+  mastheads wrap to two rows below ~430 px to keep the 44 pt toggle.
+  `[device-only]`: Reduce Motion and the toggle on a physical iPhone,
+  VoiceOver through the menu dialog and the reveals, a real password
+  recovery against a test account.
+- **CI `verify` job:** first run on `91d02db` was 142/143 (a timing gap in
+  the game test on the slower runner, fixed test-only in `632c73d`); the
+  `632c73d` run: `verify` green (143/143), store links and Lighthouse green,
+  link-check skipped on push by design; Pages built `632c73d`.
 - **Needs Sean — wording (W06, W07).** `Research/CLAIM_REGISTER_2026-09-05.md`
   logs 19 claims with file:line evidence and 13 precise rulings. Highest
   impact: the Pomagotchi terms page says the liability cap is the "greater"
@@ -84,8 +90,7 @@ tickets still need Sean's wording or design rulings.
 - **Needs Sean — design (W05, home direction).** Demo mechanics for
   keyboard/VoiceOver parity; refined dark vs warm editorial home; compact
   POM signature as sections and anchors, not routes. Atlas stays shelved.
-- **W13 done, W14 done** (both in the unpushed commits). CI will run the
-  new `verify` job on the first push; its first run is the proof.
+- **W13 done, W14 done, deployed.**
 - **Performance candidates (recorded, not changed):** the home ships seven
   font faces (468 KB) and a 182 KB JPEG favicon; Three.js is 166 KB gzip
   with most of it unused; Pomagotchi's yard backgrounds are 147 + 132 KB.
