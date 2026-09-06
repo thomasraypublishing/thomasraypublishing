@@ -88,13 +88,15 @@ export function initNav({ motion }) {
     if (!open) return;
     if (e.key === 'Escape') { e.preventDefault(); setOpen(false); return; }
     if (e.key !== 'Tab') return;
+    // Every Tab is driven from the cycle, not left to native order: engines
+    // differ on Shift+Tab from a programmatically focused link (WebKit went
+    // to body instead of the preceding Close button).
     const cycle = [closeBtn, ...links].filter(Boolean);
-    const first = cycle[0];
-    const last = cycle[cycle.length - 1];
-    const active = document.activeElement;
-    const inside = cycle.includes(active);
-    if (e.shiftKey && (active === first || !inside)) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && (active === last || !inside)) { e.preventDefault(); first.focus(); }
+    const idx = cycle.indexOf(document.activeElement);
+    const step = e.shiftKey ? -1 : 1;
+    const next = idx === -1 ? (e.shiftKey ? cycle.length - 1 : 0) : (idx + step + cycle.length) % cycle.length;
+    e.preventDefault();
+    cycle[next].focus();
   }
 
   if (btn && overlay) {
