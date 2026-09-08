@@ -2,7 +2,7 @@
 phase: live
 ship_ready: false
 needs_decision: true
-last_updated: 2026-09-06
+last_updated: 2026-09-07
 ---
 
 # thomasraypublishing.com — Status
@@ -79,7 +79,12 @@ VoiceOver closure remains his.
   report §10.
 - **Needs Sean — phone punch list** (`[design-call]`): the Pause motion
   toggle's feel; the new Close button inside the menu; the HHSS / Device
-  mastheads wrap to two rows below ~430 px to keep the 44 pt toggle.
+  mastheads wrap to two rows below ~430 px to keep the 44 pt toggle; and
+  the speed of the HHSS photograph reveals, retimed 2026-09-07 at his
+  request (`f6b1e01`, live and verified): eased and widened from 120 px of
+  scrolling to about 340 px, so each photograph opens as it rises to
+  mid-screen rather than finishing at the bottom edge. The page was already
+  holding 60fps at 4x CPU throttle, so this was timing, not performance.
   `[device-only]`: VoiceOver through the menu dialog and the reveals on a
   phone, and a real password recovery against a test account (the
   accessibility trees and the stubbed flow are verified; the real run is
