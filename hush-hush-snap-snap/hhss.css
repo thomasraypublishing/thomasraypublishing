@@ -600,12 +600,19 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
    load never traverses, so CI never sees it. Images and decor only; text
    never animates. overflow: clip on the photo figures contains the
    aperture keyframe's transient scale(1.03) so it never paints past the
-   rounded corners. */
+   rounded corners.
+
+   Timing: every scroll-driven piece is ease-in-out, so it is soft at both
+   ends of its range rather than starting and stopping dead. The aperture
+   runs over entry 10%-75% of each photograph, about 340px of scrolling on
+   a phone: the photograph opens as it rises to mid-screen instead of
+   finishing in 120px while it is still at the bottom edge. A programmatic
+   jump can now leave a reveal in flight, which hhss.js settles. */
 figure.photo, figure.bleed { overflow: clip; }
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 30%) {
+  @supports (animation-timeline: view()) and (animation-range: entry 10% entry 75%) {
     html[data-motion="full"] .hero-photo img {
-      animation: lights-down linear both;
+      animation: lights-down ease-in-out both;
       animation-timeline: view();
       animation-range: exit 0% exit 85%;
     }
@@ -613,16 +620,25 @@ figure.photo, figure.bleed { overflow: clip; }
       content: ""; position: absolute; inset: -40%; border-radius: 50%;
       background: radial-gradient(circle, rgba(232, 167, 181, 0.55) 0%, rgba(232, 167, 181, 0) 60%);
       opacity: 0; pointer-events: none; z-index: 0;
-      animation: last-light linear both;
+      animation: last-light ease-in-out both;
       animation-timeline: view();
       animation-range: exit 0% exit 100%;
     }
     html[data-motion="full"] img.capture {
-      animation: aperture linear both;
+      animation: aperture ease-in-out both;
       animation-timeline: view();
-      /* opens over the first 30% of the image's entry, so a frame-counter
-         step or a hash landing never parks a photo half-open */
-      animation-range: entry 0% entry 30%;
+      animation-range: entry 10% entry 75%;
+    }
+    /* A jump (the frame counter, a hash landing) can park a photograph
+       mid-reveal, which a scroll-driven animation would hold there. hhss.js
+       pins the value it was caught at, adds this class, and releases: the
+       aperture finishes on its own and re-arms once the photograph is out
+       of view. */
+    html[data-motion="full"] img.capture.settled {
+      animation: none;
+      clip-path: circle(72% at 50% 50%);
+      transform: none;
+      transition: clip-path 420ms ease-out, transform 420ms ease-out;
     }
   }
   /* the glow is decoration; under increased contrast it goes */

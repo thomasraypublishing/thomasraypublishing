@@ -155,7 +155,111 @@ initQuietControl();
 initDemo();
 
 /* ========================================================================
-   2. Frame counter — the page as a contact sheet. Optional enhancement:
+   2. Aperture settle — a jump must not park a photograph half-open.
+   The reveal is scroll-driven, so a programmatic jump (a frame-counter
+   step, a hash landing) can stop a photograph mid-aperture and hold it
+   there for as long as the reader stays put. Once the jump has settled,
+   any reveal caught in flight is pinned at the value it reached, handed to
+   the transition in .settled, and left to finish on its own; it re-arms
+   when the photograph leaves the viewport, so scrolling back replays it.
+   Ordinary scrolling is untouched: the reader is in control there.
+   No-JS, ?static=1 and Reduce Motion never reach this — the CSS gate has
+   already settled the page and there is nothing in flight to catch.
+   ======================================================================== */
+
+function initApertureSettle() {
+  var noop = function () {};
+  var captures = Array.prototype.slice.call(document.querySelectorAll('img.capture'));
+  if (!captures.length || typeof captures[0].getAnimations !== 'function') { return noop; }
+
+  var apertureOf = function (img) {
+    var running = img.getAnimations();
+    for (var i = 0; i < running.length; i++) {
+      // CSSTransition objects have no animationName, so they fall through.
+      if (running[i].animationName === 'aperture') { return running[i]; }
+    }
+    return null;
+  };
+
+  var inFlight = function (img) {
+    var anim = apertureOf(img);
+    if (!anim || !anim.effect) { return false; }
+    var progress = anim.effect.getComputedTiming().progress;
+    return typeof progress === 'number' && progress > 0.001 && progress < 0.999;
+  };
+
+  var onScreen = function (img) {
+    var box = img.getBoundingClientRect();
+    return box.bottom > 0 && box.top < window.innerHeight;
+  };
+
+  var settle = function (img) {
+    var computed = window.getComputedStyle(img);
+    // Pin the value the scroll left it at, so the transition in .settled has
+    // somewhere to travel from; without this, dropping the animation would
+    // snap straight to the open state.
+    img.style.clipPath = computed.clipPath;
+    img.style.transform = computed.transform;
+    img.classList.add('settled');
+    void img.getBoundingClientRect();
+    img.style.clipPath = '';
+    img.style.transform = '';
+  };
+
+  // Re-arm: a photograph that has left the viewport goes back to the
+  // scroll-driven reveal, so the effect is not spent for the rest of the visit.
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting && entry.target.classList.contains('settled')) {
+          entry.target.classList.remove('settled');
+          entry.target.style.clipPath = '';
+          entry.target.style.transform = '';
+        }
+      });
+    });
+    captures.forEach(function (img) { io.observe(img); });
+  }
+
+  /* Wait for the page to stop moving: a smooth jump takes a moment, and a
+     jump to where we already are produces no scroll events at all. Single
+     flight, so holding down the arrow key cannot stack up listeners. */
+  var idle = null;
+  var ceiling = null;
+  var pending = false;
+
+  var sweep = function () {
+    clearTimeout(idle);
+    clearTimeout(ceiling);
+    window.removeEventListener('scroll', bump);
+    pending = false;
+    captures.forEach(function (img) {
+      if (!img.classList.contains('settled') && onScreen(img) && inFlight(img)) { settle(img); }
+    });
+  };
+
+  var bump = function () { clearTimeout(idle); idle = setTimeout(sweep, 140); };
+
+  var settleAfterJump = function () {
+    clearTimeout(idle);
+    idle = setTimeout(sweep, 400);
+    if (pending) { return; }
+    pending = true;
+    window.addEventListener('scroll', bump, { passive: true });
+    ceiling = setTimeout(sweep, 2000);
+  };
+
+  // A deep link lands the same way a frame-counter step does.
+  if (window.location.hash) { settleAfterJump(); }
+  window.addEventListener('hashchange', settleAfterJump);
+
+  return settleAfterJump;
+}
+
+var settleAfterJump = initApertureSettle();
+
+/* ========================================================================
+   3. Frame counter — the page as a contact sheet. Optional enhancement:
    scrolling is untouched; Left/Right arrows and the pill buttons step
    between sections. Hidden entirely without JS.
    ======================================================================== */
@@ -195,6 +299,7 @@ function initFrameCounter() {
     if (target === current) { return; }
     current = target;
     frames[current].el.scrollIntoView({ behavior: isStatic() ? 'auto' : 'smooth', block: 'start' });
+    settleAfterJump();
     render();
     if (status) {
       status.textContent = 'Frame ' + (current + 1) + ' of ' + frames.length + ': ' + frames[current].name;
