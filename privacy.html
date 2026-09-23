@@ -257,9 +257,19 @@
         <hr class="section-rule">
 
         <h1 id="the-device">Per-App Addendum: The Device &mdash; Cosmic Pyramid</h1>
-        <p class="updated">Effective May 16, 2026</p>
+        <p class="updated">Version 3.1.0 &middot; Effective September 23, 2026 &middot; Last updated September 23, 2026</p>
 
-        <p>The Device is a mystical entertainment app for iOS. This addendum supplements the portfolio policy above with Device-specific data flows.</p>
+        <p>The Device is a mystical entertainment app for iOS, iPadOS, and watchOS. This addendum supplements the portfolio policy above with Device-specific data flows. <strong>Where this addendum differs from the portfolio policy, this addendum controls for The Device.</strong> An equivalent version ships inside the app (Settings &rarr; About The Device &rarr; Privacy Policy).</p>
+
+        <h2>How The Device differs from the portfolio policy</h2>
+        <ul>
+            <li><strong>What leaves your device.</strong> Most of what you do inside The Device stays on your device. Your readings (including any reflection notes), streaks, and profile settings sync between your devices through your own iCloud account, using your private iCloud database and iCloud key-value storage; TRP cannot access that data. Optional analytics, crash reports, feedback, and referral codes go to our Apple CloudKit database, as described below.</li>
+            <li><strong>CloudKit public database.</strong> The Device uses it for three narrow purposes: optional analytics and crash reports, the in-app feedback form, and referral codes you choose to create or redeem. Referral records contain a random referral identifier, the code, and its zodiac prefix; they contain no analytics identifier, and they are created only when you create or redeem a code. Like every record in a CloudKit public database, these records are also stamped by Apple with an opaque identifier for the iCloud account that created them.</li>
+            <li><strong>Crash and performance reports.</strong> If analytics is on, The Device uploads its own crash and hang reports (technical call stacks, app and OS version, and device model &mdash; never anything you typed) to the same CloudKit database. Turning analytics off stops these uploads.</li>
+            <li><strong>Name, email, and feedback.</strong> We receive your name and email address only if you choose to type them into the in-app feedback form or email us, together with your message and any screenshots you attach.</li>
+            <li><strong>Location.</strong> We do not receive your location. If you allow location access, the app sends it only to Apple's WeatherKit (see below).</li>
+            <li><strong>Analytics are pseudonymous, not anonymous.</strong> Analytics and crash records never contain your name, email, or Apple ID, but analytics reports carry the identifiers described below, one of which Apple classifies as data &ldquo;linked to you.&rdquo; We retain these records as long as they remain useful for product improvement.</li>
+        </ul>
 
         <h2>Data stored on your device</h2>
         <ul>
@@ -268,27 +278,35 @@
             <li>Saved prediction images and reading history (stored as files, capped at 50 readings).</li>
             <li>Cached daily horoscope message and recent prediction values (for diversity tracking).</li>
             <li>User preferences (sound, haptics, notifications, Enhanced Awareness).</li>
-            <li>Optional birth date &mdash; stored locally to personalize readings through zodiac and numerology calculations; never transmitted.</li>
-            <li>Streak and milestone tracking; subscription status and redemption code activation date.</li>
+            <li>Optional birth date &mdash; stored on your device to personalize readings through zodiac and numerology calculations, and synced to your other devices through your own iCloud account. It is never sent to us. If you create a referral code, the code includes your zodiac sign (not your birth date).</li>
+            <li>Streak and milestone tracking; subscription status and any redemption-code activation date.</li>
             <li>Widget data (shared via App Group for home-screen widget display).</li>
             <li>Local diagnostic logs.</li>
         </ul>
 
         <h2>Location and weather</h2>
-        <p>The Device may optionally request your location to retrieve local weather conditions via WeatherKit. The permission is optional &mdash; deny it and the app functions normally. When granted, your location is sent only to Apple's WeatherKit; weather is used to flavor prediction narratives; your location is never stored, logged, or transmitted to TRP.</p>
+        <p>The Device may optionally request your location to retrieve local weather conditions via WeatherKit. The permission is optional &mdash; deny it and the app functions normally. When granted, your location is sent only to Apple's WeatherKit; weather is used to flavor prediction narratives; your location is never stored, logged, or transmitted to TRP. You can revoke location access at any time in iOS Settings.</p>
 
         <h2>On-device AI (Apple Foundation Models)</h2>
-        <p>The Device uses Apple's on-device Foundation Models extensively to personalize your experience: creative prediction options, narrative intros, reading summaries, mystical reasons for lucky numbers, peril prompts, personalized notification messages, enhanced Siri responses, and reflective commentary on past readings. All AI processing occurs entirely on your device. No prompts, inputs, or outputs are transmitted to any external server. AI Predictions can be disabled in Settings.</p>
+        <p>The Device uses Apple's on-device Foundation Models to personalize your experience: creative prediction options, narrative intros, reading summaries, mystical reasons for lucky numbers, peril prompts, enhanced Siri responses, and reflective commentary on past readings. All AI processing occurs entirely on your device, and your prompts and outputs are never sent to us or to any third party. AI Predictions can be disabled in Settings.</p>
 
         <h2>Saved prediction images</h2>
         <p>When you save a prediction reading, an image is rendered and stored in the app's local Documents directory. Sharing through the iOS share sheet is handled entirely by the operating system; TRP does not have access to shared images or their destinations.</p>
 
-        <h2>Notifications, Siri, Live Activities, widget</h2>
-        <p>Local notifications, Siri Shortcuts, Live Activities, and the home-screen widget all run entirely on-device. No notification data, voice data, or intent data is transmitted to TRP or any third party.</p>
+        <h2>Notifications</h2>
+        <p>Notifications are scheduled entirely on your device. <strong>The text of a notification never leaves your device</strong>: it is chosen on-device from content bundled inside the app, and it is never transmitted, logged to our database, or included in a feedback report. If analytics is on, your usage report includes notification <em>counts</em> only (scheduled, failed, opened, by reminder type, plus how many days of reminders are queued and how varied the copy was), your notification permission level, how many times permission was withdrawn, and the outcome of the one-time &ldquo;allow banners and sounds&rdquo; offer. Turning analytics off stops all of it.</p>
 
-        <h2>Anonymous analytics (default ON)</h2>
-        <p>The Device sends an anonymous usage report to Apple's CloudKit at most once every 24 hours. Reports include: app version, iOS version, device model, screen dimensions, language/locale, anonymous session count, total readings count, current and longest streaks, subscription and redemption status, purchased prediction count, feature toggle states, AI model availability, engagement counts, onboarding status, free readings remaining, purchase event count, attunement completion rate, average reading interval, most frequent prediction category, device language, sound cache performance, AI generation speed, days since install, session duration, paywall views, time-of-day usage patterns, Apple Watch companion app usage, and error summaries.</p>
-        <p>Reports do <strong>NOT</strong> include: your name, Apple ID, email, location, IP address, or any other personally identifiable information. Each install is assigned a random identifier for deduplication only. Disable anytime in Settings under "Share Anonymous Analytics."</p>
+        <h2>Siri Shortcuts, Live Activities, widgets, and Apple Watch</h2>
+        <p>Siri Shortcuts, Live Activities, and the home-screen widgets run entirely on-device; no voice data, intent content, or on-screen content is transmitted to TRP or any third party. Streak and reading state syncs between iPhone and Apple Watch using WatchConnectivity; this sync itself sends nothing to TRP. If analytics is on, your iPhone's report includes counts of how often you open the app from Siri, widgets, Live Activities, notifications, and the Apple Watch, plus Apple Watch app use, complication taps, and Watch error counts &mdash; counts only, never content.</p>
+
+        <h2>Privacy-minded analytics (default ON)</h2>
+        <p>The Device sends a usage report to Apple's CloudKit at most once every 24 hours. Reports include: app version, iOS version, device model, screen dimensions, language/locale, session count, total readings count, current and longest streaks, subscription and redemption status, purchased prediction count, feature toggle states, AI model availability, engagement counts, onboarding status, free readings remaining, purchase event count, attunement completion rate, average reading interval, most frequent prediction category, device language, sound cache performance, AI generation speed, days since install, session duration, paywall views, time-of-day usage patterns, Apple Watch companion app usage, the notification counts and permission states described above, counts of app opens from widgets, Live Activities, Siri, notifications, and the Apple Watch, aggregated action counts, and error summaries.</p>
+        <p>Reports do <strong>NOT</strong> include your name, Apple ID, email address, precise location, or IP address. Each report carries two deduplication identifiers:</p>
+        <ul>
+            <li><strong>Install identifier.</strong> A random UUID, generated on a given install the first time a report is sent (only while analytics is on). It was replaced once when you updated to version 1.5, so that referral records never carry it, and you can reset it at any time in Settings &rarr; About The Device &rarr; Privacy Details. A different install (including a delete-and-reinstall, and the app on a separate device) gets a different identifier.</li>
+            <li><strong>User-hash identifier.</strong> A salted, one-way hash derived from the opaque CloudKit user record token Apple emits for your Apple ID and this app. It is not your Apple ID and cannot be reversed to it; it lets us count unique accounts across reinstalls and devices. It is unique to this app, so it cannot be cross-referenced with other apps. Apple classifies it as data &ldquo;linked to you.&rdquo; It is omitted if you are not signed in to iCloud or if analytics is off.</li>
+        </ul>
+        <p>If you send feedback with your name or email, we can connect that feedback to diagnostics from the same session. We use these identifiers solely to compute population metrics; we do not use them for advertising, to track you across apps or websites, or to build a profile of you. Disable anytime in Settings under &ldquo;Share Anonymous Analytics.&rdquo; When analytics is off, neither identifier is generated, stored, or transmitted.</p>
 
         <h2>Required-reason APIs</h2>
         <p>The Device's <code>PrivacyInfo.xcprivacy</code> declares <code>NSPrivacyAccessedAPICategoryUserDefaults</code> (CA92.1), <code>NSPrivacyAccessedAPICategoryFileTimestamp</code> (C617.1), <code>NSPrivacyAccessedAPICategoryDiskSpace</code> (E174.1), and <code>NSPrivacyAccessedAPICategorySystemBootTime</code> (35F9.1). <code>NSPrivacyTracking</code> is <code>false</code>.</p>
