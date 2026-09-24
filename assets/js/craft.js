@@ -27,7 +27,7 @@ const CARD_SELECTOR = '.specimen, .stk, .book .cover, .instrument, .plan, .card,
 // Never fade an image that is itself (or sits inside) a cross-document
 // view-transition morph target, or one HHSS's own scroll-driven aperture
 // reveal already owns.
-const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed';
+const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed, img.capture';
 
 let sheenBound = false;
 let rafPending = false;
