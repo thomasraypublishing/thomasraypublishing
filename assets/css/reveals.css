@@ -1,0 +1,174 @@
+/* ========================================================================
+   reveals.css — cross-document paw-print reveal + cat-menu circular reveal
+   (from prototypes/transitions/{paw,cat-menu}.css, QA'd Chromium 153 +
+   WebKit 26.6). Never touches ::view-transition-*(root) outside
+   html:active-view-transition-type(paw) — hero-work is a separate pair
+   this file never selects.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+    :root {
+        --paw-x: 50vw; /* PIXEL lengths from paw-head.js; default = centred */
+        --paw-y: 50vh;
+        --paw-anchor-x: 0.5; /* heel-pad anchor in the 200x200 mask */
+        --paw-anchor-y: 0.635;
+        --paw-readable: clamp(140px, 22vmin, 220px);
+        --paw-readable-over: calc(var(--paw-readable) * 1.12);
+        --paw-cover: 350vmax; /* no-JS fallback */
+        --paw-duration: 1100ms; /* ?pawms=NNN overrides */
+        --paw-ease-stamp: cubic-bezier(0.16, 1, 0.3, 1);
+        --paw-ease-settle: ease-in-out;
+        --paw-ease-expand: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    @keyframes paw-grow { /* STAMP 0-30 -> SETTLE 30-42 -> HOLD 42-58 -> EXPAND 58-100 */
+        0% {
+            mask-size: 0 0; -webkit-mask-size: 0 0;
+            mask-position: var(--paw-x) var(--paw-y);
+            -webkit-mask-position: var(--paw-x) var(--paw-y);
+            animation-timing-function: var(--paw-ease-stamp);
+        }
+        30% {
+            mask-size: var(--paw-readable-over) var(--paw-readable-over);
+            -webkit-mask-size: var(--paw-readable-over) var(--paw-readable-over);
+            mask-position:
+                calc(var(--paw-x) - var(--paw-readable-over) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-readable-over) * var(--paw-anchor-y));
+            -webkit-mask-position:
+                calc(var(--paw-x) - var(--paw-readable-over) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-readable-over) * var(--paw-anchor-y));
+            animation-timing-function: var(--paw-ease-settle);
+        }
+        42% {
+            mask-size: var(--paw-readable) var(--paw-readable);
+            -webkit-mask-size: var(--paw-readable) var(--paw-readable);
+            mask-position:
+                calc(var(--paw-x) - var(--paw-readable) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-readable) * var(--paw-anchor-y));
+            -webkit-mask-position:
+                calc(var(--paw-x) - var(--paw-readable) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-readable) * var(--paw-anchor-y));
+            animation-timing-function: linear;
+        }
+        58% {
+            mask-size: var(--paw-readable) var(--paw-readable);
+            -webkit-mask-size: var(--paw-readable) var(--paw-readable);
+            mask-position:
+                calc(var(--paw-x) - var(--paw-readable) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-readable) * var(--paw-anchor-y));
+            -webkit-mask-position:
+                calc(var(--paw-x) - var(--paw-readable) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-readable) * var(--paw-anchor-y));
+            animation-timing-function: var(--paw-ease-expand);
+        }
+        100% {
+            mask-size: var(--paw-cover) var(--paw-cover);
+            -webkit-mask-size: var(--paw-cover) var(--paw-cover);
+            mask-position:
+                calc(var(--paw-x) - var(--paw-cover) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-cover) * var(--paw-anchor-y));
+            -webkit-mask-position:
+                calc(var(--paw-x) - var(--paw-cover) * var(--paw-anchor-x))
+                calc(var(--paw-y) - var(--paw-cover) * var(--paw-anchor-y));
+        }
+    }
+
+    /* Peach ink without an extra element: during STAMP+HOLD the arriving
+       snapshot is flattened to one colour (contrast(0) -> mid-grey, tinted
+       to --ginger, ~#F1B07C) so the paw reads even between two navy pages.
+       It releases as a hard switch at 58%, not an interpolated fade: a
+       linear release passed through a muddy-grey frame (see L3, SESSION_
+       HANDOFF_2026-09-23_CRAFT_PASS.md §6). A named ink element was tried
+       first; WebKit 26.6 never painted it. */
+    @keyframes paw-tint {
+        0%, 58% { filter: contrast(0) sepia(1) saturate(1.75) hue-rotate(-16deg) brightness(1.2); }
+        58.01%, 100% { filter: contrast(1) sepia(0) saturate(1) hue-rotate(0deg) brightness(1); }
+    }
+
+    html:active-view-transition-type(paw)::view-transition-old(root) { animation: none; }
+    html:active-view-transition-type(paw)::view-transition-new(root) {
+        animation:
+            paw-grow var(--paw-duration) linear forwards,
+            paw-tint var(--paw-duration) linear forwards;
+        mix-blend-mode: normal;
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-mode: alpha; /* force alpha, never luminance */
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Empty: no @view-transition above -> no cross-document transition at all. */
+}
+
+/* Cat menu: clip-path reveal, cat -> overlay. All 11 #menu-btn pages are
+   cosmic (verified); unscoped defaults below fall back for a future light page. */
+:root {
+    --cat-reveal-ms: 600ms;
+    --cat-close-ms: 450ms;
+    --cat-reveal-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.menu-btn .cat-icon { width: 24px; height: 24px; color: var(--ink); }
+.menu-btn:hover .cat-icon { color: var(--ink-2); }
+@media (forced-colors: active) {
+    .cat-icon { fill: CanvasText; }
+    .menu-btn:focus-visible { outline-color: Highlight; }
+}
+
+.menu-overlay {
+    clip-path: circle(0px at 100% 0%); /* nav.js sets this inline before every reveal */
+    background: color-mix(in srgb, var(--paper-2) 65%, var(--cosmos-2) 35%); /* ~#3D3668 cosmic */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    scroll-padding-top: calc(var(--nav-h, 64px) + 56px);
+}
+/* --ink-3 clears only ~2.8-3.3:1 here; --ink-2 clears >=5.8:1. */
+.menu-overlay .menu-foot a { color: var(--ink-2); }
+.menu-overlay a em { color: var(--ink); }
+[data-theme="cosmic"] .menu-overlay a em { color: var(--chapter-accent, var(--ginger)); }
+.menu-overlay a:focus-visible,
+.menu-overlay button:focus-visible { outline-color: var(--ink); }
+[data-theme="cosmic"] .menu-overlay a:focus-visible,
+[data-theme="cosmic"] .menu-overlay button:focus-visible { outline-color: var(--chapter-accent, var(--ginger)); }
+.menu-overlay .menu-close { color: var(--ink-2); }
+
+.menu-content { /* wrapper nav.js creates at init */
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
+
+.cat-reveal-ring { /* sized per reveal by nav.js; only scale() animates */
+    position: fixed; left: 0; top: 0;
+    width: 0; height: 0;
+    border-radius: 50%;
+    border: 2px solid var(--ginger);
+    background: none;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+    z-index: 80; /* above nav.top (70) and .menu-overlay (60) */
+    will-change: transform, opacity;
+}
+@media (forced-colors: active) {
+    .cat-reveal-ring { border-color: Highlight; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-overlay,
+    .menu-content,
+    .cat-reveal-ring {
+        transition: none !important;
+        animation: none !important;
+    }
+    .cat-reveal-ring { opacity: 0 !important; }
+}

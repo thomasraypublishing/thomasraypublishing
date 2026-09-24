@@ -43,8 +43,8 @@ stop it.
 
 ## What each file asserts
 
-- **`routes.test.js`** — for every route in `routes.json`, at 1280px and
-  375px (loaded with `?static=1` for the routes flagged `static`, plain
+- **`routes.test.js`** — for every route in `routes.json`, at 1280px, 375px,
+  and 320px (loaded with `?static=1` for the routes flagged `static`, plain
   otherwise): no page or console error, no horizontal overflow
   (`document.documentElement.scrollWidth` at most 1px over the viewport —
   a fractional-device-scale rounding allowance, not real reflow slack), a
@@ -71,7 +71,8 @@ stop it.
 
 - **`behavior.test.js`** — the interactive and motion-policy assertions,
   ported from probe.cjs's `blocked`, `menu`, `gate`, `live`, `paused`, and
-  `quiet` sections:
+  `quiet` sections, plus the craft pass's own `cat menu`, `paw`, and
+  `craft` additions below:
   - *blocked*: the mobile menu still opens (and nothing throws) with
     `three.module.min.js`, `ScrollTrigger.min.js`, or `gsap.min.js`
     aborted.
@@ -87,6 +88,43 @@ stop it.
     accessibility improvement, not something this ticket asked for) —
     the invariant-based check is correct before and after a change like
     that; a hardcoded sequence would not have been.
+  - *cat menu*: opening `#menu-btn` under full motion shows `#menu-overlay`,
+    focuses its first link, and marks the background `inert`; under
+    Reduce Motion the overlay is visible immediately with zero running
+    `document.getAnimations()` targeting it (nav.js's `setOpen()` calls
+    `settleFullyOpen()` synchronously instead of animating in that case).
+  - *paw*: the cross-document paw-print reveal (`assets/js/paw-head.js` +
+    `assets/js/paw-reveal.js`) arms on a push navigation under full
+    motion (the *control* case — proves the four negative cases below
+    aren't vacuous), and never under `?static=1`, Reduce Motion, a stored
+    `trp-motion=paused`, or a back/forward (traverse) navigation;
+    `sessionStorage['trp-paw-origin']` is empty after every arrival. Every
+    case here runs against its own dedicated server started with
+    `{ cacheControl: 'max-age=600' }` (`tools/tests/lib/server.js`), not
+    this file's shared no-store one: measured (installed Google Chrome,
+    channel `'chrome'`, 153.0.8010.53), Chrome does not grant a
+    cross-document view-transition opt-in for a document served
+    `no-store`/`no-cache` — no-store 1/8, no-cache 0/8, max-age=600 8/8 —
+    and the live site sends `max-age=600` (`curl -I
+    https://thomasraypublishing.com/privacy.html`). Without that fix the
+    four negative cases were passing vacuously: against `no-store`,
+    Chrome rarely offered a transition to skip in the first place, so "no
+    paw type" proved nothing. **Note on the assertion technique:** a
+    `pagereveal` capture listener (installed before any page script, via
+    `context.addInitScript`) must read `event.viewTransition.types` only
+    *after* `event.viewTransition.ready` settles, not synchronously and
+    not just after a microtask — confirmed empirically that reading it
+    too early races paw-head.js's own (later-registered) listener,
+    intermittently observing an empty set even though
+    `.types.add('paw')` ran and threw nothing. A known-benign Chromium
+    diagnostic ("...ViewTransition opt-in disabled", the same no-store
+    cause above) is filtered out of the "no console errors" assertions
+    rather than failing a test on an expected line — it shouldn't fire at
+    all now that these tests run against `max-age=600`, but the filter is
+    kept as a defensive backstop.
+  - *craft*: a pressable control (`#menu-btn`) produces no `transform` on
+    `:active` under Reduce Motion (styles.css only applies the press
+    `scale()` transition under `html[data-motion="full"]`).
   - *gate*: on the Hush Hush Snap Snap page, the ring/capture/hero
     animations and `scroll-behavior` only run when
     `html[data-motion="full"]` — every other value (absent, `static`,
@@ -165,7 +203,8 @@ stop it.
   `check-esm.cjs`, plus `assets/js/quiet.js` — the "Pause motion" module,
   which `main.js`/`pomagotchi.js`/`thedevice.js`/`trade-rc.js`/`hhss.js`
   all `import`, and which that seed script's hand-written file list had
-  missed.
+  missed — and `assets/js/paw-reveal.js` + `assets/js/craft.js`, added
+  when the craft pass wired them into every public page.
 
 ## Adding a route or a product
 

@@ -106,17 +106,21 @@ VoiceOver closure remains his.
   keyboard/VoiceOver parity; refined dark vs warm editorial home; compact
   POM signature as sections and anchors, not routes. Atlas stays shelved.
 - **W13 done, W14 done, deployed.**
-- **W15 — paw-print page reveal: AUTHORED (prototype), awaiting Sean's
-  design call.** `prototypes/transitions/paw-a.html` (gitignored). A
-  cross-document reveal: stamp, hold, expand over 1100 ms, typed `paw`
-  and added on the arriving page. Verified in Chromium 153 and WebKit 26.6.
-  Next phase is WIRED: shared head script and CSS across the 19 routes,
-  deferring to `hero-work`, plus harness assertions.
-- **W16 — cat-menu reveal: AUTHORED (prototype), awaiting Sean's design
-  call.** `prototypes/transitions/cat-menu.html`. A clip-path circle with a
-  ginger rim grows from a cat menu button. axe is clean with the menu open
-  in both themes. Next phase is WIRED: replace the `nav.js` GSAP fade and
-  the `.menu-btn` icon. Real cat artwork waits on W17 photos.
+- **W15 — paw-print page reveal: WIRED on `claude/craft-pass` (not merged).**
+  Cosmic peach-tinted paw; stamp, hold, expand over 1100 ms. Deferring to
+  hero-work, HHSS and Back/Forward are all implemented. Verified in Chromium,
+  WebKit and installed Chrome, plus the iOS 27 simulator. QA round 1 left H3
+  open (stylesheet hero-work names play over the paw). See
+  `Research/SESSION_HANDOFF_2026-09-23_CRAFT_PASS.md`.
+- **W16 — cat-menu reveal: WIRED on `claude/craft-pass` (not merged).**
+  A clip-path circle with a ginger rim replaces the GSAP fade in `nav.js`,
+  and the cat icon is on the 11 menu pages. axe is clean with the menu open.
+- **W18 — craft pass: WIRED, in QA (round 1 scored 45/100; fixes in progress).**
+  Press springs, hover sheen, focus ease, text-wrap and hanging punctuation,
+  image fade, `html` background (fixes the grey iPhone overscroll band) and
+  themed scrollbars. `npm test` is 172/172. Open: H1 stretched home hero
+  screenshots, H2 image fade overriding page opacity and filters, plus M1,
+  L1, L2 and L3. Merge to `main` waits on QA at 95% or more.
 - **W17 — pack elements: PROPOSED.** The blind, deaf cat as accessibility
   inspector (`/accessibility/` plus the About line), a pack masthead, and a
   Pom-ate-it 404, using Sean's photographs. **Needs Sean:** the cat's name,

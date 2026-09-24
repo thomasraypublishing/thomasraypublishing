@@ -69,28 +69,28 @@ function statOrNull(p) {
   }
 }
 
-function send(res, status, filePath) {
+function send(res, status, filePath, cacheControl) {
   const ext = path.extname(filePath).toLowerCase();
   const body = fs.readFileSync(filePath);
   res.writeHead(status, {
     'Content-Type': MIME[ext] || DEFAULT_MIME,
     'Content-Length': body.length,
-    'Cache-Control': 'no-store',
+    'Cache-Control': cacheControl,
   });
   res.end(body);
 }
 
-function handleRequest(req, res) {
+function handleRequest(req, res, cacheControl) {
   try {
     const parsed = new URL(req.url, 'http://internal');
     const found = resolveFile(parsed.pathname);
     if (found) {
-      send(res, 200, found);
+      send(res, 200, found, cacheControl);
       return;
     }
     const notFoundPage = path.join(ROOT, '404.html');
     if (statOrNull(notFoundPage)) {
-      send(res, 404, notFoundPage);
+      send(res, 404, notFoundPage, cacheControl);
     } else {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end('404 Not Found');
@@ -101,10 +101,18 @@ function handleRequest(req, res) {
   }
 }
 
-/** Start the server on a free port. Resolves to { url, port, server }. */
-function start() {
+/** Start the server on a free port. Resolves to { url, port, server }.
+    `cacheControl` defaults to 'no-store' for every ordinary test (nothing
+    here should ever be served from a stale cache mid-suite). Chrome does
+    not grant a cross-document view-transition opt-in for a document
+    served 'no-store' or 'no-cache' — measured (channel 'chrome'
+    153.0.8010.53): no-store 1/8, no-cache 0/8, max-age=600 8/8 — so the
+    paw-reveal tests start their own server with
+    `{ cacheControl: 'max-age=600' }`, matching the live site's own header
+    (`curl -I https://thomasraypublishing.com/privacy.html`). */
+function start({ cacheControl = 'no-store' } = {}) {
   return new Promise((resolve, reject) => {
-    const server = http.createServer(handleRequest);
+    const server = http.createServer((req, res) => handleRequest(req, res, cacheControl));
     server.once('error', reject);
     server.listen(0, '127.0.0.1', () => {
       const address = server.address();

@@ -277,13 +277,17 @@ function initReveals() {
     let trigger = null;
     const reveal = () => {
       if (trigger) trigger.kill();
-      gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' });
+      // clearProps also hands back scale/translate/rotate: GSAP 3.13
+      // zeroes those inline whenever it drives `transform`, which would
+      // otherwise leave the craft press/hover-lift (now on those
+      // properties) dead on this card forever.
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', clearProps: 'transform,translate,scale,rotate' });
     };
     trigger = ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: reveal });
     el.addEventListener('focusin', () => {
       if (trigger) trigger.kill();
       gsap.killTweensOf(el);
-      gsap.set(el, { clearProps: 'opacity,transform' });
+      gsap.set(el, { clearProps: 'opacity,transform,translate,scale,rotate' });
     }, { once: true });
   });
   window.addEventListener('load', () => ScrollTrigger.refresh());

@@ -25,7 +25,9 @@ const ROOT = path.resolve(__dirname, '..', '..');
 // list and adds assets/js/quiet.js (the "Pause motion" control shipped in
 // d92e05d): main.js, pomagotchi.js, thedevice.js, trade-rc.js and hhss.js
 // all `import` it, so it is first-party and load-bearing, and check-esm.cjs
-// had missed it.
+// had missed it. assets/js/paw-reveal.js and assets/js/craft.js were added
+// when the craft pass wired them into every public page as
+// type="module" script tags.
 const MODULES = [
   'assets/js/main.js',
   'assets/js/nav.js',
@@ -38,6 +40,8 @@ const MODULES = [
   'assets/js/specimen.js',
   'assets/js/cameo.js',
   'assets/js/prose.js',
+  'assets/js/paw-reveal.js',
+  'assets/js/craft.js',
   'pomagotchi/pomagotchi.js',
   'thedevice/thedevice.js',
   'trade-rc/trade-rc.js',

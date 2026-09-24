@@ -689,13 +689,18 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
   --motion-fast: 120ms;
   --motion-standard: 220ms;
   --motion-emphasis: 360ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
 }
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
-  .mast { view-transition-name: hero-work; }
+  /* Suppressed during a paw transition (assets/css/reveals.css) — the paw
+     only ever detects an inline view-transition-name (the home page's
+     specimen click), and this stylesheet rule would otherwise still
+     name the masthead and layer the hero-work morph on top of it. */
+  html:not(:active-view-transition-type(paw)) .mast { view-transition-name: hero-work; }
   ::view-transition-old(hero-work),
   ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
 }
@@ -716,3 +721,125 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
   .btn-acid { border: 1px solid ButtonText; }
   .skip-link { border: 1px solid ButtonText; }
 }
+
+/* ========================================================================
+   Craft pass — press feedback, card lift + sheen, focus ease, type grace,
+   image reveal, edge theming. Scale/lift/sheen are opt-in on
+   html[data-motion="full"]; every element keeps a non-motion press cue
+   (filter dim) so feedback survives Reduce Motion, ?static=1, and the
+   visitor's own pause. /assets/js/craft.js drives image reveal and the
+   pointer-tracked sheen (--mx/--my); everything else here is CSS-only.
+   ======================================================================== */
+:root {
+  --press-scale: 0.97;
+  --press-in: 90ms;
+  --press-out: 420ms;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* fallback; replaced below when linear() is supported */
+  --lift: 0 -2px; /* for the `translate` property, not `transform` — see below */
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring: linear(0, 0.0546, 0.1858, 0.3528, 0.526, 0.6855, 0.8199, 0.9247, 0.9996, 1.0478, 1.074, 1.0832, 1.0807, 1.0709, 1.0574, 1.0429, 1.0292, 1.0174, 1.0081, 1.0013, 0.9968, 0.9942, 0.9931, 0.9931);
+  }
+}
+
+/* -------- Press: inline text links get a tint, never a scale -------- */
+a { -webkit-tap-highlight-color: transparent; }
+a:active { filter: brightness(0.82); transition: filter var(--press-in) var(--ease-standard); }
+
+/* -------- Press: buttons, cards, controls --------
+   Press and hover-lift transition the independent `scale`/`translate`
+   properties, never `transform`: .tier carries a GSAP scroll reveal that
+   writes `transform` directly, and a CSS transition on that same property
+   fights every inline write GSAP makes, so the reveal never settles.
+   Different properties compose instead. */
+.btn, .motion-toggle, .tier, .boot {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active, .motion-toggle:active, .tier:active, .boot:active {
+  filter: brightness(0.92);
+}
+html[data-motion="full"] .btn,
+html[data-motion="full"] .motion-toggle,
+html[data-motion="full"] .tier,
+html[data-motion="full"] .boot {
+  transition: scale var(--press-out) var(--spring);
+}
+/* .tier also gets the hover lift below, on `translate` — a second rule
+   for the same selector replaces the whole transition list rather than
+   merging into it, so its own timing is added here instead. */
+html[data-motion="full"] .tier {
+  transition: scale var(--press-out) var(--spring), translate var(--press-out) var(--spring);
+}
+html[data-motion="full"] .btn:active,
+html[data-motion="full"] .motion-toggle:active,
+html[data-motion="full"] .tier:active,
+html[data-motion="full"] .boot:active {
+  scale: var(--press-scale);
+  transition: scale var(--press-in) var(--ease-standard);
+}
+
+/* -------- Card hover: lift + pointer-tracked sheen (fine pointer, motion full only) -------- */
+@media (hover: hover) and (pointer: fine) {
+  html[data-motion="full"] .tier:hover {
+    translate: var(--lift);
+    box-shadow: 0 20px 36px -22px rgba(0, 0, 0, .5);
+  }
+  .tier { position: relative; overflow: hidden; }
+  .tier::after {
+    content: ""; position: absolute; inset: 0; z-index: 3;
+    opacity: 0; pointer-events: none;
+    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(127, 255, 107, .1), transparent 65%);
+  }
+  html[data-motion="full"] .tier::after {
+    transition: opacity var(--motion-fast) var(--ease-standard);
+  }
+  html[data-motion="full"] .tier:hover::after {
+    opacity: 1;
+  }
+}
+
+/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise --------
+   The transition for `a` is combined with typography grace's below (one
+   rule per selector — a second same-specificity rule for the same
+   selector doesn't merge properties, it replaces the whole declaration). */
+a, button, input, [tabindex] { outline-offset: 6px; outline-color: transparent; }
+html[data-motion="full"] button, html[data-motion="full"] input, html[data-motion="full"] [tabindex] {
+  transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard);
+}
+@media (forced-colors: active) {
+  a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline-color: Highlight; }
+}
+
+/* -------- Typography grace -------- */
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+/* ...except long-form body prose: WebKit's `pretty` re-rags every line to
+   avoid a short last one, which over a legal page's hundreds of lines
+   measurably grows the page (privacy/terms at 320px). Short text (ledes,
+   card copy, captions, quotes, list items inside cards) keeps it. */
+.calm-main p, .calm-main li { text-wrap: wrap; }
+.calm-main { hanging-punctuation: first allow-end; }
+html[data-motion="full"] a {
+  transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
+a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
+
+/* -------- Image reveal (/assets/js/craft.js marks <img>s not yet complete) --------
+   Layered so it can never outrank this file's own rules for the same
+   element: any unlayered rule always beats a layered one regardless of
+   specificity or source order. craft.js also strips .craft-fade/
+   .craft-loaded once the transition finishes, so this is
+   belt-and-suspenders, not the only guard. No background-color here — it
+   paints a visible square behind transparent images while the fade is in
+   progress. */
+@layer craft-fade {
+  .craft-fade { opacity: 0; filter: blur(8px); }
+  html[data-motion="full"] .craft-fade {
+    transition: opacity var(--motion-emphasis) var(--ease-standard), filter var(--motion-emphasis) var(--ease-standard);
+  }
+  .craft-fade.craft-loaded { opacity: 1; filter: blur(0); }
+}
+
+/* -------- Edges: overscroll bounce matches the page; themed scrollbar -------- */
+html { background: var(--trc-plum); scrollbar-color: var(--trc-ink-2) var(--trc-plum); }
