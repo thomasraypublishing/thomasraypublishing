@@ -1,44 +1,23 @@
-/* ========================================================================
-   craft.js — the craft pass's two runtime jobs. Everything else (press
-   feedback, focus ease, edge theming, typography grace) is CSS-only.
-
-   1. Image reveal: any <img> not yet complete() when this module runs
-      gets .craft-fade (opacity/blur set in each page's own CSS, keyed to
-      that page's own background token); on load/decode it gets
-      .craft-loaded, which the CSS transitions under
-      html[data-motion="full"] and snaps instantly everywhere else.
-      Already-complete/cached images are left alone — never faded.
-
-   2. Card sheen: a rAF-throttled, passive pointermove sets --mx/--my (as
-      percentages) on whichever card the pointer is over, so the radial
-      sheen in each page's CSS can follow it. Only bound while motion is
-      "full" AND the device actually has a fine-pointer hover (a touch
-      screen has no hover to chase) — re-evaluated live on every
-      motion-policy change and on that media query changing.
-
-   No dependencies. Root-relative import so this resolves the same from
-   the site root and from a one-level-down app page. No-op safely if the
-   page has none of the elements below.
-   ======================================================================== */
+/* craft.js — the craft pass's runtime jobs (everything else is CSS-only):
+   1. Image reveal: an <img> not yet complete() gets .craft-fade until
+      load/decode, then .craft-loaded (CSS transitions it under
+      html[data-motion="full"], snaps elsewhere). Cached images: untouched.
+   2. Card sheen: rAF-throttled pointermove sets --mx/--my on the hovered
+      card, bound only while motion is full and the pointer has hover.
+   Root-relative import; no deps; no-op if the page has none of this. */
 
 import { isStatic, onMotionChange } from '/assets/js/motion.js';
 
 // Cards the pointer-tracked sheen runs on, across every page's own CSS.
 const CARD_SELECTOR = '.specimen, .stk, .book .cover, .instrument, .plan, .card, .tier';
 
-// Never fade an image that is itself (or sits inside) a cross-document
-// view-transition morph target, one HHSS's own scroll-driven aperture
-// reveal already owns, or one GSAP's own scroll reveal already owns
-// (Pomagotchi/The Device screenshot galleries: `closest()` catches both
-// an img carrying data-reveal itself and one nested inside a data-reveal
-// container) — never two reveals racing on the same image.
+// Never fade an image already owned by another reveal: a cross-document
+// morph target, HHSS's own aperture reveal, or a GSAP scroll reveal
+// (data-reveal — closest() also catches an img nested inside one).
 const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed, img.capture, [data-reveal]';
 
-// The sheen follows a real pointer; a touch device has no hover to chase,
-// so binding the listener there is pure overhead (and --mx/--my would just
-// sit wherever the last touch happened). Re-evaluated live: a Bluetooth
-// mouse paired mid-session, or a 2-in-1 switching to tablet mode, changes
-// this query without a reload.
+// No hover to chase on touch; re-evaluated live for a mouse paired or a
+// 2-in-1 switched mid-session.
 const HOVER_CAPABLE = window.matchMedia('(hover: hover) and (pointer: fine)');
 
 let sheenBound = false;
@@ -86,12 +65,9 @@ function markImage(img) {
   if (img.closest(SKIP_SELECTOR)) return;
   if (img.complete && img.naturalWidth > 0) return; // already loaded/cached — never fade
   img.dataset.craftMarked = '';
-  // A lazy image isn't complete() yet at bind time even on a cached reload
-  // — the browser doesn't check its cache until the image nears the
-  // viewport — but a cache hit then decodes within a frame or two. Waiting
-  // one frame before committing to the fade skips it for that case
-  // (nothing was visibly blocked either way in that single frame), instead
-  // of running the full 360ms fade-in for an image that was already there.
+  // A cached lazy image isn't complete() yet at bind time (the browser
+  // doesn't check until it nears the viewport) but decodes within a
+  // frame; wait one frame so that case skips the fade.
   requestAnimationFrame(() => {
     if (img.complete && img.naturalWidth > 0) return; // decoded within a frame — a cache hit, not worth fading
     img.classList.add('craft-fade');
@@ -104,11 +80,8 @@ function markImage(img) {
   });
 }
 
-// .craft-fade/.craft-loaded only ever hold a temporary starting state
-// (see the CSS's @layer craft-fade) — once the fade-in has visually
-// finished, both classes are dropped so the page's own opacity/filter
-// rules for that element (e.g. The Device's .webb-glow ambient glow) take
-// over permanently instead of being shadowed forever.
+// .craft-fade/.craft-loaded are temporary; drop both once settled so the
+// page's own permanent rules (e.g. The Device's .webb-glow) take over.
 function settleFade(img) {
   const clear = () => img.classList.remove('craft-fade', 'craft-loaded');
   if (isStatic()) { clear(); return; } // no transition ran; nothing to wait for
