@@ -120,26 +120,34 @@ function initReveals() {
   });
 
   // The /msg moment: the query pane slides in beside the room as you scroll.
+  // Only while the panes sit side by side (trade-rc.css stacks them at
+  // 880px): gsap.matchMedia reverts the tween, its trigger, and the inline
+  // offset the moment the layout stacks, so a window narrowed after load
+  // never keeps a full-width pane shoved 44px past the viewport edge.
   const dm = document.querySelector('#query-scene .q-dm');
-  if (dm && window.matchMedia('(min-width: 881px)').matches &&
-      dm.getBoundingClientRect().top > window.innerHeight) {
-    gsap.set(dm, { opacity: 0, x: 44 });
-    const slide = gsap.to(dm, {
-      opacity: 1,
-      x: 0,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#query-scene',
-        start: 'top 82%',
-        end: 'top 40%',
-        scrub: 0.4
-      }
+  if (dm) {
+    gsap.matchMedia().add('(min-width: 881px)', () => {
+      if (isStatic() || dm.getBoundingClientRect().top <= window.innerHeight) return;
+      gsap.set(dm, { opacity: 0, x: 44 });
+      const slide = gsap.to(dm, {
+        opacity: 1,
+        x: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#query-scene',
+          start: 'top 82%',
+          end: 'top 40%',
+          scrub: 0.4
+        }
+      });
+      const onFocus = () => {
+        if (slide.scrollTrigger) slide.scrollTrigger.kill();
+        slide.kill();
+        gsap.set(dm, { clearProps: 'all' });
+      };
+      dm.addEventListener('focusin', onFocus, { once: true });
+      return () => dm.removeEventListener('focusin', onFocus);
     });
-    dm.addEventListener('focusin', () => {
-      if (slide.scrollTrigger) slide.scrollTrigger.kill();
-      slide.kill();
-      gsap.set(dm, { clearProps: 'all' });
-    }, { once: true });
   }
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
