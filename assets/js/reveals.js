@@ -57,7 +57,15 @@ export function initReveals() {
       .from('.hero .eyebrow .mono', { opacity: 0, x: -8, duration: 0.6 }, 0.3)
       .from('.hero p.lede', { opacity: 0, y: 18, duration: 0.8 }, 0.55)
       .from('.hero-meta-row .item', { opacity: 0, y: 12, stagger: 0.07, duration: 0.5 }, 0.7)
-      .from('.specimens .specimen', { opacity: 0, y: 36, stagger: 0.12, duration: 0.9 }, 0.8);
+      .from('.specimens .specimen', {
+        opacity: 0, y: 36, stagger: 0.12, duration: 0.9,
+        // GSAP 3.13 zeroes the independent scale/translate/rotate
+        // properties inline whenever it drives `transform`, so it has to
+        // hand them back too — otherwise they're stuck at `none` forever
+        // and the craft press/hover-lift (which live on those properties
+        // now, not `transform`) never fires again on these cards.
+        clearProps: 'transform,translate,scale,rotate',
+      }, 0.8);
     track('.hero .eyebrow .mono, .hero p.lede, .hero-meta-row .item, .specimens .specimen', tl);
   }
 
@@ -101,7 +109,9 @@ export function initReveals() {
     track('.catalog .book', gsap.from('.catalog .book', {
       scrollTrigger: { trigger: '.catalog', start: 'top 75%' },
       opacity: 0, y: 36, stagger: 0.1, duration: 0.85, ease: 'power3.out',
-      clearProps: 'transform', // hand transform back to CSS so press/hover states apply
+      // hand transform AND the independent scale/translate/rotate back to
+      // CSS (GSAP 3.13 zeroes those inline too) so press/hover-lift apply.
+      clearProps: 'transform,translate,scale,rotate',
     }));
   }
 
@@ -110,7 +120,7 @@ export function initReveals() {
     track('.stickers .stk', gsap.from('.stickers .stk', {
       scrollTrigger: { trigger: '.stickers', start: 'top 78%' },
       opacity: 0, scale: 0.82, y: 20, stagger: 0.07, duration: 0.7,
-      ease: 'back.out(1.7)', clearProps: 'transform',
+      ease: 'back.out(1.7)', clearProps: 'transform,translate,scale,rotate',
     }));
   }
 

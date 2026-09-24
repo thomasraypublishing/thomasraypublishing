@@ -628,7 +628,7 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
   --press-in: 90ms;
   --press-out: 420ms;
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* fallback; replaced below when linear() is supported */
-  --lift: translateY(-2px);
+  --lift: 0 -2px; /* for the `translate` property, not `transform` — see below */
 }
 @supports (transition-timing-function: linear(0, 1)) {
   :root {
@@ -640,7 +640,13 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
 a { -webkit-tap-highlight-color: transparent; }
 a:active { filter: brightness(0.82); transition: filter var(--press-in) var(--ease-standard); }
 
-/* -------- Press: buttons, badges, cards, controls -------- */
+/* -------- Press: buttons, badges, cards, controls --------
+   Press and hover-lift transition the independent `scale`/`translate`
+   properties, never `transform`: .instrument/.plan carry a GSAP scroll
+   reveal (reveals.js/thedevice.js) that writes `transform` directly, and
+   a CSS transition on that same property fights every inline write GSAP
+   makes, so the reveal never settles. Different properties compose
+   instead. */
 .btn, .motion-toggle, .pyramid-btn, .brick, .store-badge, .instrument, .plan {
   -webkit-tap-highlight-color: transparent;
 }
@@ -654,13 +660,20 @@ html[data-motion="full"] .pyramid-btn,
 html[data-motion="full"] .store-badge,
 html[data-motion="full"] .instrument,
 html[data-motion="full"] .plan {
-  transition: transform var(--press-out) var(--spring);
+  transition: scale var(--press-out) var(--spring);
 }
 /* .brick already transitions opacity/box-shadow for its .lit state; a
    second rule for the same selector would replace that list, not merge
-   into it, so the transform timing is added here instead. */
+   into it, so the scale timing is added here instead. */
 html[data-motion="full"] .brick {
-  transition: opacity 0.18s ease, transform var(--press-out) var(--spring), box-shadow 0.18s ease;
+  transition: opacity 0.18s ease, scale var(--press-out) var(--spring), box-shadow 0.18s ease;
+}
+/* .instrument and .plan also get the hover lift below, on `translate` —
+   a second rule for the same selector replaces the whole transition list
+   rather than merging into it, so their own timing is added here. */
+html[data-motion="full"] .instrument,
+html[data-motion="full"] .plan {
+  transition: scale var(--press-out) var(--spring), translate var(--press-out) var(--spring);
 }
 html[data-motion="full"] .btn:active,
 html[data-motion="full"] .motion-toggle:active,
@@ -669,15 +682,15 @@ html[data-motion="full"] .brick:active,
 html[data-motion="full"] .store-badge:active,
 html[data-motion="full"] .instrument:active,
 html[data-motion="full"] .plan:active {
-  transform: scale(var(--press-scale));
-  transition: transform var(--press-in) var(--ease-standard);
+  scale: var(--press-scale);
+  transition: scale var(--press-in) var(--ease-standard);
 }
 
 /* -------- Card hover: lift + pointer-tracked sheen (fine pointer, motion full only) -------- */
 @media (hover: hover) and (pointer: fine) {
   html[data-motion="full"] .instrument:hover,
   html[data-motion="full"] .plan:hover {
-    transform: var(--lift);
+    translate: var(--lift);
     box-shadow: 0 20px 36px -22px rgba(0, 0, 0, .55);
   }
   .instrument, .plan { position: relative; overflow: hidden; }
