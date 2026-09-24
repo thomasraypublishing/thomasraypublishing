@@ -1,16 +1,29 @@
 'use strict';
 /* lib/paw.js — shared helpers for the cross-document paw-print reveal
-   tests (assets/js/paw-head.js + assets/js/paw-reveal.js), used by both:
-     - behavior.test.js's "paw" describe block: the four negative-gating
-       cases (?static=1, Reduce Motion, a stored pause, a back/forward
-       traverse), which are reliably single-attempt since "no transition
-       granted at all" is itself a valid pass for each of them.
-     - paw-positive.solo.test.js: the one case that needs a real, live
-       cross-document view-transition grant from the browser (a push
-       navigation under full motion actually arming 'paw') — split into
-       its own file and its own `node --test` invocation in package.json's
-       "test" script, run AFTER the main concurrent batch. See that file's
-       header comment for why.
+   tests (assets/js/paw-head.js + assets/js/paw-reveal.js), used by every
+   test in behavior.test.js's "paw" describe block: the one case that
+   proves the gate isn't vacuous (a push navigation under full motion
+   actually arms 'paw') sits alongside the four negative-gating cases
+   (?static=1, Reduce Motion, a stored pause, a back/forward traverse).
+
+   Root cause of an earlier flake in these tests, measured (installed
+   Google Chrome, channel 'chrome', 153.0.8010.53): Chrome does not grant
+   a cross-document view-transition opt-in for a document served
+   `Cache-Control: no-store` or `no-cache` — no-store 1/8, no-cache 0/8,
+   max-age=600 8/8 (fresh context each attempt, index.html to the footer
+   privacy link, types read after `ready`). This repo's default test
+   server (lib/server.js) sends `no-store`, which every OTHER test in
+   this suite wants (nothing here should ever be served stale mid-run).
+   The live site sends `max-age=600` (curl -I
+   https://thomasraypublishing.com/privacy.html), so real visitors get
+   the paw reveal; the test server just wasn't matching that header. Every
+   paw test — positive and negative alike — therefore runs against its
+   own server started with `{ cacheControl: 'max-age=600' }`, not the
+   file's shared no-store one. (This also means the four negative cases
+   were previously passing vacuously: with no-store, Chrome rarely
+   offered a transition to skip in the first place, so "no paw type"
+   proved nothing. The positive/control case below is what makes a
+   vacuous pass impossible.)
 
    Every navigation here is a push from FROM_PAGE to a real, visible
    footer link (not a scripted location.href — Playwright's click() is
@@ -24,21 +37,20 @@ const TO_GLOB = '**/privacy.html*';
 const FROM_GLOB = `**/${FROM_PAGE}*`;
 
 // Chromium logs "Transition was aborted because of invalid state.
-// ViewTransition opt-in disabled" whenever it declines to grant a
-// cross-document transition for reasons outside the page's control —
-// observed on a sizeable share of same-origin navigations in this
-// headless environment, including ones where our own JS deliberately
-// calls skipTransition(). It is a browser diagnostic, not a page bug, so
-// it's filtered out of the "no console errors" assertions rather than
-// failing a test on an expected, harmless line.
+// ViewTransition opt-in disabled" when it declines to grant a
+// cross-document transition for reasons outside the page's control — the
+// same no-store/no-cache cause documented above. Every paw test now runs
+// against the max-age=600 server, so this shouldn't fire for these
+// navigations in practice; kept as a defensive filter (not a page bug)
+// rather than removed, so a real, unrelated console error still fails
+// the test.
 const BENIGN_VT_ABORT = 'Transition was aborted because of invalid state. ViewTransition opt-in disabled';
 const realErrors = (errs) => errs.filter((e) => !e.includes(BENIGN_VT_ABORT));
 
 // Does NOT use lib/browser.js's newPage(): its context.route('**/*')
 // interception (needed elsewhere to keep tests off the public internet)
-// measurably increases how often Chromium logs the abort above. Every
-// navigation here is same-origin against the local fixture server
-// regardless, so the network policy isn't needed for correctness here.
+// isn't needed here — every navigation in this file is same-origin
+// against the local fixture server regardless.
 async function newLocalPage(browser, contextOptions = {}) {
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, ...contextOptions });
   const errors = [];
@@ -67,6 +79,7 @@ async function withCaptureInstalled(context) {
       if (vt) {
         vt.ready.catch(() => {}).finally(() => {
           window.__pawCap.types = vt.types ? Array.from(vt.types) : [];
+          window.__pawCap.settled = true;
         });
       }
     });
@@ -78,7 +91,15 @@ async function loadFromPage(site, page, suffix = '') {
 }
 
 async function snapshot(page) {
-  await page.waitForTimeout(150); // let the ready-gated capture settle
+  // Wait for the ready-gated capture itself, not a fixed delay: `ready`
+  // can settle after the load event, and a fixed 150 ms after load read
+  // an empty type set on a real paw navigation (measured 40/40 paw
+  // transitions both engines when reading after `ready`).
+  await page.waitForFunction(
+    () => window.__pawCap && (!window.__pawCap.hasVT || window.__pawCap.settled),
+    null,
+    { timeout: 5000 },
+  );
   return page.evaluate(() => ({
     cap: window.__pawCap,
     pawOrigin: (() => {
@@ -96,32 +117,15 @@ async function clickToPrivacy(page) {
   return snapshot(page);
 }
 
-/** Chromium only grants the cross-document view-transition opt-in on a
-    minority of same-origin navigations when run concurrently with the
-    rest of this suite (node:test runs separate *.test.js files in
-    parallel by default, and every other file here is Playwright-heavy
-    too — measured reliable in isolation: 9/10 and 10/10 across runs
-    against both this repo's no-store server and a plain server, so the
-    feature itself is fine; the low grant rate under `npm test` is
-    contention from sibling files, not a gating defect). maxAttempts is
-    deliberately kept low (5, not dozens): a case that still can't get a
-    single real transition in 5 fresh-page attempts is a signal worth
-    seeing, not something to paper over with more retries. That's exactly
-    why the positive case lives in its own file, run outside the
-    concurrent batch — see paw-positive.solo.test.js. */
-async function pushToPrivacyRetrying(site, context, { fromSuffix = '', maxAttempts = 5 } = {}) {
-  let last = null;
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const page = await context.newPage();
-    try {
-      await loadFromPage(site, page, fromSuffix);
-      last = await clickToPrivacy(page);
-      if (last.cap.hasVT && last.cap.types.includes('paw')) return last;
-    } finally {
-      await page.close();
-    }
-  }
-  return last;
+/** Single navigation attempt: push from FROM_PAGE to privacy.html and
+    return the captured pagereveal state. No retry — against the
+    max-age=600 server this should be reliable (measured 8/8; see this
+    file's header comment). If a single attempt proves flaky under the
+    full concurrent `npm test`, that's real signal to report with
+    numbers, not something to paper over by adding retries back. */
+async function pushToPrivacy(site, page) {
+  await loadFromPage(site, page);
+  return clickToPrivacy(page);
 }
 
 module.exports = {
@@ -136,5 +140,5 @@ module.exports = {
   loadFromPage,
   snapshot,
   clickToPrivacy,
-  pushToPrivacyRetrying,
+  pushToPrivacy,
 };

@@ -13,18 +13,6 @@ npx playwright install chromium          # once, only if you don't have Google C
 npm test                                 # everything
 ```
 
-**`npm test` is two `node --test` invocations in sequence**, not one: the
-main batch (`behavior.test.js`, `cta.test.js`, `game.test.js`,
-`links.test.js`, `modules.test.js`, `reset.test.js`, `routes.test.js` —
-node:test runs separate files concurrently by default), then
-`paw-positive.solo.test.js` alone, afterward, on its own. That file holds
-exactly one assertion — that a push navigation under full motion actually
-arms the cross-document paw-print reveal — which needs a real, live
-view-transition grant from the browser; Chromium only reliably grants one
-outside the resource contention of the concurrent batch (every file in
-this suite is Playwright-heavy). See `tools/tests/lib/paw.js`'s header
-comment for the measurements behind that split.
-
 **Browser choice.** Locally the suite drives your installed **Google
 Chrome** by default (`channel: 'chrome'`), matching the
 `Research/reviews/2026-09-05/scripts/` probes this suite was ported from.
@@ -42,7 +30,6 @@ npm run test:behavior    # tools/tests/behavior.test.js
 npm run test:links       # tools/tests/links.test.js
 npm run test:cta         # tools/tests/cta.test.js
 npm run test:modules     # tools/tests/modules.test.js
-npm run test:paw-positive # tools/tests/paw-positive.solo.test.js
 
 # No dedicated npm script for these two — run them directly:
 node --test tools/tests/reset.test.js
@@ -106,27 +93,35 @@ stop it.
     Reduce Motion the overlay is visible immediately with zero running
     `document.getAnimations()` targeting it (nav.js's `setOpen()` calls
     `settleFullyOpen()` synchronously instead of animating in that case).
-  - *paw* (negative cases): the cross-document paw-print reveal
-    (`assets/js/paw-head.js` + `assets/js/paw-reveal.js`) never arms under
-    `?static=1`, Reduce Motion, a stored `trp-motion=paused`, or a
-    back/forward (traverse) navigation; `sessionStorage['trp-paw-origin']`
-    is empty after every arrival. The positive case — a push nav under
-    full motion actually arming it — lives in its own file,
-    `paw-positive.solo.test.js` (below); see that file and
-    `tools/tests/lib/paw.js`, which both share with this suite, for why.
-    **Note on the assertion technique:** a `pagereveal` capture listener
-    (installed before any page script, via `context.addInitScript`) must
-    read `event.viewTransition.types` only *after*
-    `event.viewTransition.ready` settles, not synchronously and not just
-    after a microtask — confirmed empirically that reading it too early
-    races paw-head.js's own (later-registered) listener, intermittently
-    observing an empty set even though `.types.add('paw')` ran and threw
-    nothing. A known-benign Chromium diagnostic
-    ("...ViewTransition opt-in disabled", logged whenever the browser
-    declines the transition opt-in for any reason, including our own
-    deliberate `skipTransition()` calls) is filtered out of the "no
-    console errors" assertions rather than failing a test on an expected
-    line.
+  - *paw*: the cross-document paw-print reveal (`assets/js/paw-head.js` +
+    `assets/js/paw-reveal.js`) arms on a push navigation under full
+    motion (the *control* case — proves the four negative cases below
+    aren't vacuous), and never under `?static=1`, Reduce Motion, a stored
+    `trp-motion=paused`, or a back/forward (traverse) navigation;
+    `sessionStorage['trp-paw-origin']` is empty after every arrival. Every
+    case here runs against its own dedicated server started with
+    `{ cacheControl: 'max-age=600' }` (`tools/tests/lib/server.js`), not
+    this file's shared no-store one: measured (installed Google Chrome,
+    channel `'chrome'`, 153.0.8010.53), Chrome does not grant a
+    cross-document view-transition opt-in for a document served
+    `no-store`/`no-cache` — no-store 1/8, no-cache 0/8, max-age=600 8/8 —
+    and the live site sends `max-age=600` (`curl -I
+    https://thomasraypublishing.com/privacy.html`). Without that fix the
+    four negative cases were passing vacuously: against `no-store`,
+    Chrome rarely offered a transition to skip in the first place, so "no
+    paw type" proved nothing. **Note on the assertion technique:** a
+    `pagereveal` capture listener (installed before any page script, via
+    `context.addInitScript`) must read `event.viewTransition.types` only
+    *after* `event.viewTransition.ready` settles, not synchronously and
+    not just after a microtask — confirmed empirically that reading it
+    too early races paw-head.js's own (later-registered) listener,
+    intermittently observing an empty set even though
+    `.types.add('paw')` ran and threw nothing. A known-benign Chromium
+    diagnostic ("...ViewTransition opt-in disabled", the same no-store
+    cause above) is filtered out of the "no console errors" assertions
+    rather than failing a test on an expected line — it shouldn't fire at
+    all now that these tests run against `max-age=600`, but the filter is
+    kept as a defensive backstop.
   - *craft*: a pressable control (`#menu-btn`) produces no `transform` on
     `:active` under Reduce Motion (styles.css only applies the press
     `scale()` transition under `html[data-motion="full"]`).
@@ -144,14 +139,6 @@ stop it.
     labeled correctly, pauses and resumes site-wide, survives a reload,
     hides under `?static=1` and under Reduce Motion (nothing left to
     pause), and meets the 44×44px minimum target at 375 and 320px.
-
-- **`paw-positive.solo.test.js`** — the one paw-reveal case that needs a
-  real, live cross-document view-transition grant from the browser: a push
-  navigation under full motion actually arms `'paw'`. Deliberately not part
-  of `behavior.test.js` and not run inside `npm test`'s main concurrent
-  batch — see its own header comment and `tools/tests/lib/paw.js`'s for the
-  full story, and the "Running it" section above for how `npm test` invokes
-  it.
 
 - **`reset.test.js`** — `reset-password.html` never leaks a recovery code
   or access token, however the link is shaped or however its Supabase call

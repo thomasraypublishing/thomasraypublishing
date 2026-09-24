@@ -90,14 +90,6 @@ jobs:
     # a11y (axe-core CLI) job — routes.test.js covers the same pages plus
     # terms/accessibility/reset, at all three breakpoints, with the same
     # axe-core engine.
-    #
-    # `npm test` is two `node --test` invocations in sequence (see
-    # package.json): the main concurrent batch, then
-    # paw-positive.solo.test.js alone. That one assertion needs a real,
-    # live cross-document view-transition grant from the browser, which
-    # Chromium only reliably gives outside the resource contention of
-    # node:test's default concurrent file execution — see
-    # tools/tests/lib/paw.js's header comment.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

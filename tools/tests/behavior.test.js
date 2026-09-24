@@ -213,22 +213,63 @@ describe('behavior (Playwright)', () => {
     });
   });
 
-  describe('paw: cross-document reveal gating (negative cases)', () => {
-    // The positive case — a push nav under full motion actually arms
-    // 'paw' — lives in its own file, paw-positive.solo.test.js, run
-    // outside node:test's default concurrent file execution. Every case
-    // here is reliably single-attempt: unlike the positive case, "no
-    // viewTransition granted at all" is itself a valid pass for all four,
-    // so they aren't sensitive to the same cross-file resource contention
-    // (see lib/paw.js's header comment for the full story).
-    const { FROM_GLOB, realErrors, newLocalPage, withCaptureInstalled, loadFromPage, snapshot, clickToPrivacy } =
-      require('./lib/paw.js');
+  describe('paw: cross-document reveal gating', () => {
+    // Root cause, measured (installed Google Chrome, channel 'chrome',
+    // 153.0.8010.53): Chrome does not grant a cross-document
+    // view-transition opt-in for a document served `Cache-Control:
+    // no-store` or `no-cache` — no-store 1/8, no-cache 0/8, max-age=600
+    // 8/8. This file's shared `site` (started above with no override)
+    // sends `no-store`, matching every OTHER test's need to never see a
+    // stale response mid-run — wrong for these tests specifically, since
+    // the live site sends `max-age=600` (curl -I
+    // https://thomasraypublishing.com/privacy.html) and real visitors do
+    // get the paw. So every test below runs against its own `pawSite`,
+    // started with `{ cacheControl: 'max-age=600' }`. See
+    // tools/tests/lib/paw.js's header for the full account, including why
+    // the four negative cases were previously passing vacuously against
+    // the no-store server (Chrome rarely offered a transition to skip in
+    // the first place) — the first test below is the control that makes a
+    // vacuous pass impossible.
+    const {
+      FROM_GLOB,
+      realErrors,
+      newLocalPage,
+      withCaptureInstalled,
+      loadFromPage,
+      snapshot,
+      clickToPrivacy,
+      pushToPrivacy,
+    } = require('./lib/paw.js');
+
+    let pawSite;
+
+    before(async () => {
+      pawSite = await start({ cacheControl: 'max-age=600' });
+    });
+
+    after(async () => {
+      await stop(pawSite);
+    });
+
+    it('control: push nav, motion full DOES get the paw type (proves the gate below isn\'t vacuous)', async () => {
+      const { context, page, errors } = await newLocalPage(browser);
+      try {
+        await withCaptureInstalled(context);
+        const { cap, pawOrigin } = await pushToPrivacy(pawSite, page);
+        assert.ok(cap.hasVT, 'expected a cross-document viewTransition on arrival under full motion');
+        assert.ok(cap.types.includes('paw'), `expected 'paw' in viewTransition.types, got ${JSON.stringify(cap.types)}`);
+        assert.equal(pawOrigin, null, 'trp-paw-origin should be cleared after arrival');
+        assert.deepEqual(realErrors(errors), [], `page/console error(s):\n  ${realErrors(errors).join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
 
     it('?static=1: no paw type on arrival', async () => {
       const { context, page, errors } = await newLocalPage(browser);
       try {
         await withCaptureInstalled(context);
-        await loadFromPage(site, page, '?static=1');
+        await loadFromPage(pawSite, page, '?static=1');
         const { cap, pawOrigin } = await clickToPrivacy(page);
         assert.ok(
           !cap.hasVT || !cap.types.includes('paw'),
@@ -245,7 +286,7 @@ describe('behavior (Playwright)', () => {
       const { context, page, errors } = await newLocalPage(browser, { reducedMotion: 'reduce' });
       try {
         await withCaptureInstalled(context);
-        await loadFromPage(site, page);
+        await loadFromPage(pawSite, page);
         const { cap, pawOrigin } = await clickToPrivacy(page);
         assert.ok(
           !cap.hasVT || !cap.types.includes('paw'),
@@ -269,7 +310,7 @@ describe('behavior (Playwright)', () => {
             /* private mode: nothing to seed, the assertion below just fails loudly */
           }
         });
-        await loadFromPage(site, page);
+        await loadFromPage(pawSite, page);
         const { cap, pawOrigin } = await clickToPrivacy(page);
         assert.ok(
           !cap.hasVT || !cap.types.includes('paw'),
@@ -286,7 +327,7 @@ describe('behavior (Playwright)', () => {
       const { context, page, errors } = await newLocalPage(browser);
       try {
         await withCaptureInstalled(context);
-        await loadFromPage(site, page);
+        await loadFromPage(pawSite, page);
         await clickToPrivacy(page); // the forward leg's own outcome doesn't matter here
         await Promise.all([page.waitForURL(FROM_GLOB), page.goBack()]);
         const { cap, pawOrigin } = await snapshot(page);
