@@ -171,7 +171,7 @@ nav.top .wrap {
 }
 [data-theme="cosmic"] .spec-pom .stage { background: linear-gradient(160deg, #2a2148 0%, #1a1434 100%); }
 .spec-pom .stage img {
-    position: relative; z-index: 2; max-height: 92%; max-width: 88%;
+    position: relative; z-index: 2; width: auto; height: auto; max-height: 92%; max-width: 88%;
     filter: drop-shadow(0 20px 28px rgba(0,0,0,.22));
     transform: translateY(2px);
 }
@@ -192,7 +192,7 @@ html[data-motion="full"] .spec-pom .fluff-deco { animation: drift 22s linear inf
     cursor: pointer; user-select: none;
 }
 .spec-dev .stage img {
-    position: relative; z-index: 2; max-height: 92%; max-width: 86%;
+    position: relative; z-index: 2; width: auto; height: auto; max-height: 92%; max-width: 86%;
     filter: drop-shadow(0 22px 36px rgba(0,0,0,.55));
 }
 .spec-dev .stars {
