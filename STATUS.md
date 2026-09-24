@@ -2,7 +2,7 @@
 phase: live
 ship_ready: false
 needs_decision: true
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 ---
 
 # thomasraypublishing.com — Status
@@ -23,6 +23,12 @@ VoiceOver closure remains his.
   standalone pages for Trade RC, Pomagotchi, The Device, and Hush Hush Snap
   Snap, each with its own design system; Coming Next page; support,
   privacy, and reset-password pages; per-app legal pages.
+- **Local `main` is ahead of live, not pushed (2026-09-24).** Three lanes are
+  landed: The Device privacy addendum v3.1.0 on the root privacy page; the
+  Trade RC fix so the stacked query pane no longer overflows (13–28 px
+  before); and the craft pass (W15, W16, W18). `npm test` passes 234/234 and
+  `check-unlanded` is clean. **Pushing is Sean's call.** The Device addendum
+  goes live with it.
 - **Defect track shipped 2026-09-05, live 2026-09-06.** Sean approved
   starting it ahead of the home-direction decision. Fixed and verified: W01 reset diagnostics no longer render URL/token material; W02
   navigation works with Three.js, ScrollTrigger or GSAP blocked and without
@@ -106,21 +112,26 @@ VoiceOver closure remains his.
   keyboard/VoiceOver parity; refined dark vs warm editorial home; compact
   POM signature as sections and anchors, not routes. Atlas stays shelved.
 - **W13 done, W14 done, deployed.**
-- **W15 — paw-print page reveal: WIRED on `claude/craft-pass` (not merged).**
-  Cosmic peach-tinted paw; stamp, hold, expand over 1100 ms. Deferring to
-  hero-work, HHSS and Back/Forward are all implemented. Verified in Chromium,
-  WebKit and installed Chrome, plus the iOS 27 simulator. QA round 1 left H3
-  open (stylesheet hero-work names play over the paw). See
-  `Research/SESSION_HANDOFF_2026-09-23_CRAFT_PASS.md`.
-- **W16 — cat-menu reveal: WIRED on `claude/craft-pass` (not merged).**
-  A clip-path circle with a ginger rim replaces the GSAP fade in `nav.js`,
-  and the cat icon is on the 11 menu pages. axe is clean with the menu open.
-- **W18 — craft pass: WIRED, in QA (round 1 scored 45/100; fixes in progress).**
-  Press springs, hover sheen, focus ease, text-wrap and hanging punctuation,
-  image fade, `html` background (fixes the grey iPhone overscroll band) and
-  themed scrollbars. `npm test` is 172/172. Open: H1 stretched home hero
-  screenshots, H2 image fade overriding page opacity and filters, plus M1,
-  L1, L2 and L3. Merge to `main` waits on QA at 95% or more.
+- **W15 paw reveal, W16 cat menu, W18 craft pass: BUILT, on local `main`.**
+  Four fix→QA cycles with adversarial Opus QA: 45, then 58, 80 and 95/100
+  (ship bar ≥95, no High or Medium). The last three Low findings were fixed
+  and each re-verified against its repro. In the iOS 27 simulator the cat
+  circle grows from the cat, and the peach paw stamps at the tap and then
+  reveals the next page. The craft pass adds 11.9 KB of gzipped CSS and JS
+  to the heaviest page (the budget is 12 KB), and the harness gains a
+  transition-preservation fixture. Evidence: `Research/reviews/2026-09-23-craft-pass/`
+  (qa-round1–4, diagnostics, captures).
+  **Needs Sean `[design-call]`:**
+  - paw duration: 1100 ms now, compare with `?pawms=`
+  - the tint's hard cut at 58%, which "blinks out" between two navy pages,
+    against a short fade that avoids the grey
+  - `text-wrap: pretty` on short copy, which adds 25–78 px to some WebKit
+    pages at phone widths
+  - Back/Forward get no paw
+  **`[device-only]`:** ProMotion feel of the press, paw and cat on a real
+  iPhone; VoiceOver through the cat menu.
+- **Ticket (pre-existing, not changed):** the Pomagotchi feature cards' 1.2 s
+  time-of-day fade leaves card text hard to read partway through.
 - **W17 — pack elements: PROPOSED.** The blind, deaf cat as accessibility
   inspector (`/accessibility/` plus the About line), a pack masthead, and a
   Pom-ate-it 404, using Sean's photographs. **Needs Sean:** the cat's name,
