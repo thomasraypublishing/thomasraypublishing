@@ -733,7 +733,32 @@ html[data-motion="full"] .tod-dial button:active,
 html[data-motion="full"] .store-badge:active,
 html[data-motion="full"] .card:active {
   scale: var(--press-scale);
+}
+/* Each :active list mirrors that same selector's full-motion list above,
+   with only the scale entry's timing swapped to the fast press-in — a
+   plain `transition: scale ...` here would replace the whole list during
+   a press, truncating whatever else the element was mid-transition on
+   (.btn's hover lift, .trick's border-color, .card's background fade). */
+html[data-motion="full"] .btn:active {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .motion-toggle:active {
   transition: scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .coat-row .coat:active {
+  transition: border-color 0.2s ease, transform 0.15s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .trick-row .trick:active {
+  transition: border-color 0.2s ease, transform 0.15s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .tod-dial button:active {
+  transition: background 0.25s ease, color 0.25s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .store-badge:active {
+  transition: transform 0.2s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .card:active {
+  transition: background 1.2s ease, scale var(--press-in) var(--ease-standard), translate var(--press-out) var(--spring);
 }
 
 /* -------- Card hover: lift + pointer-tracked sheen (fine pointer, motion full only) -------- */

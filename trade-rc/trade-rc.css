@@ -782,7 +782,19 @@ html[data-motion="full"] .motion-toggle:active,
 html[data-motion="full"] .tier:active,
 html[data-motion="full"] .boot:active {
   scale: var(--press-scale);
+}
+/* Each :active list mirrors that same selector's full-motion list above,
+   with only the scale entry's timing swapped to the fast press-in — a
+   plain `transition: scale ...` here would replace the whole list during
+   a press, truncating whatever else the element was mid-transition on
+   (.tier's hover lift). */
+html[data-motion="full"] .btn:active,
+html[data-motion="full"] .motion-toggle:active,
+html[data-motion="full"] .boot:active {
   transition: scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .tier:active {
+  transition: scale var(--press-in) var(--ease-standard), translate var(--press-out) var(--spring);
 }
 
 /* -------- Card hover: lift + pointer-tracked sheen (fine pointer, motion full only) -------- */
