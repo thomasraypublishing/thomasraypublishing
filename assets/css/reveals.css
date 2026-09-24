@@ -73,15 +73,24 @@
         }
     }
 
-    @keyframes paw-ink-fade { /* solid 0-58%, fades over EXPAND's first 30% (70.6%) */
-        0%, 58% { opacity: 1; }
-        70.6% { opacity: 0; }
-        100% { opacity: 0; }
+    /* Peach ink without an extra element: during STAMP + HOLD the arriving
+       page's own snapshot is flattened to one colour (contrast(0) makes every
+       pixel mid-grey, the rest of the chain tints that grey to the cosmic
+       --ginger, measured ~#F1B07C), so the paw reads even between two navy
+       pages. It clears over the first ~12% of EXPAND (58% to 63%); a slower release
+       passes through a muddy grey as the filter functions interpolate.
+       An extra view-transition-named ink element was tried first; WebKit
+       26.6 never painted it. */
+    @keyframes paw-tint {
+        0%, 58% { filter: contrast(0) sepia(1) saturate(1.75) hue-rotate(-16deg) brightness(1.2); }
+        63%, 100% { filter: contrast(1) sepia(0) saturate(1) hue-rotate(0deg) brightness(1); }
     }
 
     html:active-view-transition-type(paw)::view-transition-old(root) { animation: none; }
     html:active-view-transition-type(paw)::view-transition-new(root) {
-        animation: paw-grow var(--paw-duration) linear forwards;
+        animation:
+            paw-grow var(--paw-duration) linear forwards,
+            paw-tint var(--paw-duration) linear forwards;
         mix-blend-mode: normal;
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
         -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
@@ -90,27 +99,6 @@
         mask-mode: alpha; /* force alpha, never luminance */
     }
 
-    #paw-ink { /* created/removed by paw-head.js; masked like root */
-        position: fixed; inset: 0;
-        /* var(--ginger) directly (not a :root custom prop): --ginger lives
-           on [data-theme="cosmic"] (<body>), a DESCENDANT of :root, and vars
-           don't cascade upward — #paw-ink is itself a body child, so it sees it. */
-        background: var(--ginger, #F5B07A);
-        pointer-events: none;
-        /* Not display:none: a display:none element gets no box, so no
-           view-transition-new(paw-ink) snapshot is ever captured for it. */
-        view-transition-name: paw-ink;
-    }
-    html:active-view-transition-type(paw)::view-transition-new(paw-ink) {
-        animation:
-            paw-grow var(--paw-duration) linear forwards,
-            paw-ink-fade var(--paw-duration) linear forwards;
-        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
-        mask-repeat: no-repeat;
-        -webkit-mask-repeat: no-repeat;
-        mask-mode: alpha;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

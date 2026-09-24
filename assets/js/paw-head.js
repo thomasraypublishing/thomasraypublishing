@@ -38,10 +38,6 @@
     var pawms = parseInt(params.get('pawms'), 10); // overrides --paw-duration (reveals.css default 1100ms)
     if (isFinite(pawms) && pawms > 0) root.style.setProperty('--paw-duration', pawms + 'ms');
 
-    function removeInk() {
-        var el = document.getElementById('paw-ink');
-        if (el) el.remove();
-    }
 
     window.addEventListener('pagereveal', function (e) {
         // Clear FIRST, unconditionally (bfcache/prerender can carry stale state).
@@ -53,11 +49,9 @@
         root.style.removeProperty('--paw-x');
         root.style.removeProperty('--paw-y');
         root.style.removeProperty('--paw-cover');
-        removeInk();
 
         if (!e.viewTransition) return;
         e.viewTransition.ready.catch(function () { /* skipped/unsupported */ });
-        e.viewTransition.finished.then(removeInk).catch(function () { /* skipped */ });
 
         var liveState = computeMotionState();
         root.dataset.motion = liveState;
@@ -87,13 +81,5 @@
             if (reach > maxReach) maxReach = reach;
         }
         root.style.setProperty('--paw-cover', (1.04 * maxReach) + 'px');
-
-        // Peach-ink layer (reveals.css styles/masks/fades it); not in markup.
-        if (!document.getElementById('paw-ink')) {
-            var ink = document.createElement('div');
-            ink.id = 'paw-ink';
-            ink.setAttribute('aria-hidden', 'true');
-            (document.body || root).appendChild(ink);
-        }
     });
 })();
