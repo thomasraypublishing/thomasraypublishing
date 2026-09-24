@@ -23,7 +23,12 @@ const { launch, newPage, injectAxe, runAxe, AXE_TAGS, settleAnimations } = requi
 const { routes } = require('./routes.json');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const WIDTHS = [1280, 375];
+// 320 is the craft pass's own no-overflow floor (STATUS.md: "every one of
+// the 19 routes 0 px overflow at 375 and 320"). This is plain 320px, not
+// the doubled-root-font reflow stress variant the README says was left out
+// on purpose — that one still has two accepted-by-design residual
+// overflows and stays out.
+const WIDTHS = [1280, 375, 320];
 // Sub-pixel layout rounding (a fraction of a px from a fractional device
 // scale factor) is not the W04 reflow bug this guards against.
 const OVERFLOW_TOLERANCE = 1;

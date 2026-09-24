@@ -147,6 +147,287 @@ describe('behavior (Playwright)', () => {
     });
   });
 
+  describe('cat menu: the clip-path reveal (replacing the old GSAP fade)', () => {
+    it('opening shows the dialog, focuses the first link, and inerts the background (motion full)', async () => {
+      const { context, page, errors } = await newPage(browser, site.url, { viewport: { width: 375, height: 812 } });
+      try {
+        await page.goto(`${site.url}/index.html`, { waitUntil: 'networkidle' });
+        await page.waitForTimeout(600);
+        await page.click('#menu-btn');
+        // >= --cat-reveal-ms (600ms default) so the WAAPI reveal has finished.
+        await page.waitForTimeout(800);
+        const state = await page.evaluate(() => {
+          const overlay = document.getElementById('menu-overlay');
+          const firstLink = overlay.querySelector('a');
+          const cs = getComputedStyle(overlay);
+          return {
+            overlayVisible: cs.display !== 'none' && cs.opacity !== '0',
+            focusIsFirstLink: document.activeElement === firstLink,
+            inertCount: document.querySelectorAll('[inert]').length,
+          };
+        });
+        assert.ok(state.overlayVisible, 'menu-overlay should be visible after opening');
+        assert.ok(state.focusIsFirstLink, 'focus should land on the first menu link on open');
+        assert.ok(state.inertCount > 0, 'background content should be inert while the menu is open');
+        assert.deepEqual(errors, [], `page/console error(s):\n  ${errors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('reduced motion: the overlay is visible immediately with no running animations on it', async () => {
+      const { context, page, errors } = await newPage(browser, site.url, {
+        viewport: { width: 375, height: 812 },
+        reducedMotion: 'reduce',
+      });
+      try {
+        await page.goto(`${site.url}/index.html`, { waitUntil: 'networkidle' });
+        await page.waitForTimeout(400);
+        await page.click('#menu-btn');
+        // No wait for a reveal duration here on purpose: under Reduce Motion
+        // nav.js's setOpen() calls settleFullyOpen() synchronously instead
+        // of animating (motionOn() is false), so this should already be
+        // the final state.
+        const state = await page.evaluate(() => {
+          const overlay = document.getElementById('menu-overlay');
+          const cs = getComputedStyle(overlay);
+          const runningOnOverlay = document.getAnimations().filter((a) => {
+            const target = a.effect && a.effect.target;
+            return target && overlay.contains(target) && a.playState === 'running';
+          });
+          return {
+            overlayVisible: cs.display !== 'none' && cs.opacity !== '0',
+            runningCount: runningOnOverlay.length,
+          };
+        });
+        assert.ok(state.overlayVisible, 'menu-overlay should be visible immediately under Reduce Motion');
+        assert.equal(
+          state.runningCount,
+          0,
+          `expected no running animations on the overlay under Reduce Motion, found ${state.runningCount}`,
+        );
+        assert.deepEqual(errors, [], `page/console error(s):\n  ${errors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+  });
+
+  describe('paw: cross-document reveal gating', () => {
+    // Any two non-exempt pages work; hush-hush-snap-snap owns its own
+    // arrival effect and is excluded by paw-head.js's own exemption list.
+    const FROM_PAGE = 'index.html';
+    const LINK_SELECTOR = 'footer a[href="privacy.html"]';
+    const TO_GLOB = '**/privacy.html*';
+    const FROM_GLOB = `**/${FROM_PAGE}*`;
+
+    // Chromium logs "Transition was aborted because of invalid state.
+    // ViewTransition opt-in disabled" whenever it declines to grant a
+    // cross-document transition for reasons outside the page's control —
+    // observed here on a sizeable share of same-origin navigations in this
+    // headless environment, including ones where our own JS deliberately
+    // calls skipTransition(). It is a browser diagnostic, not a page bug,
+    // so it's filtered out of the "no console errors" assertions below
+    // rather than failing the suite on an expected, harmless line.
+    const BENIGN_VT_ABORT = 'Transition was aborted because of invalid state. ViewTransition opt-in disabled';
+    const realErrors = (errs) => errs.filter((e) => !e.includes(BENIGN_VT_ABORT));
+
+    // This describe block does NOT use lib/browser.js's newPage(): its
+    // context.route('**/*') interception (needed elsewhere to keep tests
+    // off the public internet) measurably increases how often Chromium
+    // logs the abort above. Every navigation here is same-origin against
+    // the local fixture server regardless, so the network policy isn't
+    // needed for correctness here.
+    async function newLocalPage(browser, contextOptions = {}) {
+      const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, ...contextOptions });
+      const errors = [];
+      const page = await context.newPage();
+      page.on('pageerror', (err) => errors.push(err.message || String(err)));
+      page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+      return { context, page, errors };
+    }
+
+    async function loadFromPage(page, suffix = '') {
+      await page.goto(`${site.url}/${FROM_PAGE}${suffix}`, { waitUntil: 'networkidle' });
+    }
+
+    /** paw-head.js's pagereveal handler unconditionally clears both
+        sessionStorage['trp-paw-origin'] and the --paw-x custom property at
+        the top of every run, and only re-sets --paw-x right after the
+        `event.viewTransition.types.add('paw')` call it makes when (and
+        only when) the gating conditions pass. Reading --paw-x back via a
+        plain page.evaluate() after the navigation settles — no listener
+        of ours involved — is therefore a faithful, unmodified proxy for
+        "did the shipped code decide to add 'paw'?", confirmed against the
+        real property this same code path sets. (An earlier version of
+        this suite registered its own extra `pagereveal` listener to read
+        event.viewTransition.types directly; confirmed empirically that
+        merely having a second listener present stops paw-head.js's own
+        `.types.add('paw')` from sticking in this Chromium 153 headless
+        build, even though the call runs and throws nothing — a browser
+        quirk under multiple listeners, not a site bug. This avoids it by
+        adding no listener at all.) */
+    async function pawState(page) {
+      return page.evaluate(() => ({
+        pawX: document.documentElement.style.getPropertyValue('--paw-x'),
+        pawOrigin: (() => {
+          try {
+            return sessionStorage.getItem('trp-paw-origin');
+          } catch {
+            return null;
+          }
+        })(),
+      }));
+    }
+
+    async function clickToPrivacy(page) {
+      await Promise.all([page.waitForURL(TO_GLOB), page.click(LINK_SELECTOR)]);
+      await page.waitForTimeout(150);
+      return pawState(page);
+    }
+
+    /** In this headless environment, Chromium only actually grants the
+        cross-document view-transition opt-in on a minority of same-origin
+        navigations — confirmed empirically at roughly one in three to one
+        in four attempts running this file alone, dropping much lower
+        under `npm test`'s full run (node:test runs separate *.test.js
+        files concurrently by default, and this suite's other files are
+        all Playwright-heavy too — more competing Chromium activity, fewer
+        transitions granted). A fresh page per attempt (not a reused page
+        via goBack, which measurably drove the rate toward zero) keeps
+        attempts independent, so a generous `maxAttempts` gives a very
+        high cumulative success probability even under that contention.
+        Only used where a real transition is required to observe anything
+        (the "motion full" case) — every negative case below treats "no
+        viewTransition granted at all" as an equally valid pass, since
+        that's what the gating logic is supposed to produce there too. */
+    async function pushToPrivacyRetrying(context, { fromSuffix = '', maxAttempts = 40 } = {}) {
+      let last = null;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        const page = await context.newPage();
+        try {
+          await loadFromPage(page, fromSuffix);
+          last = await clickToPrivacy(page);
+          if (last.pawX !== '') return last;
+        } finally {
+          await page.close();
+        }
+      }
+      return last;
+    }
+
+    it('push nav, motion full: arriving page gets the paw mask positioned; origin key is cleared', async () => {
+      const { context, errors } = await newLocalPage(browser);
+      try {
+        const { pawX, pawOrigin } = await pushToPrivacyRetrying(context);
+        assert.notEqual(
+          pawX,
+          '',
+          "expected paw-head.js to set --paw-x (i.e. add 'paw' to viewTransition.types) after retries",
+        );
+        assert.equal(pawOrigin, null, 'trp-paw-origin should be cleared after arrival');
+        assert.deepEqual(realErrors(errors), [], `page/console error(s):\n  ${realErrors(errors).join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('?static=1: no paw mask on arrival', async () => {
+      const { context, page, errors } = await newLocalPage(browser);
+      try {
+        await loadFromPage(page, '?static=1');
+        const { pawX, pawOrigin } = await clickToPrivacy(page);
+        assert.equal(pawX, '', `expected no paw mask under ?static=1, got --paw-x=${JSON.stringify(pawX)}`);
+        assert.equal(pawOrigin, null, 'trp-paw-origin should be cleared after arrival');
+        assert.deepEqual(realErrors(errors), [], `page/console error(s):\n  ${realErrors(errors).join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('prefers-reduced-motion: reduce: no paw mask on arrival', async () => {
+      const { context, page, errors } = await newLocalPage(browser, { reducedMotion: 'reduce' });
+      try {
+        await loadFromPage(page);
+        const { pawX, pawOrigin } = await clickToPrivacy(page);
+        assert.equal(pawX, '', `expected no paw mask under Reduce Motion, got --paw-x=${JSON.stringify(pawX)}`);
+        assert.equal(pawOrigin, null, 'trp-paw-origin should be cleared after arrival');
+        assert.deepEqual(realErrors(errors), [], `page/console error(s):\n  ${realErrors(errors).join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('localStorage trp-motion=paused: no paw mask on arrival', async () => {
+      const { context, page, errors } = await newLocalPage(browser);
+      try {
+        await context.addInitScript(() => {
+          try {
+            window.localStorage.setItem('trp-motion', 'paused');
+          } catch {
+            /* private mode: nothing to seed, the assertion below just fails loudly */
+          }
+        });
+        await loadFromPage(page);
+        const { pawX, pawOrigin } = await clickToPrivacy(page);
+        assert.equal(pawX, '', `expected no paw mask while paused, got --paw-x=${JSON.stringify(pawX)}`);
+        assert.equal(pawOrigin, null, 'trp-paw-origin should be cleared after arrival');
+        assert.deepEqual(realErrors(errors), [], `page/console error(s):\n  ${realErrors(errors).join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('Back navigation (traverse): no paw mask on arrival', async () => {
+      const { context, page, errors } = await newLocalPage(browser);
+      try {
+        await loadFromPage(page);
+        await clickToPrivacy(page); // the forward leg's own outcome doesn't matter here
+        await Promise.all([page.waitForURL(FROM_GLOB), page.goBack()]);
+        await page.waitForTimeout(150);
+        const { pawX, pawOrigin } = await pawState(page);
+        assert.equal(pawX, '', `expected no paw mask on a back (traverse) navigation, got --paw-x=${JSON.stringify(pawX)}`);
+        assert.equal(pawOrigin, null, 'trp-paw-origin should be cleared after arrival');
+        assert.deepEqual(realErrors(errors), [], `page/console error(s):\n  ${realErrors(errors).join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+  });
+
+  describe('craft: press feedback respects Reduce Motion', () => {
+    it(':active on a pressable control produces no transform under Reduce Motion', async () => {
+      const { context, page, errors } = await newPage(browser, site.url, {
+        // #menu-btn is only display:flex under the 720px breakpoint
+        // (styles.css: `@media (max-width: 720px) { .menu-btn { display: flex; } }`).
+        viewport: { width: 375, height: 812 },
+        reducedMotion: 'reduce',
+      });
+      try {
+        await page.goto(`${site.url}/index.html`, { waitUntil: 'networkidle' });
+        await page.waitForTimeout(300);
+        const btn = page.locator('#menu-btn');
+        const box = await btn.boundingBox();
+        assert.ok(box, '#menu-btn should have a bounding box');
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.down();
+        let transform;
+        try {
+          transform = await btn.evaluate((el) => getComputedStyle(el).transform);
+        } finally {
+          await page.mouse.up();
+        }
+        assert.ok(
+          transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)',
+          `expected no transform on :active under Reduce Motion, got ${transform}`,
+        );
+        assert.deepEqual(errors, [], `page/console error(s):\n  ${errors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+  });
+
   describe('gate: Hush Hush Snap Snap only animates in html[data-motion="full"]', () => {
     it('ring/capture/hero animations and scroll-behavior key off data-motion', async () => {
       const { context, page, errors } = await newPage(browser, site.url, {
