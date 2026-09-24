@@ -570,6 +570,7 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
   --motion-fast: 120ms;
   --motion-standard: 220ms;
   --motion-emphasis: 360ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   :root { --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasis: 0ms; }
