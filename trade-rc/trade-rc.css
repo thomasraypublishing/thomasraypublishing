@@ -814,6 +814,11 @@ html[data-motion="full"] button, html[data-motion="full"] input, html[data-motio
 /* -------- Typography grace -------- */
 h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }
+/* ...except long-form body prose: WebKit's `pretty` re-rags every line to
+   avoid a short last one, which over a legal page's hundreds of lines
+   measurably grows the page (privacy/terms at 320px). Short text (ledes,
+   card copy, captions, quotes, list items inside cards) keeps it. */
+.calm-main p, .calm-main li { text-wrap: wrap; }
 .calm-main { hanging-punctuation: first allow-end; }
 html[data-motion="full"] a {
   transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
