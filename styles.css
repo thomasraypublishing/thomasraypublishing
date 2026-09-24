@@ -1038,12 +1038,21 @@ html[data-motion="full"] .prose a {
 }
 .prose a:hover { border-bottom-width: 2px; }
 
-/* -------- Image reveal (assets/js/craft.js marks <img>s not yet complete) -------- */
-.craft-fade { opacity: 0; filter: blur(8px); background-color: var(--paper-2); }
-html[data-motion="full"] .craft-fade {
-    transition: opacity var(--motion-emphasis) var(--ease-standard), filter var(--motion-emphasis) var(--ease-standard);
+/* -------- Image reveal (assets/js/craft.js marks <img>s not yet complete) --------
+   Layered so it can never outlast or outrank the page's own rules for that
+   same element (e.g. .webb-glow's ambient opacity/filter on The Device):
+   any unlayered rule always beats a layered one regardless of specificity
+   or source order. craft.js also strips .craft-fade/.craft-loaded once the
+   transition finishes, so this is belt-and-suspenders, not the only guard.
+   No background-color here — it paints a visible square behind any
+   transparent image (e.g. sticker art) while the fade is in progress. */
+@layer craft-fade {
+    .craft-fade { opacity: 0; filter: blur(8px); }
+    html[data-motion="full"] .craft-fade {
+        transition: opacity var(--motion-emphasis) var(--ease-standard), filter var(--motion-emphasis) var(--ease-standard);
+    }
+    .craft-fade.craft-loaded { opacity: 1; filter: blur(0); }
 }
-.craft-fade.craft-loaded { opacity: 1; filter: blur(0); }
 
 /* -------- Edges: overscroll bounce matches the page; themed scrollbar --------
    html is always :root here, so var(--paper) resolves to the light value

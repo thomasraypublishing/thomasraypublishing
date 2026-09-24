@@ -796,12 +796,21 @@ a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
 /* -------- Image reveal (/assets/js/craft.js marks <img>s not yet complete) --------
    figure.photo / figure.bleed images already have their own scroll-driven
    aperture reveal; craft.js skips anything already inside a <figure> so
-   the two systems never compete for the same image. */
-.craft-fade { opacity: 0; filter: blur(8px); background-color: var(--hh-surface); }
-html[data-motion="full"] .craft-fade {
-  transition: opacity var(--motion-emphasis) var(--ease-standard), filter var(--motion-emphasis) var(--ease-standard);
+   the two systems never compete for the same image.
+   Layered so it can never outrank this file's own rules for the same
+   element: any unlayered rule always beats a layered one regardless of
+   specificity or source order. craft.js also strips .craft-fade/
+   .craft-loaded once the transition finishes, so this is
+   belt-and-suspenders, not the only guard. No background-color here — it
+   paints a visible square behind transparent images while the fade is in
+   progress. */
+@layer craft-fade {
+  .craft-fade { opacity: 0; filter: blur(8px); }
+  html[data-motion="full"] .craft-fade {
+    transition: opacity var(--motion-emphasis) var(--ease-standard), filter var(--motion-emphasis) var(--ease-standard);
+  }
+  .craft-fade.craft-loaded { opacity: 1; filter: blur(0); }
 }
-.craft-fade.craft-loaded { opacity: 1; filter: blur(0); }
 
 /* -------- Edges: overscroll bounce matches the page; themed scrollbar -------- */
 html { background: var(--hh-ink); scrollbar-color: var(--hh-paper-2) var(--hh-ink); }

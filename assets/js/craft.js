@@ -75,9 +75,30 @@ function markImage(img) {
   if (img.complete && img.naturalWidth > 0) return; // already loaded/cached — never fade
   img.dataset.craftMarked = '';
   img.classList.add('craft-fade');
-  const reveal = () => img.classList.add('craft-loaded');
+  const reveal = () => {
+    img.classList.add('craft-loaded');
+    settleFade(img);
+  };
   img.addEventListener('load', reveal, { once: true });
   img.addEventListener('error', reveal, { once: true });
+}
+
+// .craft-fade/.craft-loaded only ever hold a temporary starting state
+// (see the CSS's @layer craft-fade) — once the fade-in has visually
+// finished, both classes are dropped so the page's own opacity/filter
+// rules for that element (e.g. The Device's .webb-glow ambient glow) take
+// over permanently instead of being shadowed forever.
+function settleFade(img) {
+  const clear = () => img.classList.remove('craft-fade', 'craft-loaded');
+  if (isStatic()) { clear(); return; } // no transition ran; nothing to wait for
+  const duration = parseFloat(getComputedStyle(img).transitionDuration) * 1000 || 0;
+  if (duration <= 0) { clear(); return; }
+  let settled = false;
+  const finish = () => { if (settled) return; settled = true; clear(); };
+  img.addEventListener('transitionend', (event) => {
+    if (event.target === img && (event.propertyName === 'opacity' || event.propertyName === 'filter')) finish();
+  }, { once: true });
+  setTimeout(finish, duration + 100); // safety net if transitionend never fires
 }
 
 function markImages(root = document) {
