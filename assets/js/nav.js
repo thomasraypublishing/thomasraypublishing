@@ -121,9 +121,11 @@ export function initNav({ motion }) {
     clipAnim = overlay.animate(keyframes, { duration, easing, fill: 'forwards' });
 
     if (contentWrap) {
-      // Fade starts at 35% so a keyboard user sees focus sooner, behind the ring's 80-100% fade-out.
+      // Fade starts at 15%: focus lands on the first link immediately (see
+      // setOpen()), so the content should be visible almost as soon as it
+      // does, not ~210ms later — still behind the ring's 80-100% fade-out.
       const fadeDur = duration * (direction === 'open' ? 0.5 : 0.4);
-      const fadeDelay = direction === 'open' ? duration * 0.35 : 0;
+      const fadeDelay = direction === 'open' ? duration * 0.15 : 0;
       const fadeKeyframes = flip(direction, { opacity: 0 }, { opacity: 1 });
       contentWrap.style.opacity = fadeKeyframes[0].opacity;
       contentAnim = contentWrap.animate(fadeKeyframes, {

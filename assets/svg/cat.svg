@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-    <title>Cat</title>
-    <!-- Placeholder silhouette: seated cat, ears + round head + curled tail.
+    <!-- No <title>: the button's own aria-label="Menu" is its accessible
+         name — a <title> here would surface as a "Cat" tooltip/AT name
+         instead. Placeholder silhouette: seated cat, ears + round head +
+         curled tail.
          Solid fill on currentColor so it inherits button/text color in any
          theme. Real art will replace this with the studio cat's likeness.
          Source of truth for the inline <svg> the integration agent drops

@@ -1,20 +1,13 @@
-/* ========================================================================
-   paw-head.js — arrival half of the paw-print reveal (from paw-a.html's
-   inline <head> script, QA'd Chromium 153 + WebKit 26.6). Classic script
-   (no type="module"/async/defer), right after charset/CSP metas, before
-   any stylesheet — parser-blocking so `pagereveal` attaches in time.
-   Duplicates (can't import) motion.js's policy logic; keep in sync.
-
-   'paw' MUST be added HERE: added only in paw-reveal.js's pageswap isn't
-   guaranteed to carry to this page's :active-view-transition-type(paw).
-   Also the only file checking PAW_EXEMPT_PREFIXES — without this side
-   adding the type, none of reveals.css's paw rules can match.
-   ======================================================================== */
+/* paw-head.js — arrival half of the paw-print reveal; classic, parser-
+   blocking <head> script. Rationale, placement, and the cover-size
+   derivation live in paw-reveal.js's header — this file is just the code.
+   Keep computeMotionState()/PAW_EXEMPT_PREFIXES in sync with motion.js and
+   paw-reveal.js respectively. */
 (function () {
     'use strict';
     var STORAGE_KEY = 'trp-motion';
     var ORIGIN_KEY = 'trp-paw-origin';
-    var PAW_EXEMPT_PREFIXES = ['/hush-hush-snap-snap']; // owns its own arrival effect (hhss.css)
+    var PAW_EXEMPT_PREFIXES = ['/hush-hush-snap-snap'];
     var params = new URLSearchParams(location.search);
     var root = document.documentElement;
 
@@ -26,7 +19,6 @@
         return false;
     }
 
-    // Mirrors motion.js's motionState(); re-run inside pagereveal (bfcache/prerender can refire it).
     function computeMotionState() {
         var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
         var paused = false;
@@ -35,17 +27,15 @@
     }
     root.dataset.motion = computeMotionState();
 
-    var pawms = parseInt(params.get('pawms'), 10); // overrides --paw-duration (reveals.css default 1100ms)
+    var pawms = parseInt(params.get('pawms'), 10);
     if (isFinite(pawms) && pawms > 0) root.style.setProperty('--paw-duration', pawms + 'ms');
 
-
     window.addEventListener('pagereveal', function (e) {
-        // Clear FIRST, unconditionally (bfcache/prerender can carry stale state).
         var raw = null;
         try {
             raw = sessionStorage.getItem(ORIGIN_KEY);
             sessionStorage.removeItem(ORIGIN_KEY);
-        } catch (err) { /* private mode: nothing to clear */ }
+        } catch (err) { /* private mode */ }
         root.style.removeProperty('--paw-x');
         root.style.removeProperty('--paw-y');
         root.style.removeProperty('--paw-cover');
@@ -55,12 +45,12 @@
 
         var liveState = computeMotionState();
         root.dataset.motion = liveState;
-        if (liveState !== 'full') { // ?static=1/pause are JS-only (Reduce Motion is a CSS gate)
+        if (liveState !== 'full') {
             e.viewTransition.skipTransition();
             return;
         }
         if (isPawExempt(location.pathname)) return;
-        if (!raw) return; // direct load, storage failure, or old page chose not to persist
+        if (!raw) return;
 
         var origin = null;
         try { origin = JSON.parse(raw); } catch (err) { /* corrupt: ignore */ }
@@ -73,7 +63,6 @@
         root.style.setProperty('--paw-x', tapX + 'px');
         root.style.setProperty('--paw-y', tapY + 'px');
 
-        // Cover (S): smallest mask (+4%) whose heel-pad ellipse (0.23/0.20 semi-axes) reaches every corner.
         var corners = [[0, 0], [innerWidth, 0], [0, innerHeight], [innerWidth, innerHeight]];
         var maxReach = 0;
         for (var i = 0; i < corners.length; i++) {
