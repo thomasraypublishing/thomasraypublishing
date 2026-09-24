@@ -77,13 +77,16 @@
        page's own snapshot is flattened to one colour (contrast(0) makes every
        pixel mid-grey, the rest of the chain tints that grey to the cosmic
        --ginger, measured ~#F1B07C), so the paw reads even between two navy
-       pages. It clears over the first ~12% of EXPAND (58% to 63%); a slower release
-       passes through a muddy grey as the filter functions interpolate.
+       pages. It releases as a hard switch at the 58% EXPAND boundary rather
+       than an interpolated fade: the 58%/58.01% pair share no intermediate
+       filter-function values, so there is nothing for the UA to tween and no
+       muddy-grey frame (a 58%->63% linear release passed through one; see
+       L3 in Research/SESSION_HANDOFF_2026-09-23_CRAFT_PASS.md §6).
        An extra view-transition-named ink element was tried first; WebKit
        26.6 never painted it. */
     @keyframes paw-tint {
         0%, 58% { filter: contrast(0) sepia(1) saturate(1.75) hue-rotate(-16deg) brightness(1.2); }
-        63%, 100% { filter: contrast(1) sepia(0) saturate(1) hue-rotate(0deg) brightness(1); }
+        58.01%, 100% { filter: contrast(1) sepia(0) saturate(1) hue-rotate(0deg) brightness(1); }
     }
 
     html:active-view-transition-type(paw)::view-transition-old(root) { animation: none; }
