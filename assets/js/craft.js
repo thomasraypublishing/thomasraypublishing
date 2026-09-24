@@ -74,13 +74,22 @@ function markImage(img) {
   if (img.closest(SKIP_SELECTOR)) return;
   if (img.complete && img.naturalWidth > 0) return; // already loaded/cached — never fade
   img.dataset.craftMarked = '';
-  img.classList.add('craft-fade');
-  const reveal = () => {
-    img.classList.add('craft-loaded');
-    settleFade(img);
-  };
-  img.addEventListener('load', reveal, { once: true });
-  img.addEventListener('error', reveal, { once: true });
+  // A lazy image isn't complete() yet at bind time even on a cached reload
+  // — the browser doesn't check its cache until the image nears the
+  // viewport — but a cache hit then decodes within a frame or two. Waiting
+  // one frame before committing to the fade skips it for that case
+  // (nothing was visibly blocked either way in that single frame), instead
+  // of running the full 360ms fade-in for an image that was already there.
+  requestAnimationFrame(() => {
+    if (img.complete && img.naturalWidth > 0) return; // decoded within a frame — a cache hit, not worth fading
+    img.classList.add('craft-fade');
+    const reveal = () => {
+      img.classList.add('craft-loaded');
+      settleFade(img);
+    };
+    img.addEventListener('load', reveal, { once: true });
+    img.addEventListener('error', reveal, { once: true });
+  });
 }
 
 // .craft-fade/.craft-loaded only ever hold a temporary starting state
