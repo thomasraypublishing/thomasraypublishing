@@ -783,9 +783,12 @@ html[data-motion="full"] .boot:active {
   }
 }
 
-/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise -------- */
+/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise --------
+   The transition for `a` is combined with typography grace's below (one
+   rule per selector — a second same-specificity rule for the same
+   selector doesn't merge properties, it replaces the whole declaration). */
 a, button, input, [tabindex] { outline-offset: 6px; outline-color: transparent; }
-html[data-motion="full"] a, html[data-motion="full"] button, html[data-motion="full"] input, html[data-motion="full"] [tabindex] {
+html[data-motion="full"] button, html[data-motion="full"] input, html[data-motion="full"] [tabindex] {
   transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard);
 }
 @media (forced-colors: active) {
@@ -797,7 +800,7 @@ h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }
 .calm-main { hanging-punctuation: first allow-end; }
 html[data-motion="full"] a {
-  transition: text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+  transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
 }
 a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
 

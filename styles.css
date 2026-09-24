@@ -946,16 +946,31 @@ a:active { filter: brightness(0.82); transition: filter var(--press-in) var(--ea
 .prose .card-callout .btn:active, .irc-line:active {
     filter: brightness(0.92);
 }
-html[data-motion="full"] .specimen,
+/* Each selector keeps its own pre-existing transitioned properties
+   (box-shadow, background, border-color) alongside the new transform
+   timing — a second rule for the same selector replaces the whole
+   transition list rather than merging into it, so those would otherwise
+   silently start snapping instead of easing. */
+html[data-motion="full"] .specimen {
+    transition: transform var(--press-out) var(--spring), box-shadow .4s;
+}
+html[data-motion="full"] .stk {
+    transition: transform var(--press-out) var(--spring), background-color .3s;
+}
 html[data-motion="full"] .book,
-html[data-motion="full"] .stk,
-html[data-motion="full"] .app-store-badge,
-html[data-motion="full"] .motion-toggle,
 html[data-motion="full"] .menu-btn,
 html[data-motion="full"] .menu-overlay .menu-close,
-html[data-motion="full"] .prose .card-callout .btn,
-html[data-motion="full"] .irc-line {
+html[data-motion="full"] .prose .card-callout .btn {
     transition: transform var(--press-out) var(--spring);
+}
+html[data-motion="full"] .app-store-badge {
+    transition: transform var(--press-out) var(--spring);
+}
+html[data-motion="full"] .motion-toggle {
+    transition: transform var(--press-out) var(--spring);
+}
+html[data-motion="full"] .irc-line {
+    transition: transform var(--press-out) var(--spring), background .25s ease, border-color .25s ease;
 }
 html[data-motion="full"] .specimen:active,
 html[data-motion="full"] .book:active,

@@ -646,11 +646,16 @@ a:active { filter: brightness(0.82); transition: filter var(--press-in) var(--ea
 html[data-motion="full"] .btn,
 html[data-motion="full"] .motion-toggle,
 html[data-motion="full"] .pyramid-btn,
-html[data-motion="full"] .brick,
 html[data-motion="full"] .store-badge,
 html[data-motion="full"] .instrument,
 html[data-motion="full"] .plan {
   transition: transform var(--press-out) var(--spring);
+}
+/* .brick already transitions opacity/box-shadow for its .lit state; a
+   second rule for the same selector would replace that list, not merge
+   into it, so the transform timing is added here instead. */
+html[data-motion="full"] .brick {
+  transition: opacity 0.18s ease, transform var(--press-out) var(--spring), box-shadow 0.18s ease;
 }
 html[data-motion="full"] .btn:active,
 html[data-motion="full"] .motion-toggle:active,
