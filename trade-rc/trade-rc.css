@@ -696,7 +696,11 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
 }
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
-  .mast { view-transition-name: hero-work; }
+  /* Suppressed during a paw transition (assets/css/reveals.css) — the paw
+     only ever detects an inline view-transition-name (the home page's
+     specimen click), and this stylesheet rule would otherwise still
+     name the masthead and layer the hero-work morph on top of it. */
+  html:not(:active-view-transition-type(paw)) .mast { view-transition-name: hero-work; }
   ::view-transition-old(hero-work),
   ::view-transition-new(hero-work) { animation-duration: var(--motion-emphasis); }
 }
