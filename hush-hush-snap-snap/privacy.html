@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <script src="../assets/js/paw-head.js"></script>
     <title>Hush Hush Snap Snap Privacy Policy | Thomas Ray Publishing LLC</title>
     <meta name="description" content="Privacy Policy for Hush Hush Snap Snap (iOS / watchOS) by Thomas Ray Publishing LLC.">
     <meta name="theme-color" content="#0F0C1F">
@@ -23,6 +24,7 @@
     <link rel="preload" href="../assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../assets/fonts/fonts.css">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../assets/css/reveals.css">
     <noscript><link rel="stylesheet" href="../assets/nojs.css"></noscript>
 </head>
 <body data-theme="cosmic">
@@ -45,7 +47,15 @@
             <a href="mailto:contact@thomasraypublishing.com">Contact</a>
         </div>
         <button class="menu-btn" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="menu-overlay">
-            <span></span><span></span><span></span>
+            <!-- keep in sync with assets/svg/cat.svg -->
+            <svg class="cat-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <title>Cat</title>
+                <polygon points="10.4,7.6 7.6,1.6 13.8,6.4" />
+                <polygon points="21.6,7.6 24.4,1.6 18.2,6.4" />
+                <circle cx="16" cy="11" r="5.6" />
+                <path d="M22,26.5 C27,28.5 30.5,25 29.5,20 C29,17.3 26.5,15.5 24.6,16.8 C26.3,18 27,20.3 26,22.4 C25.2,24.1 23.3,25 21.3,24.3 C20.8,25.3 21.1,26.1 22,26.5 Z" />
+                <path d="M9.5,29.5 C9,23 9.8,18 13.2,15.4 C14.6,14.3 17.4,14.3 18.8,15.4 C22.2,18 23,23 22.5,29.5 C22.5,30 21.8,30.4 21,30.4 L11,30.4 C10.2,30.4 9.5,30 9.5,29.5 Z" />
+            </svg>
         </button>
     </div>
 </nav>
@@ -300,5 +310,7 @@
     </div>
 </footer>
 <script type="module" src="../assets/js/prose.js"></script>
+<script type="module" src="../assets/js/paw-reveal.js"></script>
+<script type="module" src="../assets/js/craft.js"></script>
 </body>
 </html>
