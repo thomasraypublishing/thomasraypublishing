@@ -1046,7 +1046,7 @@ html:not([data-motion="full"]) .book:hover .cover {
 @media (hover: hover) and (pointer: fine) {
     html[data-motion="full"] .specimen:hover { translate: var(--lift); }
     html[data-motion="full"] .stk:hover { translate: var(--lift); rotate: -1deg; }
-    html[data-motion="full"] .book:hover .cover { translate: var(--lift); rotate: -.4deg; }
+    html[data-motion="full"] .book:hover .cover { translate: 0 -4px; rotate: -.4deg; }
     .stk { position: relative; }
     .specimen::after, .stk::after, .book .cover::before {
         content: ""; position: absolute; inset: 0; z-index: 3;
