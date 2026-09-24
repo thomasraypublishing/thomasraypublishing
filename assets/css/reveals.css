@@ -7,7 +7,6 @@
    ======================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-    /* @view-transition{navigation:auto} already exists site-wide. */
     :root {
         --paw-x: 50vw; /* PIXEL lengths from paw-head.js; default = centred */
         --paw-y: 50vh;
@@ -20,12 +19,9 @@
         --paw-ease-stamp: cubic-bezier(0.16, 1, 0.3, 1);
         --paw-ease-settle: ease-in-out;
         --paw-ease-expand: cubic-bezier(0.5, 0, 0.75, 0);
-        --paw-ink: var(--ginger, #F5B07A);
-        --paw-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
     }
 
-    /* STAMP 0-30 (overshoot) -> SETTLE 30-42 -> HOLD 42-58 -> EXPAND 58-100. */
-    @keyframes paw-grow {
+    @keyframes paw-grow { /* STAMP 0-30 -> SETTLE 30-42 -> HOLD 42-58 -> EXPAND 58-100 */
         0% {
             mask-size: 0 0; -webkit-mask-size: 0 0;
             mask-position: var(--paw-x) var(--paw-y);
@@ -77,8 +73,7 @@
         }
     }
 
-    /* Solid 0-58%, fades over EXPAND's first 30% (70.6%). */
-    @keyframes paw-ink-fade {
+    @keyframes paw-ink-fade { /* solid 0-58%, fades over EXPAND's first 30% (70.6%) */
         0%, 58% { opacity: 1; }
         70.6% { opacity: 0; }
         100% { opacity: 0; }
@@ -88,26 +83,30 @@
     html:active-view-transition-type(paw)::view-transition-new(root) {
         animation: paw-grow var(--paw-duration) linear forwards;
         mix-blend-mode: normal;
-        mask-image: var(--paw-mask);
-        -webkit-mask-image: var(--paw-mask);
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
         mask-repeat: no-repeat;
         -webkit-mask-repeat: no-repeat;
-        mask-mode: alpha; /* solid-fill/transparent mask: force alpha, never luminance */
+        mask-mode: alpha; /* force alpha, never luminance */
     }
 
-    /* id=paw-ink: created/removed by paw-head.js; masked like root. */
-    #paw-ink {
+    #paw-ink { /* created/removed by paw-head.js; masked like root */
         position: fixed; inset: 0;
-        background: var(--paw-ink);
+        /* var(--ginger) directly (not a :root custom prop): --ginger lives
+           on [data-theme="cosmic"] (<body>), a DESCENDANT of :root, and vars
+           don't cascade upward — #paw-ink is itself a body child, so it sees it. */
+        background: var(--ginger, #F5B07A);
         pointer-events: none;
-        display: none;
+        /* Not display:none: a display:none element gets no box, so no
+           view-transition-new(paw-ink) snapshot is ever captured for it. */
+        view-transition-name: paw-ink;
     }
     html:active-view-transition-type(paw)::view-transition-new(paw-ink) {
         animation:
             paw-grow var(--paw-duration) linear forwards,
             paw-ink-fade var(--paw-duration) linear forwards;
-        mask-image: var(--paw-mask);
-        -webkit-mask-image: var(--paw-mask);
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23000000'%3E%3Cellipse cx='100' cy='127' rx='46' ry='40'/%3E%3Ccircle cx='48' cy='77' r='20'/%3E%3Ccircle cx='152' cy='77' r='20'/%3E%3Ccircle cx='82' cy='54' r='21'/%3E%3Ccircle cx='118' cy='54' r='21'/%3E%3C/svg%3E");
         mask-repeat: no-repeat;
         -webkit-mask-repeat: no-repeat;
         mask-mode: alpha;
@@ -118,11 +117,8 @@
     /* Empty: no @view-transition above -> no cross-document transition at all. */
 }
 
-/* ========================================================================
-   Cat menu: clip-path reveal, cat button -> overlay. All 11 pages with
-   #menu-btn/#menu-overlay are data-theme="cosmic" (verified); unscoped
-   defaults below are a fallback for a future light-theme page.
-   ======================================================================== */
+/* Cat menu: clip-path reveal, cat -> overlay. All 11 #menu-btn pages are
+   cosmic (verified); unscoped defaults below fall back for a future light page. */
 :root {
     --cat-reveal-ms: 600ms;
     --cat-close-ms: 450ms;
@@ -143,7 +139,7 @@
     -webkit-backdrop-filter: none;
     scroll-padding-top: calc(var(--nav-h, 64px) + 56px);
 }
-/* --ink-3 only clears ~2.8-3.3:1 here; --ink-2 clears >=5.8:1. */
+/* --ink-3 clears only ~2.8-3.3:1 here; --ink-2 clears >=5.8:1. */
 .menu-overlay .menu-foot a { color: var(--ink-2); }
 .menu-overlay a em { color: var(--ink); }
 [data-theme="cosmic"] .menu-overlay a em { color: var(--chapter-accent, var(--ginger)); }
@@ -164,7 +160,7 @@
     width: 100%;
 }
 
-.cat-reveal-ring { /* nav.js sizes/positions per reveal; only transform: scale() animates */
+.cat-reveal-ring { /* sized per reveal by nav.js; only scale() animates */
     position: fixed; left: 0; top: 0;
     width: 0; height: 0;
     border-radius: 50%;

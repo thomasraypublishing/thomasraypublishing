@@ -1,17 +1,14 @@
-/* ========================================================================
-   paw-reveal.js — old-page half of the paw-print reveal (from paw.js,
+/* paw-reveal.js — old-page half of the paw-print reveal (from paw.js,
    QA'd Chromium 153 + WebKit 26.6). The arriving page's half — the side
-   that actually has to add 'paw', since a type added only here isn't
-   guaranteed to carry — lives in classic parser-blocking paw-head.js (a
-   module here would race `pagereveal` and could lose). That arrival-side
-   check is also the only gate a page needing its own arrival effect (Hush
-   Hush Snap Snap) needs: without it adding 'paw', reveals.css never matches.
-
-   1. `click` (capture): remember the tap origin in memory only, so a
-      same-page anchor or motion-off can't leave a stale one behind.
+   that actually adds 'paw', since a type added only here isn't guaranteed
+   to carry — lives in classic parser-blocking paw-head.js (a module here
+   would race `pagereveal` and could lose). That arrival check is also the
+   only gate a page needing its own arrival effect (Hush Hush Snap Snap)
+   needs: without it adding 'paw', reveals.css never matches.
+   1. `click` (capture): remember the tap origin in memory, so a same-page
+      anchor or motion-off can't leave a stale one behind.
    2. `pageswap`: decide whether this nav gets 'paw', then persist the
-      origin for paw-head.js to read.
-   ======================================================================== */
+      origin for paw-head.js to read. */
 
 import { motionState } from './motion.js';
 

@@ -26,7 +26,7 @@
         return false;
     }
 
-    // Mirrors motion.js's motionState(); re-run inside pagereveal too (bfcache/prerender can fire it again).
+    // Mirrors motion.js's motionState(); re-run inside pagereveal (bfcache/prerender can refire it).
     function computeMotionState() {
         var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
         var paused = false;
@@ -61,12 +61,12 @@
 
         var liveState = computeMotionState();
         root.dataset.motion = liveState;
-        if (liveState !== 'full') { // ?static=1/stored pause are JS-only (Reduce Motion is a CSS gate)
+        if (liveState !== 'full') { // ?static=1/pause are JS-only (Reduce Motion is a CSS gate)
             e.viewTransition.skipTransition();
             return;
         }
         if (isPawExempt(location.pathname)) return;
-        if (!raw) return; // direct load, storage failure, or old page chose not to persist one
+        if (!raw) return; // direct load, storage failure, or old page chose not to persist
 
         var origin = null;
         try { origin = JSON.parse(raw); } catch (err) { /* corrupt: ignore */ }

@@ -1,15 +1,11 @@
-/* ========================================================================
-   nav.js — mobile overlay menu (circular cat-reveal) + nav condense on
+/* nav.js — mobile overlay menu (circular cat-reveal) + nav condense on
    scroll. Modal dialog while open: own Close button, Close→links→Close
    focus cycle, background inert, Escape closes, resize-while-open closes.
-
-   Open/close: a WAAPI clip-path circle centred on #menu-btn + a leading
-   ginger ring + content fade, ported from prototypes/transitions/cat-menu.js
-   (QA'd Chromium 153 + WebKit 26.6), replacing the old GSAP fade. Timing in
-   reveals.css (--cat-reveal-ms/--cat-close-ms/--cat-reveal-ease); ?catms=NNN
-   overrides. Content wrapper + ring aren't in markup — built here at init.
-   Motion off: open/close are instant, no WAAPI animation runs.
-   ======================================================================== */
+   Open/close: a WAAPI clip-path circle on #menu-btn + a leading ginger ring
+   + content fade, from prototypes/transitions/cat-menu.js (QA'd Chromium
+   153 + WebKit 26.6), replacing the old GSAP fade. Timing in reveals.css
+   (--cat-reveal-ms/--cat-close-ms/--cat-reveal-ease); ?catms=NNN overrides.
+   Content wrapper + ring aren't in markup — built here. Motion off: instant. */
 
 import { onMotionChange } from './motion.js';
 
@@ -110,8 +106,7 @@ export function initNav({ motion }) {
     if (ring) { ring.style.opacity = '0'; ring.style.transform = 'scale(0)'; }
   }
 
-  /** Clip + content fade + ring, sharing duration/easing so they move in
-      lockstep; reverse()-ing a running one keeps re-activation smooth. */
+  // Clip + content fade + ring share duration/easing (lockstep); reverse() keeps re-activation smooth.
   function runReveal(direction) {
     if (clipAnim && clipAnim.playState === 'running') {
       [clipAnim, contentAnim, ringAnim, ringFadeAnim].forEach((a) => { try { a && a.reverse(); } catch { /* may already be idle */ } });
@@ -253,7 +248,7 @@ export function initNav({ motion }) {
     });
   }
 
-  // Condense on scroll; publish height so anchors land under the bar.
+  // Condense on scroll; publish height for anchor offset.
   const nav = document.querySelector('nav.top');
   if (nav) {
     let last = false;
