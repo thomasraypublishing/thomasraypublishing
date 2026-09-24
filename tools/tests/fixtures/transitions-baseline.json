@@ -1,601 +1,1553 @@
 {
   "404.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "accessibility.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "coming-soon.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "hush-hush-snap-snap/index.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > header.mast > span.mast-right > a.btn": [
-      "transform"
-    ],
-    "#main > section.hero:nth-of-type(1) > div.wide.hero-grid > div.hero-copy > div.cta-row:nth-of-type(2) > a.store-badge:nth-of-type(1)": [
-      "transform"
-    ],
-    "#main > section.hero:nth-of-type(1) > div.wide.hero-grid > div.hero-copy > div.cta-row:nth-of-type(2) > a.btn.btn-ghost:nth-of-type(2)": [
-      "transform"
-    ],
-    "#demo > div.cue-row:nth-of-type(1) > button.switch": [
-      "background"
-    ],
-    "#demo > div.cue-row:nth-of-type(2) > button.switch": [
-      "background"
-    ],
-    "#demo > div.cue-row:nth-of-type(3) > button.switch": [
-      "background"
-    ],
-    "#demo-start": [
-      "transform"
-    ],
-    "#get > div.wrap > a.store-badge": [
-      "transform"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > header.mast > span.mast-right > a.btn": {
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#main > section.hero:nth-of-type(1) > div.wide.hero-grid > div.hero-copy > div.cta-row:nth-of-type(2) > a.store-badge:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#main > section.hero:nth-of-type(1) > div.wide.hero-grid > div.hero-copy > div.cta-row:nth-of-type(2) > a.btn.btn-ghost:nth-of-type(2)": {
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#demo > div.cue-row:nth-of-type(1) > button.switch": {
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#demo > div.cue-row:nth-of-type(2) > button.switch": {
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#demo > div.cue-row:nth-of-type(3) > button.switch": {
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#demo-start": {
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#get > div.wrap > a.store-badge": {
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "hush-hush-snap-snap/privacy.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "hush-hush-snap-snap/terms.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "index.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top:nth-of-type(1)": [
-      "background-color"
-    ],
-    "body > nav.top:nth-of-type(1) > div.wrap": [
-      "min-height"
-    ],
-    "#chapter-rail > a:nth-of-type(2)": [
-      "color",
-      "border-color"
-    ],
-    "#chapter-rail > a:nth-of-type(3)": [
-      "color",
-      "border-color"
-    ],
-    "#chapter-rail > a:nth-of-type(4)": [
-      "color",
-      "border-color"
-    ],
-    "#chapter-rail > a:nth-of-type(5)": [
-      "color",
-      "border-color"
-    ],
-    "#hero > div.wrap > div.specimens:nth-of-type(3) > a.specimen.spec-pom:nth-of-type(1)": [
-      "background-color"
-    ],
-    "div.wrap > div.specimens:nth-of-type(3) > a.specimen.spec-pom:nth-of-type(1) > div.meta:nth-of-type(1) > div.cta:nth-of-type(3) > span.arrow:nth-of-type(2)": [
-      "transform"
-    ],
-    "#device-specimen": [
-      "background-color"
-    ],
-    "#device-specimen > div.meta:nth-of-type(1) > div.cta:nth-of-type(3) > span.arrow:nth-of-type(2)": [
-      "transform"
-    ],
-    "#fortune-text": [
-      "opacity",
-      "transform"
-    ],
-    "#hhss-specimen": [
-      "background-color"
-    ],
-    "#hhss-specimen > div.meta:nth-of-type(1) > div.cta:nth-of-type(3) > span.arrow:nth-of-type(2)": [
-      "transform"
-    ],
-    "#hhss-stage": [
-      "filter"
-    ],
-    "#hero > div.wrap > a.irc-line:nth-of-type(1)": [
-      "background",
-      "border-color"
-    ],
-    "#hero > div.wrap > a.irc-line:nth-of-type(1) > span.arrow:nth-of-type(5)": [
-      "opacity",
-      "transform"
-    ],
-    "#hero > div.wrap > a.coming-line:nth-of-type(2) > span.arrow": [
-      "transform"
-    ],
-    "#pomagotchi > div.copy:nth-of-type(1) > div.actions:nth-of-type(2) > a.app-store-badge": [
-      "transform"
-    ],
-    "#the-device > div.copy:nth-of-type(2) > div.actions:nth-of-type(2) > a.app-store-badge": [
-      "transform"
-    ],
-    "#hush-hush-snap-snap > div.copy:nth-of-type(1) > div.actions:nth-of-type(3) > a.app-store-badge": [
-      "transform"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(1) > div.cover:nth-of-type(1)": [
-      "transform",
-      "box-shadow"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(1) > div.meta:nth-of-type(2) > span.buy": [
-      "gap"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(2) > div.cover:nth-of-type(1)": [
-      "transform",
-      "box-shadow"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(2) > div.meta:nth-of-type(2) > span.buy": [
-      "gap"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(3) > div.cover:nth-of-type(1)": [
-      "transform",
-      "box-shadow"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(3) > div.meta:nth-of-type(2) > span.buy": [
-      "gap"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(4) > div.cover:nth-of-type(1)": [
-      "transform",
-      "box-shadow"
-    ],
-    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(4) > div.meta:nth-of-type(2) > span.buy": [
-      "gap"
-    ],
-    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(1)": [
-      "background-color"
-    ],
-    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(2)": [
-      "background-color"
-    ],
-    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(3)": [
-      "background-color"
-    ],
-    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(4)": [
-      "background-color"
-    ],
-    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(5)": [
-      "background-color"
-    ],
-    "#about > div.wrap > div.about-grid:nth-of-type(2) > div.about-collage:nth-of-type(2)": [
-      "background-color"
-    ],
-    "#contact": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top:nth-of-type(1)": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top:nth-of-type(1) > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#chapter-rail > a:nth-of-type(2)": {
+      "color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "border-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#chapter-rail > a:nth-of-type(3)": {
+      "color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "border-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#chapter-rail > a:nth-of-type(4)": {
+      "color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "border-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#chapter-rail > a:nth-of-type(5)": {
+      "color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "border-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hero > div.wrap > div.specimens:nth-of-type(3) > a.specimen.spec-pom:nth-of-type(1)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "div.wrap > div.specimens:nth-of-type(3) > a.specimen.spec-pom:nth-of-type(1) > div.meta:nth-of-type(1) > div.cta:nth-of-type(3) > span.arrow:nth-of-type(2)": {
+      "transform": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#device-specimen": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#device-specimen > div.meta:nth-of-type(1) > div.cta:nth-of-type(3) > span.arrow:nth-of-type(2)": {
+      "transform": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#fortune-text": {
+      "opacity": {
+        "duration": "0.4s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.4s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hhss-specimen": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hhss-specimen > div.meta:nth-of-type(1) > div.cta:nth-of-type(3) > span.arrow:nth-of-type(2)": {
+      "transform": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hhss-stage": {
+      "filter": {
+        "duration": "0.14s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hero > div.wrap > a.irc-line:nth-of-type(1)": {
+      "background": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "border-color": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hero > div.wrap > a.irc-line:nth-of-type(1) > span.arrow:nth-of-type(5)": {
+      "opacity": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hero > div.wrap > a.coming-line:nth-of-type(2) > span.arrow": {
+      "transform": {
+        "duration": "0.12s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pomagotchi > div.copy:nth-of-type(1) > div.actions:nth-of-type(2) > a.app-store-badge": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#the-device > div.copy:nth-of-type(2) > div.actions:nth-of-type(2) > a.app-store-badge": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#hush-hush-snap-snap > div.copy:nth-of-type(1) > div.actions:nth-of-type(3) > a.app-store-badge": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(1) > div.cover:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.45s",
+        "timingFunction": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.45s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(1) > div.meta:nth-of-type(2) > span.buy": {
+      "gap": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(2) > div.cover:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.45s",
+        "timingFunction": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.45s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(2) > div.meta:nth-of-type(2) > span.buy": {
+      "gap": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(3) > div.cover:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.45s",
+        "timingFunction": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.45s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(3) > div.meta:nth-of-type(2) > span.buy": {
+      "gap": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(4) > div.cover:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.45s",
+        "timingFunction": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.45s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#books > div.wrap > div.catalog:nth-of-type(2) > a.book:nth-of-type(4) > div.meta:nth-of-type(2) > span.buy": {
+      "gap": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(1)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(2)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(3)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(4)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stickers > div.wrap > div.stickers:nth-of-type(2) > a.stk:nth-of-type(5)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#about > div.wrap > div.about-grid:nth-of-type(2) > div.about-collage:nth-of-type(2)": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#contact": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#chapter-rail a.active": {
+      "color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "border-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "pomagotchi/index.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > header.mast > span.mast-cta > a.btn": [
-      "transform",
-      "box-shadow"
-    ],
-    "#main > section.hero:nth-of-type(1) > div.wrap > div:nth-of-type(1) > div.cta-row:nth-of-type(1) > a.store-badge:nth-of-type(1)": [
-      "transform"
-    ],
-    "#main > section.hero:nth-of-type(1) > div.wrap > div:nth-of-type(1) > div.cta-row:nth-of-type(1) > a.btn.btn-ghost:nth-of-type(2)": [
-      "transform",
-      "box-shadow"
-    ],
-    "#tod-dial > button:nth-of-type(1)": [
-      "background",
-      "color"
-    ],
-    "#tod-dial > button:nth-of-type(2)": [
-      "background",
-      "color"
-    ],
-    "#tod-dial > button:nth-of-type(3)": [
-      "background",
-      "color"
-    ],
-    "#tod-dial > button:nth-of-type(4)": [
-      "background",
-      "color"
-    ],
-    "#pom-stage": [
-      "background"
-    ],
-    "#stage-view > img.stage-bg.bg-day:nth-of-type(1)": [
-      "opacity"
-    ],
-    "#stage-view > img.stage-bg.bg-night:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#pom-speech": [
-      "opacity"
-    ],
-    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(1)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(2)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(3)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(4)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(5)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(6)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.trick-row:nth-of-type(3) > button.trick:nth-of-type(1)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.trick-row:nth-of-type(3) > button.trick:nth-of-type(2)": [
-      "border-color",
-      "transform"
-    ],
-    "#pom-stage > div.trick-row:nth-of-type(3) > button.trick:nth-of-type(3)": [
-      "border-color",
-      "transform"
-    ],
-    "#care > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(1)": [
-      "background"
-    ],
-    "#care > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(2)": [
-      "background"
-    ],
-    "#care > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(3)": [
-      "background"
-    ],
-    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(1)": [
-      "background"
-    ],
-    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(2)": [
-      "background"
-    ],
-    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(3)": [
-      "background"
-    ],
-    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(4)": [
-      "background"
-    ],
-    "#letters > div.wrap > div.cards:nth-of-type(3) > div.card:nth-of-type(1)": [
-      "background"
-    ],
-    "#letters > div.wrap > div.cards:nth-of-type(3) > div.card:nth-of-type(2)": [
-      "background"
-    ],
-    "#dreams > div.band-inner > div.cards:nth-of-type(2) > div.card:nth-of-type(1)": [
-      "background"
-    ],
-    "#dreams > div.band-inner > div.cards:nth-of-type(2) > div.card:nth-of-type(2)": [
-      "background"
-    ],
-    "#dreams > div.band-inner > div.cards:nth-of-type(2) > div.card:nth-of-type(3)": [
-      "background"
-    ],
-    "#fluff-society > div.wrap > div.society": [
-      "background"
-    ],
-    "#main > section.final:nth-of-type(6) > div.wrap > a.store-badge": [
-      "transform"
-    ],
-    "#bookmark": [
-      "background"
-    ],
-    "#bm-fill": [
-      "height"
-    ],
-    "#bookmark > a:nth-of-type(1) > span.paw:nth-of-type(1)": [
-      "transform",
-      "background"
-    ],
-    "#bookmark > a:nth-of-type(1) > span.bm-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#bookmark > a:nth-of-type(2) > span.paw:nth-of-type(1)": [
-      "transform",
-      "background"
-    ],
-    "#bookmark > a:nth-of-type(2) > span.bm-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#bookmark > a:nth-of-type(3) > span.paw:nth-of-type(1)": [
-      "transform",
-      "background"
-    ],
-    "#bookmark > a:nth-of-type(3) > span.bm-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#bookmark > a:nth-of-type(4) > span.paw:nth-of-type(1)": [
-      "transform",
-      "background"
-    ],
-    "#bookmark > a:nth-of-type(4) > span.bm-label:nth-of-type(2)": [
-      "opacity"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > header.mast > span.mast-cta > a.btn": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#main > section.hero:nth-of-type(1) > div.wrap > div:nth-of-type(1) > div.cta-row:nth-of-type(1) > a.store-badge:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#main > section.hero:nth-of-type(1) > div.wrap > div:nth-of-type(1) > div.cta-row:nth-of-type(1) > a.btn.btn-ghost:nth-of-type(2)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#tod-dial > button:nth-of-type(1)": {
+      "background": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "color": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#tod-dial > button:nth-of-type(2)": {
+      "background": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "color": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#tod-dial > button:nth-of-type(3)": {
+      "background": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "color": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#tod-dial > button:nth-of-type(4)": {
+      "background": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "color": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stage-view > img.stage-bg.bg-day:nth-of-type(1)": {
+      "opacity": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#stage-view > img.stage-bg.bg-night:nth-of-type(2)": {
+      "opacity": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-speech": {
+      "opacity": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(1)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(2)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(3)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(4)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(5)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.coat-row:nth-of-type(2) > button.coat:nth-of-type(6)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.trick-row:nth-of-type(3) > button.trick:nth-of-type(1)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.trick-row:nth-of-type(3) > button.trick:nth-of-type(2)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pom-stage > div.trick-row:nth-of-type(3) > button.trick:nth-of-type(3)": {
+      "border-color": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#care > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(1)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#care > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(2)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#care > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(3)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(1)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(2)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(3)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#play > div.wrap > div.cards:nth-of-type(2) > div.card:nth-of-type(4)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#letters > div.wrap > div.cards:nth-of-type(3) > div.card:nth-of-type(1)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#letters > div.wrap > div.cards:nth-of-type(3) > div.card:nth-of-type(2)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#dreams > div.band-inner > div.cards:nth-of-type(2) > div.card:nth-of-type(1)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#dreams > div.band-inner > div.cards:nth-of-type(2) > div.card:nth-of-type(2)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#dreams > div.band-inner > div.cards:nth-of-type(2) > div.card:nth-of-type(3)": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#fluff-society > div.wrap > div.society": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#main > section.final:nth-of-type(6) > div.wrap > a.store-badge": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark": {
+      "background": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bm-fill": {
+      "height": {
+        "duration": "0.25s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(1) > span.paw:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(1) > span.bm-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(2) > span.paw:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(2) > span.bm-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(3) > span.paw:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(3) > span.bm-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(4) > span.paw:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#bookmark > a:nth-of-type(4) > span.bm-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "pomagotchi/privacy.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "pomagotchi/terms.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "privacy.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "reset-password.html": {
-    "body.trc-calm > a.skip-link": [
-      "top"
-    ]
+    "body.trc-calm > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "support.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "terms.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "body > nav.top": [
-      "background-color"
-    ],
-    "body > nav.top > div.wrap": [
-      "min-height"
-    ],
-    "body > footer": [
-      "background-color"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top": {
+      "background-color": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > nav.top > div.wrap": {
+      "min-height": {
+        "duration": "0.3s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "body > footer": {
+      "background-color": {
+        "duration": "1.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "thedevice/index.html": {
-    "body > a.skip-link": [
-      "top"
-    ],
-    "#pyramid-btn > img.glass": [
-      "filter"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(1) > button.brick.b-pink": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(2) > button.brick.b-lav:nth-of-type(1)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(2) > button.brick.b-mint:nth-of-type(2)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(3) > button.brick.b-peach:nth-of-type(1)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(3) > button.brick.b-sky:nth-of-type(2)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(3) > button.brick.b-lemon:nth-of-type(3)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-coral:nth-of-type(1)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-lilac:nth-of-type(2)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-pink:nth-of-type(3)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-lav:nth-of-type(4)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-mint:nth-of-type(1)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-peach:nth-of-type(2)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-sky:nth-of-type(3)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-lemon:nth-of-type(4)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-coral:nth-of-type(5)": [
-      "opacity",
-      "transform",
-      "box-shadow"
-    ],
-    "#starchart > a:nth-of-type(1) > span.star:nth-of-type(1)": [
-      "transform",
-      "box-shadow",
-      "background"
-    ],
-    "#starchart > a:nth-of-type(1) > span.sc-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#starchart > a:nth-of-type(2) > span.star:nth-of-type(1)": [
-      "transform",
-      "box-shadow",
-      "background"
-    ],
-    "#starchart > a:nth-of-type(2) > span.sc-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#starchart > a:nth-of-type(3) > span.star:nth-of-type(1)": [
-      "transform",
-      "box-shadow",
-      "background"
-    ],
-    "#starchart > a:nth-of-type(3) > span.sc-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#starchart > a:nth-of-type(4) > span.star:nth-of-type(1)": [
-      "transform",
-      "box-shadow",
-      "background"
-    ],
-    "#starchart > a:nth-of-type(4) > span.sc-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#starchart > a:nth-of-type(5) > span.star:nth-of-type(1)": [
-      "transform",
-      "box-shadow",
-      "background"
-    ],
-    "#starchart > a:nth-of-type(5) > span.sc-label:nth-of-type(2)": [
-      "opacity"
-    ],
-    "#starchart > a:nth-of-type(6) > span.star:nth-of-type(1)": [
-      "transform",
-      "box-shadow",
-      "background"
-    ],
-    "#starchart > a:nth-of-type(6) > span.sc-label:nth-of-type(2)": [
-      "opacity"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#pyramid-btn > img.glass": {
+      "filter": {
+        "duration": "0.4s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(1) > button.brick.b-pink": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(2) > button.brick.b-lav:nth-of-type(1)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(2) > button.brick.b-mint:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(3) > button.brick.b-peach:nth-of-type(1)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(3) > button.brick.b-sky:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(3) > button.brick.b-lemon:nth-of-type(3)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-coral:nth-of-type(1)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-lilac:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-pink:nth-of-type(3)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(4) > button.brick.b-lav:nth-of-type(4)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-mint:nth-of-type(1)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-peach:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-sky:nth-of-type(3)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-lemon:nth-of-type(4)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#challenge-board > div.brick-pyramid:nth-of-type(1) > div.brick-row:nth-of-type(5) > button.brick.b-coral:nth-of-type(5)": {
+      "opacity": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "transform": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.18s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(1) > span.star:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(1) > span.sc-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(2) > span.star:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(2) > span.sc-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(3) > span.star:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(3) > span.sc-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(4) > span.star:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(4) > span.sc-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(5) > span.star:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(5) > span.sc-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(6) > span.star:nth-of-type(1)": {
+      "transform": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "box-shadow": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      },
+      "background": {
+        "duration": "0.2s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    },
+    "#starchart > a:nth-of-type(6) > span.sc-label:nth-of-type(2)": {
+      "opacity": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "trade-rc/index.html": {
-    "body > a.skip-link": [
-      "top"
-    ]
+    "body > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "trade-rc/privacy.html": {
-    "body.trc-calm > a.skip-link": [
-      "top"
-    ]
+    "body.trc-calm > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "trade-rc/support.html": {
-    "body.trc-calm > a.skip-link": [
-      "top"
-    ]
+    "body.trc-calm > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   },
   "trade-rc/terms.html": {
-    "body.trc-calm > a.skip-link": [
-      "top"
-    ]
+    "body.trc-calm > a.skip-link": {
+      "top": {
+        "duration": "0.15s",
+        "timingFunction": "ease",
+        "delay": "0s"
+      }
+    }
   }
 }
