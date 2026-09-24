@@ -91,6 +91,8 @@ jobs:
     # terms/accessibility/reset, at all three breakpoints, with the same
     # axe-core engine.
     runs-on: ubuntu-latest
+    # A healthy run takes a few minutes; fail fast instead of GitHub's 6 h default.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -99,10 +101,11 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Install Playwright's Chromium
+      - name: Install Playwright's Chromium and WebKit
         # No Google Chrome on this runner, so tools/tests/lib/browser.js
         # uses Playwright's own bundled Chromium instead (its CI branch
         # keys off the CI env var, which GitHub Actions sets on every job).
-        run: npx playwright install --with-deps chromium
+        # craft.test.js also launches WebKit for engine-parity checks.
+        run: npx playwright install --with-deps chromium webkit
       - name: Run the verification suite
         run: npm test

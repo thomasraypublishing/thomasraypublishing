@@ -142,9 +142,14 @@ describe('craft (Playwright)', () => {
   });
 
   after(async () => {
-    await chromiumBrowser.close();
-    await webkitBrowser.close();
-    await stop(site);
+    // Close whatever launched, and always stop the server: a failed launch in
+    // before() must not leave the server holding the event loop open (that
+    // hung CI for six hours when WebKit wasn't installed on the runner).
+    try {
+      await Promise.allSettled([chromiumBrowser?.close(), webkitBrowser?.close()]);
+    } finally {
+      await stop(site);
+    }
   });
 
   describe('full motion: GSAP reveals settle to identity instead of fighting the craft press/lift transitions', () => {
