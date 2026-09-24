@@ -427,7 +427,13 @@ describe('behavior (Playwright)', () => {
           await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
           await page.waitForTimeout(1500);
           await page.emulateMedia({ reducedMotion: 'reduce' });
-          await page.waitForTimeout(300);
+          // The media-query change event fires at the next rendering update,
+          // which a busy main thread on a slow CI runner can push well past
+          // 300 ms (measured on The Device at 25x CPU: 400-530 ms late, then
+          // correct). Wait for the policy to land; a page that never settles
+          // still fails the assertion below.
+          await page.waitForFunction(() => document.documentElement.dataset.motion === 'reduced', null, { timeout: 5000, polling: 50 })
+            .catch(() => { /* reported precisely by the assertion below */ });
           await settleAnimations(page);
           const after = await page.evaluate(() => ({
             motion: document.documentElement.dataset.motion || null,
@@ -547,7 +553,10 @@ describe('behavior (Playwright)', () => {
           assert.equal(afterResume.stored, null, `${route}: resuming should clear the stored preference`);
 
           await page.emulateMedia({ reducedMotion: 'reduce' });
-          await page.waitForTimeout(300);
+          // Same late media-query change as the live Reduce Motion test above.
+          await page.waitForFunction(() => document.documentElement.dataset.motion === 'reduced', null, { timeout: 5000, polling: 50 })
+            .catch(() => { /* reported by the assertion below */ });
+          await page.waitForTimeout(100);
           const underReduce = await snap();
           assert.equal(underReduce.hidden, true, `${route}: toggle should hide under Reduce Motion — nothing left to pause`);
 

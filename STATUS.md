@@ -23,12 +23,15 @@ VoiceOver closure remains his.
   standalone pages for Trade RC, Pomagotchi, The Device, and Hush Hush Snap
   Snap, each with its own design system; Coming Next page; support,
   privacy, and reset-password pages; per-app legal pages.
-- **Local `main` is ahead of live, not pushed (2026-09-24).** Three lanes are
-  landed: The Device privacy addendum v3.1.0 on the root privacy page; the
-  Trade RC fix so the stacked query pane no longer overflows (13–28 px
-  before); and the craft pass (W15, W16, W18). `npm test` passes 234/234 and
-  `check-unlanded` is clean. **Pushing is Sean's call.** The Device addendum
-  goes live with it.
+- **Live (pushed by Sean 2026-09-24; site content as of `d493c3d`).** It adds the craft pass
+  (W15 paw, W16 cat menu, W18 details), The Device privacy addendum v3.1.0
+  on the root privacy page, and the Trade RC stacked-pane overflow fix. Two
+  CI-only fixes followed: WebKit is now installed for `craft.test.js`, and
+  teardown no longer hangs. The first run had hung for 6 h, and the verify
+  job now has a 30 min timeout. A settle test also now waits for rest
+  instead of a fixed 3 s. Two Reduce Motion tests now wait for the change event, which a slow
+  runner delivers 400-530 ms late at 25x CPU; the site itself was correct.
+  The repo is down to a single `main` checkout with no open lanes.
 - **Defect track shipped 2026-09-05, live 2026-09-06.** Sean approved
   starting it ahead of the home-direction decision. Fixed and verified: W01 reset diagnostics no longer render URL/token material; W02
   navigation works with Three.js, ScrollTrigger or GSAP blocked and without
@@ -112,7 +115,7 @@ VoiceOver closure remains his.
   keyboard/VoiceOver parity; refined dark vs warm editorial home; compact
   POM signature as sections and anchors, not routes. Atlas stays shelved.
 - **W13 done, W14 done, deployed.**
-- **W15 paw reveal, W16 cat menu, W18 craft pass: BUILT, on local `main`.**
+- **W15 paw reveal, W16 cat menu, W18 craft pass: LIVE (device checks pending).**
   Four fix→QA cycles with adversarial Opus QA: 45, then 58, 80 and 95/100
   (ship bar ≥95, no High or Medium). The last three Low findings were fixed
   and each re-verified against its repro. In the iOS 27 simulator the cat
