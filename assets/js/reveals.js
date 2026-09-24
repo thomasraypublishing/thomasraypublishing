@@ -101,6 +101,7 @@ export function initReveals() {
     track('.catalog .book', gsap.from('.catalog .book', {
       scrollTrigger: { trigger: '.catalog', start: 'top 75%' },
       opacity: 0, y: 36, stagger: 0.1, duration: 0.85, ease: 'power3.out',
+      clearProps: 'transform', // hand transform back to CSS so press/hover states apply
     }));
   }
 
@@ -109,7 +110,7 @@ export function initReveals() {
     track('.stickers .stk', gsap.from('.stickers .stk', {
       scrollTrigger: { trigger: '.stickers', start: 'top 78%' },
       opacity: 0, scale: 0.82, y: 20, stagger: 0.07, duration: 0.7,
-      ease: 'back.out(1.7)',
+      ease: 'back.out(1.7)', clearProps: 'transform',
     }));
   }
 
@@ -142,6 +143,7 @@ export function initReveals() {
     track(card, gsap.from(card, {
       scrollTrigger: { trigger: '.about-collage', start: 'top 80%' },
       opacity: 0, y: 30, rotation: 0, duration: 0.9, delay: i * 0.12, ease: 'power3.out',
+      clearProps: 'transform',
     }));
   });
 }
