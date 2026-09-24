@@ -659,7 +659,6 @@ html[data-motion="full"] .brick:active,
 html[data-motion="full"] .store-badge:active,
 html[data-motion="full"] .instrument:active,
 html[data-motion="full"] .plan:active {
-  filter: none;
   transform: scale(var(--press-scale));
   transition: transform var(--press-in) var(--ease-standard);
 }

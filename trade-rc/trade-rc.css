@@ -759,7 +759,6 @@ html[data-motion="full"] .btn:active,
 html[data-motion="full"] .motion-toggle:active,
 html[data-motion="full"] .tier:active,
 html[data-motion="full"] .boot:active {
-  filter: none;
   transform: scale(var(--press-scale));
   transition: transform var(--press-in) var(--ease-standard);
 }

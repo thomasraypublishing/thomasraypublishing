@@ -966,7 +966,6 @@ html[data-motion="full"] .menu-btn:active,
 html[data-motion="full"] .menu-overlay .menu-close:active,
 html[data-motion="full"] .prose .card-callout .btn:active,
 html[data-motion="full"] .irc-line:active {
-    filter: none;
     transform: scale(var(--press-scale));
     transition: transform var(--press-in) var(--ease-standard);
 }

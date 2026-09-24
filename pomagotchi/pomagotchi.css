@@ -697,7 +697,6 @@ html[data-motion="full"] .trick-row .trick:active,
 html[data-motion="full"] .tod-dial button:active,
 html[data-motion="full"] .store-badge:active,
 html[data-motion="full"] .card:active {
-  filter: none;
   transform: scale(var(--press-scale));
   transition: transform var(--press-in) var(--ease-standard);
 }
