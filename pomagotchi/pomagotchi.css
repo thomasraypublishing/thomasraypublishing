@@ -108,6 +108,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   z-index: 10001; transition: top 0.15s ease;
 }
 .skip-link:focus { top: 12px; }
+/* Combined with the focus-ease + typography-grace `a` transition below
+   (one rule per selector — a second same-specificity rule for the same
+   selector doesn't merge properties, it replaces the whole declaration). */
+html[data-motion="full"] .skip-link {
+  transition: top 0.15s ease, outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
 
 /* ---------- Type ---------- */
 
@@ -691,20 +697,33 @@ a:active { filter: brightness(0.82); transition: filter var(--press-in) var(--ea
 .tod-dial button:active, .store-badge:active, .card:active {
   filter: brightness(0.92);
 }
-html[data-motion="full"] .btn,
-html[data-motion="full"] .motion-toggle,
-html[data-motion="full"] .coat-row .coat,
-html[data-motion="full"] .trick-row .trick,
-html[data-motion="full"] .tod-dial button,
-html[data-motion="full"] .store-badge,
-html[data-motion="full"] .card {
+html[data-motion="full"] .motion-toggle {
   transition: scale var(--press-out) var(--spring);
 }
-/* .card also gets the hover lift below, on `translate` — a second rule
-   for the same selector replaces the whole transition list rather than
-   merging into it, so its own timing is added here instead. */
+/* .btn, .coat, .trick, .tod-dial button, .store-badge and .card each
+   already carry their own pre-existing transitioned properties — a
+   second rule for the same selector replaces the whole transition list
+   rather than merging into it, so each keeps its own combined list here
+   instead of joining the group above. */
+html[data-motion="full"] .btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, scale var(--press-out) var(--spring);
+}
+html[data-motion="full"] .coat-row .coat {
+  transition: border-color 0.2s ease, transform 0.15s ease, scale var(--press-out) var(--spring);
+}
+html[data-motion="full"] .trick-row .trick {
+  transition: border-color 0.2s ease, transform 0.15s ease, scale var(--press-out) var(--spring);
+}
+html[data-motion="full"] .tod-dial button {
+  transition: background 0.25s ease, color 0.25s ease, scale var(--press-out) var(--spring);
+}
+html[data-motion="full"] .store-badge {
+  transition: transform 0.2s ease, scale var(--press-out) var(--spring);
+}
+/* .card also gets the hover lift below, on `translate`, plus its own
+   pre-existing time-of-day background fade. */
 html[data-motion="full"] .card {
-  transition: scale var(--press-out) var(--spring), translate var(--press-out) var(--spring);
+  transition: background 1.2s ease, scale var(--press-out) var(--spring), translate var(--press-out) var(--spring);
 }
 html[data-motion="full"] .btn:active,
 html[data-motion="full"] .motion-toggle:active,
@@ -740,7 +759,10 @@ html[data-motion="full"] .card:active {
 /* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise --------
    The transition for `a` is combined with typography grace's below (one
    rule per selector — a second same-specificity rule for the same
-   selector doesn't merge properties, it replaces the whole declaration). */
+   selector doesn't merge properties, it replaces the whole declaration).
+   .skip-link is an `a` too but keeps its own pre-existing `top` slide
+   (see the Skip link rule above) — excluded here and given the combined
+   list next to that rule instead. */
 a, button, [tabindex] { outline-offset: 6px; outline-color: transparent; }
 html[data-motion="full"] button, html[data-motion="full"] [tabindex] {
   transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard);
@@ -757,7 +779,7 @@ p, li { text-wrap: pretty; }
    measurably grows the page (privacy/terms at 320px). Short text (ledes,
    card copy, captions, quotes, list items inside cards) keeps it. */
 .prose p, .prose li { text-wrap: wrap; }
-html[data-motion="full"] a {
+html[data-motion="full"] a:where(:not(.skip-link)) {
   transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
 }
 a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
