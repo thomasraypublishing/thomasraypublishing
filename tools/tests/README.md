@@ -13,6 +13,18 @@ npx playwright install chromium          # once, only if you don't have Google C
 npm test                                 # everything
 ```
 
+**`npm test` is two `node --test` invocations in sequence**, not one: the
+main batch (`behavior.test.js`, `cta.test.js`, `game.test.js`,
+`links.test.js`, `modules.test.js`, `reset.test.js`, `routes.test.js` —
+node:test runs separate files concurrently by default), then
+`paw-positive.solo.test.js` alone, afterward, on its own. That file holds
+exactly one assertion — that a push navigation under full motion actually
+arms the cross-document paw-print reveal — which needs a real, live
+view-transition grant from the browser; Chromium only reliably grants one
+outside the resource contention of the concurrent batch (every file in
+this suite is Playwright-heavy). See `tools/tests/lib/paw.js`'s header
+comment for the measurements behind that split.
+
 **Browser choice.** Locally the suite drives your installed **Google
 Chrome** by default (`channel: 'chrome'`), matching the
 `Research/reviews/2026-09-05/scripts/` probes this suite was ported from.
@@ -30,6 +42,7 @@ npm run test:behavior    # tools/tests/behavior.test.js
 npm run test:links       # tools/tests/links.test.js
 npm run test:cta         # tools/tests/cta.test.js
 npm run test:modules     # tools/tests/modules.test.js
+npm run test:paw-positive # tools/tests/paw-positive.solo.test.js
 
 # No dedicated npm script for these two — run them directly:
 node --test tools/tests/reset.test.js
@@ -93,27 +106,27 @@ stop it.
     Reduce Motion the overlay is visible immediately with zero running
     `document.getAnimations()` targeting it (nav.js's `setOpen()` calls
     `settleFullyOpen()` synchronously instead of animating in that case).
-  - *paw*: the cross-document paw-print reveal (`assets/js/paw-head.js` +
-    `assets/js/paw-reveal.js`) only arms on a push navigation under full
-    motion, and never under `?static=1`, Reduce Motion, a stored
-    `trp-motion=paused`, or a back/forward (traverse) navigation;
-    `sessionStorage['trp-paw-origin']` is empty after every arrival.
-    **Note on the assertion technique:** in this Chromium 153 headless
-    environment, a cross-document view-transition opt-in is only actually
-    granted on a minority of same-origin navigations, and — confirmed
-    empirically — adding a second `pagereveal` listener to read
-    `event.viewTransition.types` directly stops paw-head.js's own
-    `.types.add('paw')` from sticking, even though the call runs cleanly.
-    So this suite adds no competing listener; it reads back the `--paw-x`
-    custom property paw-head.js sets on `document.documentElement`
-    immediately after that same `.add('paw')` call (and unconditionally
-    clears at the top of every `pagereveal`) as an unmodified side effect
-    of the real code path, and retries the "should arm" case with a fresh
-    page per attempt until it does. A known-benign Chromium diagnostic
+  - *paw* (negative cases): the cross-document paw-print reveal
+    (`assets/js/paw-head.js` + `assets/js/paw-reveal.js`) never arms under
+    `?static=1`, Reduce Motion, a stored `trp-motion=paused`, or a
+    back/forward (traverse) navigation; `sessionStorage['trp-paw-origin']`
+    is empty after every arrival. The positive case — a push nav under
+    full motion actually arming it — lives in its own file,
+    `paw-positive.solo.test.js` (below); see that file and
+    `tools/tests/lib/paw.js`, which both share with this suite, for why.
+    **Note on the assertion technique:** a `pagereveal` capture listener
+    (installed before any page script, via `context.addInitScript`) must
+    read `event.viewTransition.types` only *after*
+    `event.viewTransition.ready` settles, not synchronously and not just
+    after a microtask — confirmed empirically that reading it too early
+    races paw-head.js's own (later-registered) listener, intermittently
+    observing an empty set even though `.types.add('paw')` ran and threw
+    nothing. A known-benign Chromium diagnostic
     ("...ViewTransition opt-in disabled", logged whenever the browser
-    declines the opt-in for any reason, including our own deliberate
-    `skipTransition()` calls) is filtered out of the "no console errors"
-    assertions rather than failing the suite on an expected line.
+    declines the transition opt-in for any reason, including our own
+    deliberate `skipTransition()` calls) is filtered out of the "no
+    console errors" assertions rather than failing a test on an expected
+    line.
   - *craft*: a pressable control (`#menu-btn`) produces no `transform` on
     `:active` under Reduce Motion (styles.css only applies the press
     `scale()` transition under `html[data-motion="full"]`).
@@ -131,6 +144,14 @@ stop it.
     labeled correctly, pauses and resumes site-wide, survives a reload,
     hides under `?static=1` and under Reduce Motion (nothing left to
     pause), and meets the 44×44px minimum target at 375 and 320px.
+
+- **`paw-positive.solo.test.js`** — the one paw-reveal case that needs a
+  real, live cross-document view-transition grant from the browser: a push
+  navigation under full motion actually arms `'paw'`. Deliberately not part
+  of `behavior.test.js` and not run inside `npm test`'s main concurrent
+  batch — see its own header comment and `tools/tests/lib/paw.js`'s for the
+  full story, and the "Running it" section above for how `npm test` invokes
+  it.
 
 - **`reset.test.js`** — `reset-password.html` never leaks a recovery code
   or access token, however the link is shaped or however its Supabase call

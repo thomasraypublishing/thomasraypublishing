@@ -80,14 +80,24 @@ jobs:
 
   verify:
     # The full W13 verification suite (tools/tests/): every public route at
-    # 1280/375 (errors, overflow, settled motion, axe on
+    # 1280/375/320 (errors, overflow, settled motion, axe on
     # wcag2a/wcag2aa/wcag21aa/wcag22aa/best-practice), the mobile menu's
-    # focus trap, the site's one motion policy, the reset-password flow
-    # (stubbed SDK and the real SDK with the network blocked), The Device's
-    # restart race, every internal link and fragment, and the three App
-    # Store CTAs. Replaces the old standalone a11y (axe-core CLI) job —
-    # routes.test.js covers the same pages plus terms/accessibility/reset,
-    # at both breakpoints, with the same axe-core engine.
+    # focus trap and its clip-path cat reveal, the cross-document paw-print
+    # reveal's motion gating, the site's one motion policy, the
+    # reset-password flow (stubbed SDK and the real SDK with the network
+    # blocked), The Device's restart race, every internal link and
+    # fragment, and the three App Store CTAs. Replaces the old standalone
+    # a11y (axe-core CLI) job — routes.test.js covers the same pages plus
+    # terms/accessibility/reset, at all three breakpoints, with the same
+    # axe-core engine.
+    #
+    # `npm test` is two `node --test` invocations in sequence (see
+    # package.json): the main concurrent batch, then
+    # paw-positive.solo.test.js alone. That one assertion needs a real,
+    # live cross-document view-transition grant from the browser, which
+    # Chromium only reliably gives outside the resource contention of
+    # node:test's default concurrent file execution — see
+    # tools/tests/lib/paw.js's header comment.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
