@@ -160,7 +160,15 @@ describe('craft (Playwright)', () => {
         if (scrollTo) {
           await page.evaluate((sel) => document.querySelector(sel).scrollIntoView({ block: 'center', behavior: 'instant' }), scrollTo);
         }
+        // Poll for rest rather than sleeping a fixed time: slower CI runners
+        // can still be mid-tween at waitMs (seen: a sticker at scale 1.0079,
+        // y -0.88 on ubuntu WebKit). The regression this guards left elements
+        // stuck forever, so a generous deadline still catches it.
         await page.waitForTimeout(waitMs);
+        await page.waitForFunction((sel) => [...document.querySelectorAll(sel)].every((el) => {
+          const cs = getComputedStyle(el);
+          return (cs.transform === 'none' || cs.transform === 'matrix(1, 0, 0, 1, 0, 0)') && cs.opacity === '1';
+        }), selector, { timeout: 7000, polling: 100 }).catch(() => { /* fall through to the precise assertions below */ });
         const results = await page.evaluate((sel) => [...document.querySelectorAll(sel)].map((el) => ({
           transform: getComputedStyle(el).transform,
           opacity: getComputedStyle(el).opacity,
