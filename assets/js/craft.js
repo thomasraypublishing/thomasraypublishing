@@ -1,0 +1,102 @@
+/* ========================================================================
+   craft.js — the craft pass's two runtime jobs. Everything else (press
+   feedback, focus ease, edge theming, typography grace) is CSS-only.
+
+   1. Image reveal: any <img> not yet complete() when this module runs
+      gets .craft-fade (opacity/blur set in each page's own CSS, keyed to
+      that page's own background token); on load/decode it gets
+      .craft-loaded, which the CSS transitions under
+      html[data-motion="full"] and snaps instantly everywhere else.
+      Already-complete/cached images are left alone — never faded.
+
+   2. Card sheen: a rAF-throttled, passive pointermove sets --mx/--my (as
+      percentages) on whichever card the pointer is over, so the radial
+      sheen in each page's CSS can follow it. Only bound while motion is
+      "full" — re-evaluated on every motion-policy change.
+
+   No dependencies. Root-relative import so this resolves the same from
+   the site root and from a one-level-down app page. No-op safely if the
+   page has none of the elements below.
+   ======================================================================== */
+
+import { isStatic, onMotionChange } from '/assets/js/motion.js';
+
+// Cards the pointer-tracked sheen runs on, across every page's own CSS.
+const CARD_SELECTOR = '.specimen, .stk, .book .cover, .instrument, .plan, .card, .tier';
+
+// Never fade an image that is itself (or sits inside) a cross-document
+// view-transition morph target, or one HHSS's own scroll-driven aperture
+// reveal already owns.
+const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed';
+
+let sheenBound = false;
+let rafPending = false;
+let lastEvent = null;
+
+function onPointerMove(event) {
+  lastEvent = event;
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    if (!lastEvent) return;
+    const target = lastEvent.target.closest?.(CARD_SELECTOR);
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    const mx = ((lastEvent.clientX - rect.left) / rect.width) * 100;
+    const my = ((lastEvent.clientY - rect.top) / rect.height) * 100;
+    target.style.setProperty('--mx', `${mx}%`);
+    target.style.setProperty('--my', `${my}%`);
+  });
+}
+
+function bindSheen() {
+  if (sheenBound) return;
+  document.addEventListener('pointermove', onPointerMove, { passive: true });
+  sheenBound = true;
+}
+
+function unbindSheen() {
+  if (!sheenBound) return;
+  document.removeEventListener('pointermove', onPointerMove);
+  sheenBound = false;
+  lastEvent = null;
+}
+
+function applyMotionState() {
+  if (isStatic()) unbindSheen();
+  else bindSheen();
+}
+
+function markImage(img) {
+  if (img.dataset.craftMarked !== undefined) return;
+  if (img.closest(SKIP_SELECTOR)) return;
+  if (img.complete && img.naturalWidth > 0) return; // already loaded/cached — never fade
+  img.dataset.craftMarked = '';
+  img.classList.add('craft-fade');
+  const reveal = () => img.classList.add('craft-loaded');
+  img.addEventListener('load', reveal, { once: true });
+  img.addEventListener('error', reveal, { once: true });
+}
+
+function markImages(root = document) {
+  root.querySelectorAll?.('img').forEach(markImage);
+}
+
+markImages();
+applyMotionState();
+onMotionChange(applyMotionState);
+
+// Content inserted after boot (lazy sections, JS-rendered cards) still
+// gets the same fade-in treatment.
+const observer = new MutationObserver((mutations) => {
+  for (const mutation of mutations) {
+    for (const node of mutation.addedNodes) {
+      if (!(node instanceof Element)) continue;
+      if (node.tagName === 'IMG') markImage(node);
+      else if (node.querySelector?.('img')) markImages(node);
+    }
+  }
+});
+observer.observe(document.body, { childList: true, subtree: true });
