@@ -2,7 +2,7 @@
 phase: live
 ship_ready: false
 needs_decision: true
-last_updated: 2026-09-07
+last_updated: 2026-09-23
 ---
 
 # thomasraypublishing.com — Status
@@ -106,6 +106,21 @@ VoiceOver closure remains his.
   keyboard/VoiceOver parity; refined dark vs warm editorial home; compact
   POM signature as sections and anchors, not routes. Atlas stays shelved.
 - **W13 done, W14 done, deployed.**
+- **W15 — paw-print page reveal: AUTHORED (prototype), awaiting Sean's
+  design call.** `prototypes/transitions/paw-a.html` (gitignored). A
+  cross-document reveal: stamp, hold, expand over 1100 ms, typed `paw`
+  and added on the arriving page. Verified in Chromium 153 and WebKit 26.6.
+  Next phase is WIRED: shared head script and CSS across the 19 routes,
+  deferring to `hero-work`, plus harness assertions.
+- **W16 — cat-menu reveal: AUTHORED (prototype), awaiting Sean's design
+  call.** `prototypes/transitions/cat-menu.html`. A clip-path circle with a
+  ginger rim grows from a cat menu button. axe is clean with the menu open
+  in both themes. Next phase is WIRED: replace the `nav.js` GSAP fade and
+  the `.menu-btn` icon. Real cat artwork waits on W17 photos.
+- **W17 — pack elements: PROPOSED.** The blind, deaf cat as accessibility
+  inspector (`/accessibility/` plus the About line), a pack masthead, and a
+  Pom-ate-it 404, using Sean's photographs. **Needs Sean:** the cat's name,
+  the fourth Pom's name, and photos of all five.
 - **Performance candidates (recorded, not changed):** the home ships seven
   font faces (468 KB) and a 182 KB JPEG favicon; Three.js is 166 KB gzip
   with most of it unused; Pomagotchi's yard backgrounds are 147 + 132 KB.
