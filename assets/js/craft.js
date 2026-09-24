@@ -27,9 +27,12 @@ import { isStatic, onMotionChange } from '/assets/js/motion.js';
 const CARD_SELECTOR = '.specimen, .stk, .book .cover, .instrument, .plan, .card, .tier';
 
 // Never fade an image that is itself (or sits inside) a cross-document
-// view-transition morph target, or one HHSS's own scroll-driven aperture
-// reveal already owns.
-const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed, img.capture';
+// view-transition morph target, one HHSS's own scroll-driven aperture
+// reveal already owns, or one GSAP's own scroll reveal already owns
+// (Pomagotchi/The Device screenshot galleries: `closest()` catches both
+// an img carrying data-reveal itself and one nested inside a data-reveal
+// container) — never two reveals racing on the same image.
+const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed, img.capture, [data-reveal]';
 
 // The sheen follows a real pointer; a touch device has no hover to chase,
 // so binding the listener there is pure overhead (and --mx/--my would just
