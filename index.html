@@ -625,14 +625,28 @@
 // view-transition-name per navigation (keyboard Enter fires click too).
 (function () {
     'use strict';
+    function clearStaleNames() {
+        document.querySelectorAll('[style*="view-transition-name"]').forEach(function (n) { n.style.viewTransitionName = ''; });
+    }
+    // The name is set on THIS document and never cleared if that click
+    // actually navigates — the transition plays out on the way out, and a
+    // bfcache restore resumes this exact document instance with the name
+    // still sitting inline. paw-reveal.js's pageswap handler reads that
+    // leftover as "a hero-work morph is already in flight" and skips the
+    // paw on the visitor's next, unrelated navigation. Clearing on every
+    // click's capture phase (document, not just the specimens) catches
+    // that next click before pageswap sees it; pageshow's persisted flag
+    // catches the same restore with no click at all in between.
+    document.addEventListener('click', clearStaleNames, true);
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { clearStaleNames(); } });
     ['.spec-pom', '.spec-dev', '.spec-hhss', '.irc-line'].forEach(function (sel) {
         var el = document.querySelector(sel);
         if (!el) { return; }
         el.addEventListener('click', function (e) {
             if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
-            // Exactly one element may carry the name, so clear any stale one
-            // first (a cancelled navigation or a bfcache restore can leave it).
-            document.querySelectorAll('[style*="view-transition-name"]').forEach(function (n) { n.style.viewTransitionName = ''; });
+            // The document-level capture listener above already cleared any
+            // stale name (it runs first: capture reaches document before
+            // this bubble-phase listener on the element itself).
             var target = el.querySelector('.stage') || el;
             target.style.viewTransitionName = 'hero-work';
             // The interactive specimens' own handlers run after this one and
