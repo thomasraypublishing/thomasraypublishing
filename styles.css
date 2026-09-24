@@ -552,6 +552,12 @@ h1, h2, h3, .lede { overflow-wrap: break-word; }
     transition: top 0.15s ease;
 }
 .skip-link:focus { top: 12px; }
+/* Combined with the focus-ease `a` transition below (one rule per
+   selector — a second same-specificity rule for the same selector
+   doesn't merge properties, it replaces the whole declaration). */
+html[data-motion="full"] .skip-link {
+    transition: top 0.15s ease, outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard);
+}
 
 /* -------- Focus visibility (keyboard) -------- */
 a:focus-visible, button:focus-visible {
@@ -955,15 +961,18 @@ a:active { filter: brightness(0.82); transition: filter var(--press-in) var(--ea
     filter: brightness(0.92);
 }
 /* Each selector keeps its own pre-existing transitioned properties
-   (box-shadow, background, border-color) alongside the new scale
+   (background-color, transform) alongside the new scale/translate/rotate
    timing — a second rule for the same selector replaces the whole
    transition list rather than merging into it, so those would otherwise
-   silently start snapping instead of easing. */
+   silently start snapping instead of easing. .specimen and .stk also
+   carry the page-wide palette-morph transition (background-color 1.2s,
+   see "Smooth palette morph" above) which the same-specificity, later
+   full-motion rule would otherwise silently drop. */
 html[data-motion="full"] .specimen {
-    transition: scale var(--press-out) var(--spring), translate var(--press-out) var(--spring), box-shadow .4s;
+    transition: background-color 1.2s ease, scale var(--press-out) var(--spring), translate var(--press-out) var(--spring), box-shadow .4s;
 }
 html[data-motion="full"] .stk {
-    transition: scale var(--press-out) var(--spring), translate var(--press-out) var(--spring), rotate var(--press-out) var(--spring), background-color .3s;
+    transition: background-color 1.2s ease, scale var(--press-out) var(--spring), translate var(--press-out) var(--spring), rotate var(--press-out) var(--spring);
 }
 html[data-motion="full"] .book,
 html[data-motion="full"] .menu-btn,
@@ -972,7 +981,7 @@ html[data-motion="full"] .prose .card-callout .btn {
     transition: scale var(--press-out) var(--spring);
 }
 html[data-motion="full"] .app-store-badge {
-    transition: scale var(--press-out) var(--spring);
+    transition: transform .2s ease, scale var(--press-out) var(--spring);
 }
 html[data-motion="full"] .motion-toggle {
     transition: scale var(--press-out) var(--spring);
@@ -1030,9 +1039,14 @@ html:not([data-motion="full"]) .book:hover .cover {
     }
 }
 
-/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise -------- */
+/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise --------
+   .skip-link is an `a` too but keeps its own pre-existing `top` slide
+   (see the Skip link rule above) — excluded here and given the combined
+   list next to that rule instead, since a second same-specificity rule
+   for the same element replaces the whole transition list rather than
+   merging into it. */
 a, button { outline-offset: 6px; outline-color: transparent; }
-html[data-motion="full"] a, html[data-motion="full"] button {
+html[data-motion="full"] a:where(:not(.skip-link)), html[data-motion="full"] button {
     transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard);
 }
 @media (forced-colors: active) {

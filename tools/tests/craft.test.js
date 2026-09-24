@@ -1,10 +1,14 @@
 'use strict';
 /* craft.test.js — regression coverage for the craft-pass fixes from the
-   2026-09-23 QA round 2 (see Research/reviews/2026-09-23-craft-pass/
-   qa-round2/REPORT.md): the GSAP-vs-CSS-transition conflict that left the
-   home specimens and books/stickers stuck mid-reveal (HIGH-1/MEDIUM-1),
-   the craft-fade cleanup contract, paw/hero-work exclusivity after a
-   bfcache restore (LOW-2), and the per-page asset budget (LOW-1).
+   2026-09-23 QA rounds 2 and 3 (see Research/reviews/2026-09-23-craft-pass/
+   qa-round2/REPORT.md and qa-round3/REPORT.md): the GSAP-vs-CSS-transition
+   conflict that left the home specimens and books/stickers stuck
+   mid-reveal (HIGH-1/MEDIUM-1, round 2), the craft-fade cleanup contract,
+   paw/hero-work exclusivity after a bfcache restore (LOW-2), the per-page
+   asset budget (LOW-1, round 2), and the round-3 MEDIUM-1/MEDIUM-2 fix:
+   every full-motion `transition` shorthand that used to replace an
+   element's whole pre-existing transition list now carries the union of
+   that list and the craft additions instead.
 
    A new file, not a section added to behavior.test.js: another lane is
    editing that file concurrently, and `npm test`'s `tools/tests/*.test.js`
@@ -24,6 +28,47 @@ const VIEWPORT = { width: 1280, height: 900 };
 /** Identity, however the engine renders a `transform` that never moved. */
 function isIdentity(transform) {
   return transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)';
+}
+
+/** The CSS property names a `transition` shorthand actually eases right
+    now: every entry whose paired duration is > 0 (a 0s entry is present
+    in the list but inert). */
+async function liveTransitionProperties(page, selector) {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return null;
+    const cs = getComputedStyle(el);
+    const props = cs.transitionProperty.split(',').map((s) => s.trim());
+    const durations = cs.transitionDuration.split(',').map((s) => parseFloat(s));
+    return props.filter((_, i) => durations[i % durations.length] > 0);
+  }, selector);
+}
+
+/** Does `live` still cover a baseline property? A bare name match counts,
+    as does the `all` keyword. `transform` also counts satisfied if both
+    `translate` and `rotate` are live: the craft pass deliberately splits
+    a hover/press `transform` into those two independent properties so a
+    GSAP-driven `transform` reveal on the same element can't fight the
+    transition (see reveals.js's `clearProps` comment) — an intentional,
+    lead-approved substitution, not a loss. */
+function satisfiesBaseline(live, baselineProp) {
+  if (!live) return false;
+  if (live.includes(baselineProp) || live.includes('all')) return true;
+  return baselineProp === 'transform' && live.includes('translate') && live.includes('rotate');
+}
+
+/** trade-rc/index.html's `<script type="speculationrules">` prefetch hint
+    is Chromium-only; WebKit logs a console error trying to parse it
+    against this test server's plain http://127.0.0.1 origin ("URL must be
+    secure (HTTPS)"). Pre-existing on the live site too (an http-vs-https
+    engine limitation, not something any fix in this file touches), so
+    it's the one console message these tests ignore rather than folding
+    into every future WebKit run's noise. */
+function isBenignSpeculationRulesWarning(msg) {
+  return msg === 'Prefetch request denied: URL must be secure (HTTPS)';
+}
+function realErrorsOnly(errors) {
+  return errors.filter((e) => !isBenignSpeculationRulesWarning(e));
 }
 
 describe('craft (Playwright)', () => {
@@ -193,6 +238,132 @@ describe('craft (Playwright)', () => {
         await context.close();
       }
     });
+  });
+
+  describe('press feedback and hover-lift are real, not just present in the CSS (QA round 3 LOW-1: the prior version of this test passed even with the clearProps fix reverted, since it only checked that a GSAP reveal settles to an identity transform, never that press/hover actually still moves anything)', () => {
+    const cases = [
+      { path: 'index.html', selector: '.specimens .specimen' },
+      { path: 'index.html', selector: '.catalog .book', liftSelector: '.catalog .book .cover', scrollTo: '.catalog' },
+      { path: 'index.html', selector: '.stickers .stk', scrollTo: '.stickers' },
+      { path: 'pomagotchi/index.html', selector: '.card', scrollTo: '.card' },
+      { path: 'thedevice/index.html', selector: '.instrument', scrollTo: '.instrument' },
+      { path: 'thedevice/index.html', selector: '.plan', scrollTo: '.plan' },
+      { path: 'trade-rc/index.html', selector: '.tier', scrollTo: '.tier' },
+    ];
+
+    async function assertPressAndLift(browser, { path: route, selector, liftSelector, scrollTo }) {
+      const { context, page, errors } = await newPage(browser, site.url, { viewport: VIEWPORT });
+      try {
+        await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
+        if (scrollTo) {
+          await page.evaluate(
+            (sel) => document.querySelector(sel).scrollIntoView({ block: 'center', behavior: 'instant' }),
+            scrollTo,
+          );
+        }
+        await page.waitForTimeout(2500); // the per-card reveal + its clearProps settle in this window
+
+        // GSAP's clearProps hands the inline scale/translate/rotate it drove
+        // back to the stylesheet once the reveal finishes — if a future edit
+        // drops `clearProps` (or narrows it), a stale inline value would pin
+        // the property and every check below would still pass for the wrong
+        // reason (an inline value always wins over a CSS one), so this has
+        // to be checked on its own.
+        const inline = await page.evaluate((sel) => {
+          const el = document.querySelector(sel);
+          return { translate: el.style.translate, scale: el.style.scale, rotate: el.style.rotate };
+        }, selector);
+        assert.equal(inline.translate, '', `${route} ${selector}: expected no inline translate left by GSAP, got "${inline.translate}"`);
+        assert.equal(inline.scale, '', `${route} ${selector}: expected no inline scale left by GSAP, got "${inline.scale}"`);
+        assert.equal(inline.rotate, '', `${route} ${selector}: expected no inline rotate left by GSAP, got "${inline.rotate}"`);
+
+        // Hover actually lifts (computed `translate` changes).
+        const lift = liftSelector || selector;
+        const restTranslate = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).translate, lift);
+        const box = await page.locator(selector).first().boundingBox();
+        await page.mouse.move(2, 2);
+        await page.waitForTimeout(100);
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.waitForTimeout(500);
+        const hoverTranslate = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).translate, lift);
+        assert.notEqual(
+          hoverTranslate, restTranslate,
+          `${route} ${lift}: expected computed translate to change on hover (stayed ${restTranslate})`,
+        );
+
+        // Pressing actually presses (computed `scale` changes on :active).
+        const restScale = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).scale, selector);
+        await page.mouse.down();
+        await page.waitForTimeout(150);
+        const pressedScale = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).scale, selector);
+        await page.mouse.up();
+        assert.notEqual(
+          pressedScale, restScale,
+          `${route} ${selector}: expected computed scale to change on :active (stayed ${restScale})`,
+        );
+
+        const realErrors = realErrorsOnly(errors);
+        assert.deepEqual(realErrors, [], `page/console error(s):\n  ${realErrors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    }
+
+    for (const c of cases) {
+      it(`${c.path} ${c.selector}: settles clean, lifts on hover, presses on :active — Chromium`, async () => {
+        await assertPressAndLift(chromiumBrowser, c);
+      });
+      it(`${c.path} ${c.selector}: settles clean, lifts on hover, presses on :active — WebKit`, async () => {
+        await assertPressAndLift(webkitBrowser, c);
+      });
+    }
+  });
+
+  describe('transition preservation (QA round 3 MEDIUM-1/MEDIUM-2 regression tripwire)', () => {
+    // fixtures/transitions-baseline.json maps route -> stable element
+    // selector -> the set of properties that element transitioned (any
+    // duration > 0) on the pre-craft site (commit 0218f30, full motion,
+    // 1280 viewport). Regenerate it only by recording fresh from that
+    // commit if the pre-craft site's own behavior changes — never hand-edit
+    // it to make a fix look complete, and never regenerate it from the
+    // current tree (that would launder away exactly the kind of regression
+    // this test exists to catch). A `transform` baseline entry is also
+    // satisfied by `translate` + `rotate` together — see satisfiesBaseline
+    // above for why that split is intentional, not a loss.
+    const fixturePath = path.join(__dirname, 'fixtures', 'transitions-baseline.json');
+    const baseline = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
+
+    async function assertRouteHoldsBaseline(browser, route, entries) {
+      const { context, page, errors } = await newPage(browser, site.url, { viewport: VIEWPORT });
+      try {
+        await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
+        await page.waitForTimeout(500);
+        for (const [selector, props] of Object.entries(entries)) {
+          const live = await liveTransitionProperties(page, selector);
+          assert.ok(live !== null, `${route} ${selector}: element no longer found on the page`);
+          for (const prop of props) {
+            assert.ok(
+              satisfiesBaseline(live, prop),
+              `${route} ${selector}: expected '${prop}' to still transition under full motion (pre-craft baseline), got [${live.join(', ')}]`,
+            );
+          }
+        }
+        const realErrors = realErrorsOnly(errors);
+        assert.deepEqual(realErrors, [], `page/console error(s):\n  ${realErrors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    }
+
+    for (const [route, entries] of Object.entries(baseline)) {
+      if (Object.keys(entries).length === 0) continue;
+      it(`${route}: every pre-craft transitioned property still transitions under full motion — Chromium`, async () => {
+        await assertRouteHoldsBaseline(chromiumBrowser, route, entries);
+      });
+      it(`${route}: every pre-craft transitioned property still transitions under full motion — WebKit`, async () => {
+        await assertRouteHoldsBaseline(webkitBrowser, route, entries);
+      });
+    }
   });
 
   describe('craft asset budget (regression tripwire)', () => {

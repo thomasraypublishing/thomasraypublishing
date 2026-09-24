@@ -84,6 +84,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   z-index: 10001; transition: top 0.15s ease;
 }
 .skip-link:focus { top: 12px; }
+/* Combined with the focus-ease + typography-grace `a` transition below
+   (one rule per selector — a second same-specificity rule for the same
+   selector doesn't merge properties, it replaces the whole declaration). */
+html[data-motion="full"] .skip-link {
+  transition: top 0.15s ease, outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
 
 /* ---------- Starfield (three fixed layers; JS parallax, CSS drift) ---------- */
 
@@ -662,11 +668,11 @@ html[data-motion="full"] .instrument,
 html[data-motion="full"] .plan {
   transition: scale var(--press-out) var(--spring);
 }
-/* .brick already transitions opacity/box-shadow for its .lit state; a
-   second rule for the same selector would replace that list, not merge
-   into it, so the scale timing is added here instead. */
+/* .brick already transitions opacity/transform/box-shadow for its .lit
+   pop; a second rule for the same selector would replace that list, not
+   merge into it, so the scale timing is added alongside them here. */
 html[data-motion="full"] .brick {
-  transition: opacity 0.18s ease, scale var(--press-out) var(--spring), box-shadow 0.18s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease, scale var(--press-out) var(--spring), box-shadow 0.18s ease;
 }
 /* .instrument and .plan also get the hover lift below, on `translate` —
    a second rule for the same selector replaces the whole transition list
@@ -709,9 +715,15 @@ html[data-motion="full"] .plan:active {
   }
 }
 
-/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise -------- */
+/* -------- Focus ease: the ring contracts in from 6px on arrival; instant otherwise --------
+   The transition for `a` is combined with typography grace's below (one
+   rule per selector — a second same-specificity rule for the same
+   selector doesn't merge properties, it replaces the whole declaration,
+   which is also why .skip-link — an `a` too, but with its own
+   pre-existing `top` slide, see the Skip link rule above — is excluded
+   here and given the combined list next to that rule instead). */
 a, button, [tabindex] { outline-offset: 6px; outline-color: transparent; }
-html[data-motion="full"] a, html[data-motion="full"] button, html[data-motion="full"] [tabindex] {
+html[data-motion="full"] button, html[data-motion="full"] [tabindex] {
   transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard);
 }
 @media (forced-colors: active) {
@@ -721,8 +733,8 @@ html[data-motion="full"] a, html[data-motion="full"] button, html[data-motion="f
 /* -------- Typography grace -------- */
 h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }
-html[data-motion="full"] a {
-  transition: text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+html[data-motion="full"] a:where(:not(.skip-link)) {
+  transition: outline-offset var(--motion-standard) var(--ease-standard), outline-color var(--motion-standard) var(--ease-standard), text-decoration-thickness var(--motion-fast) var(--ease-standard), text-underline-offset var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
 }
 a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
 
