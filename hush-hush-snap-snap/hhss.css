@@ -779,7 +779,29 @@ html[data-motion="full"] .store-badge:active,
 html[data-motion="full"] .card:active,
 html[data-motion="full"] .plan:active {
   scale: var(--press-scale);
+}
+/* Each :active list mirrors that same selector's full-motion list above,
+   with only the scale entry's timing swapped to the fast press-in — a
+   plain `transition: scale ...` here would replace the whole list during
+   a press, truncating whatever else the element was mid-transition on
+   (.btn/.store-badge's hover lift, .switch's background, .card/.plan's
+   hover lift). */
+html[data-motion="full"] .motion-toggle:active,
+html[data-motion="full"] .frame-counter button:active {
   transition: scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .btn:active {
+  transition: transform 0.18s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .store-badge:active {
+  transition: transform 0.18s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .cue-row .switch:active {
+  transition: background 0.2s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .card:active,
+html[data-motion="full"] .plan:active {
+  transition: scale var(--press-in) var(--ease-standard), translate var(--press-out) var(--spring);
 }
 
 /* -------- Card hover: lift + pointer-tracked sheen (fine pointer, motion full only) -------- */

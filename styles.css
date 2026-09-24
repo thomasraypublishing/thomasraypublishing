@@ -999,7 +999,33 @@ html[data-motion="full"] .menu-overlay .menu-close:active,
 html[data-motion="full"] .prose .card-callout .btn:active,
 html[data-motion="full"] .irc-line:active {
     scale: var(--press-scale);
+}
+/* Each :active list mirrors that same selector's full-motion list above,
+   with only the scale entry's timing swapped to the fast press-in — a
+   plain `transition: scale ...` here would replace the whole list during
+   a press, truncating whatever else the element was mid-transition on
+   (the home .app-store-badge lift, .trick/.irc-line border-color, the
+   palette-morph background-color, .specimen's box-shadow). */
+html[data-motion="full"] .specimen:active {
+    transition: background-color 1.2s ease, scale var(--press-in) var(--ease-standard), translate var(--press-out) var(--spring), box-shadow .4s;
+}
+html[data-motion="full"] .stk:active {
+    transition: background-color 1.2s ease, scale var(--press-in) var(--ease-standard), translate var(--press-out) var(--spring), rotate var(--press-out) var(--spring);
+}
+html[data-motion="full"] .book:active,
+html[data-motion="full"] .menu-btn:active,
+html[data-motion="full"] .menu-overlay .menu-close:active,
+html[data-motion="full"] .prose .card-callout .btn:active {
     transition: scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .app-store-badge:active {
+    transition: transform .2s ease, scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .motion-toggle:active {
+    transition: scale var(--press-in) var(--ease-standard);
+}
+html[data-motion="full"] .irc-line:active {
+    transition: scale var(--press-in) var(--ease-standard), background .25s ease, border-color .25s ease;
 }
 
 /* -------- Card hover: lift + pointer-tracked sheen (fine pointer, motion full only) --------
@@ -1020,7 +1046,7 @@ html:not([data-motion="full"]) .book:hover .cover {
 @media (hover: hover) and (pointer: fine) {
     html[data-motion="full"] .specimen:hover { translate: var(--lift); }
     html[data-motion="full"] .stk:hover { translate: var(--lift); rotate: -1deg; }
-    html[data-motion="full"] .book:hover .cover { translate: var(--lift); rotate: -.4deg; }
+    html[data-motion="full"] .book:hover .cover { translate: 0 -4px; rotate: -.4deg; }
     .stk { position: relative; }
     .specimen::after, .stk::after, .book .cover::before {
         content: ""; position: absolute; inset: 0; z-index: 3;

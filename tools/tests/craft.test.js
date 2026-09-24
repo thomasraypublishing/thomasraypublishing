@@ -30,31 +30,87 @@ function isIdentity(transform) {
   return transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)';
 }
 
-/** The CSS property names a `transition` shorthand actually eases right
-    now: every entry whose paired duration is > 0 (a 0s entry is present
-    in the list but inert). */
-async function liveTransitionProperties(page, selector) {
+/** The live transition timing for every property a `transition` shorthand
+    actually eases right now, keyed by property name — every entry whose
+    paired duration is > 0 (a 0s entry is present in the list but inert).
+    Duration/timing-function/delay are included, not just the property
+    name: a name-only check would still pass if a duration silently
+    shrank from 1.2s to 0.01s, which is exactly the QA round-4 LOW-3
+    finding this replaces. */
+async function liveTransitionDetails(page, selector) {
   return page.evaluate((sel) => {
+    // Split each computed-style list on top-level commas only —
+    // transitionTimingFunction's own values are function calls
+    // (`cubic-bezier(0.2, 0.7, 0.2, 1)`) whose internal commas a plain
+    // split(',') would wrongly treat as separators between properties.
+    // Defined inline (not shared with a Node-side helper) because
+    // page.evaluate serializes this callback to run inside the browser,
+    // which can't close over a function defined in this process.
+    const splitTopLevel = (s) => {
+      const out = []; let depth = 0; let cur = '';
+      for (const ch of s) {
+        if (ch === '(') depth++;
+        if (ch === ')') depth--;
+        if (ch === ',' && depth === 0) { out.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+      out.push(cur.trim());
+      return out;
+    };
     const el = document.querySelector(sel);
     if (!el) return null;
     const cs = getComputedStyle(el);
-    const props = cs.transitionProperty.split(',').map((s) => s.trim());
-    const durations = cs.transitionDuration.split(',').map((s) => parseFloat(s));
-    return props.filter((_, i) => durations[i % durations.length] > 0);
+    const props = splitTopLevel(cs.transitionProperty);
+    const durations = splitTopLevel(cs.transitionDuration);
+    const timingFunctions = splitTopLevel(cs.transitionTimingFunction);
+    const delays = splitTopLevel(cs.transitionDelay);
+    const out = {};
+    props.forEach((prop, i) => {
+      const duration = durations[i % durations.length];
+      if (parseFloat(duration) > 0) {
+        out[prop] = {
+          duration,
+          timingFunction: timingFunctions[i % timingFunctions.length],
+          delay: delays[i % delays.length],
+        };
+      }
+    });
+    return out;
   }, selector);
 }
 
-/** Does `live` still cover a baseline property? A bare name match counts,
-    as does the `all` keyword. `transform` also counts satisfied if both
-    `translate` and `rotate` are live: the craft pass deliberately splits
-    a hover/press `transform` into those two independent properties so a
-    GSAP-driven `transform` reveal on the same element can't fight the
-    transition (see reveals.js's `clearProps` comment) — an intentional,
-    lead-approved substitution, not a loss. */
-function satisfiesBaseline(live, baselineProp) {
+/** Do two timing triples match exactly? */
+function timingMatches(live, baseline) {
+  return live
+    && live.duration === baseline.duration
+    && live.timingFunction === baseline.timingFunction
+    && live.delay === baseline.delay;
+}
+
+/** Does `live` (a map of property -> {duration, timingFunction, delay})
+    still hold a baseline property's exact timing? A bare name match with
+    identical timing counts, as does the `all` keyword covering every
+    value.
+    `.book .cover`'s `transform` baseline is the one deliberate, lead-
+    approved exception: the craft pass splits a hover/press `transform`
+    into independent `translate` + `rotate` properties so a GSAP-driven
+    `transform` reveal on the same element can't fight the transition
+    (see reveals.js's `clearProps` comment). That split is satisfied only
+    when BOTH `translate` and `rotate` are live and BOTH carry the exact
+    timing the pre-craft `transform` baseline recorded — the split must
+    preserve the original motion, not merely exist. */
+function satisfiesBaseline(live, baselineProp, baselineTiming) {
   if (!live) return false;
-  if (live.includes(baselineProp) || live.includes('all')) return true;
-  return baselineProp === 'transform' && live.includes('translate') && live.includes('rotate');
+  if (live.all && timingMatches(live.all, baselineTiming)) return true;
+  if (live[baselineProp] && timingMatches(live[baselineProp], baselineTiming)) return true;
+  if (
+    baselineProp === 'transform'
+    && timingMatches(live.translate, baselineTiming)
+    && timingMatches(live.rotate, baselineTiming)
+  ) {
+    return true;
+  }
+  return false;
 }
 
 /** trade-rc/index.html's `<script type="speculationrules">` prefetch hint
@@ -321,15 +377,19 @@ describe('craft (Playwright)', () => {
 
   describe('transition preservation (QA round 3 MEDIUM-1/MEDIUM-2 regression tripwire)', () => {
     // fixtures/transitions-baseline.json maps route -> stable element
-    // selector -> the set of properties that element transitioned (any
-    // duration > 0) on the pre-craft site (commit 0218f30, full motion,
-    // 1280 viewport). Regenerate it only by recording fresh from that
+    // selector -> { property: { duration, timingFunction, delay } } for
+    // every property that element transitioned (any duration > 0) on the
+    // pre-craft site (commit 0218f30, full motion, 1280 viewport). Timing
+    // is recorded, not just the property name (QA round-4 LOW-3: a
+    // name-only fixture still passed when a duration silently shrank from
+    // 1.2s to 0.01s). Regenerate it only by recording fresh from that
     // commit if the pre-craft site's own behavior changes — never hand-edit
     // it to make a fix look complete, and never regenerate it from the
     // current tree (that would launder away exactly the kind of regression
     // this test exists to catch). A `transform` baseline entry is also
-    // satisfied by `translate` + `rotate` together — see satisfiesBaseline
-    // above for why that split is intentional, not a loss.
+    // satisfied by `translate` + `rotate` together, each carrying that same
+    // timing — see satisfiesBaseline above for why that split is
+    // intentional, not a loss.
     const fixturePath = path.join(__dirname, 'fixtures', 'transitions-baseline.json');
     const baseline = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
 
@@ -339,12 +399,12 @@ describe('craft (Playwright)', () => {
         await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
         await page.waitForTimeout(500);
         for (const [selector, props] of Object.entries(entries)) {
-          const live = await liveTransitionProperties(page, selector);
+          const live = await liveTransitionDetails(page, selector);
           assert.ok(live !== null, `${route} ${selector}: element no longer found on the page`);
-          for (const prop of props) {
+          for (const [prop, timing] of Object.entries(props)) {
             assert.ok(
-              satisfiesBaseline(live, prop),
-              `${route} ${selector}: expected '${prop}' to still transition under full motion (pre-craft baseline), got [${live.join(', ')}]`,
+              satisfiesBaseline(live, prop, timing),
+              `${route} ${selector}: expected '${prop}' (${JSON.stringify(timing)}) to still transition under full motion (pre-craft baseline), got ${JSON.stringify(live)}`,
             );
           }
         }
