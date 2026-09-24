@@ -361,4 +361,40 @@ describe('behavior (Playwright)', () => {
       }
     });
   });
+
+  describe('resize: narrowing the window after load never overflows', () => {
+    // routes.test.js only measures fresh loads. Trade RC's /msg slide-in
+    // offsets the query pane 44px to the right while the panes sit side by
+    // side; before gsap.matchMedia scoped it, a window narrowed after load
+    // kept that offset on the stacked, full-width pane (28px of overflow).
+    it('trade-rc/index.html: 1280 -> 375 -> 1280 -> 375', async () => {
+      const { context, page, errors } = await newPage(browser, site.url, {
+        viewport: { width: 1280, height: 800 },
+      });
+      try {
+        // Skip the first-visit connect overlay; it is not what this measures.
+        await context.addInitScript(() => sessionStorage.setItem('trc-booted', '1'));
+        await page.goto(`${site.url}/trade-rc/index.html`, { waitUntil: 'networkidle' });
+        await page.waitForTimeout(500);
+        const measure = () => page.evaluate(() => ({
+          overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          transform: getComputedStyle(document.querySelector('#query-scene .q-dm')).transform,
+        }));
+
+        const armed = await measure();
+        assert.notEqual(armed.transform, 'none', 'the query pane should load offset at 1280, or this test no longer exercises the slide-in');
+
+        for (const [step, width, height] of [['375', 375, 812], ['back to 1280', 1280, 800], ['375 again', 375, 812]]) {
+          await page.setViewportSize({ width, height });
+          await page.waitForTimeout(600);
+          const after = await measure();
+          assert.ok(after.overflow <= 1, `after resizing to ${step}: ${after.overflow}px of horizontal overflow`);
+          if (width === 375) assert.equal(after.transform, 'none', `after resizing to ${step}: the stacked query pane still carries ${after.transform}`);
+        }
+        assert.deepEqual(errors, [], `page/console error(s):\n  ${errors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+  });
 });

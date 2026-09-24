@@ -101,6 +101,11 @@ stop it.
     labeled correctly, pauses and resumes site-wide, survives a reload,
     hides under `?static=1` and under Reduce Motion (nothing left to
     pause), and meets the 44×44px minimum target at 375 and 320px.
+  - *resize*: Trade RC loaded at 1280px and then resized to 375, back to
+    1280, and to 375 again without a reload never overflows horizontally,
+    and the stacked query pane (`#query-scene .q-dm`) sheds the 44px
+    slide-in offset it carries in the side-by-side layout.
+    `routes.test.js` only measures fresh loads, which never caught this.
 
 - **`reset.test.js`** — `reset-password.html` never leaks a recovery code
   or access token, however the link is shaped or however its Supabase call
