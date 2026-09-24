@@ -12,7 +12,9 @@
    2. Card sheen: a rAF-throttled, passive pointermove sets --mx/--my (as
       percentages) on whichever card the pointer is over, so the radial
       sheen in each page's CSS can follow it. Only bound while motion is
-      "full" — re-evaluated on every motion-policy change.
+      "full" AND the device actually has a fine-pointer hover (a touch
+      screen has no hover to chase) — re-evaluated live on every
+      motion-policy change and on that media query changing.
 
    No dependencies. Root-relative import so this resolves the same from
    the site root and from a one-level-down app page. No-op safely if the
@@ -28,6 +30,13 @@ const CARD_SELECTOR = '.specimen, .stk, .book .cover, .instrument, .plan, .card,
 // view-transition morph target, or one HHSS's own scroll-driven aperture
 // reveal already owns.
 const SKIP_SELECTOR = '.stage, .stage-view, .stage-pom, .dot-field, .pyramid-btn, figure.photo, figure.bleed, img.capture';
+
+// The sheen follows a real pointer; a touch device has no hover to chase,
+// so binding the listener there is pure overhead (and --mx/--my would just
+// sit wherever the last touch happened). Re-evaluated live: a Bluetooth
+// mouse paired mid-session, or a 2-in-1 switching to tablet mode, changes
+// this query without a reload.
+const HOVER_CAPABLE = window.matchMedia('(hover: hover) and (pointer: fine)');
 
 let sheenBound = false;
 let rafPending = false;
@@ -65,7 +74,7 @@ function unbindSheen() {
 }
 
 function applyMotionState() {
-  if (isStatic()) unbindSheen();
+  if (isStatic() || !HOVER_CAPABLE.matches) unbindSheen();
   else bindSheen();
 }
 
@@ -117,6 +126,7 @@ function markImages(root = document) {
 markImages();
 applyMotionState();
 onMotionChange(applyMotionState);
+HOVER_CAPABLE.addEventListener('change', applyMotionState);
 
 // Content inserted after boot (lazy sections, JS-rendered cards) still
 // gets the same fade-in treatment.
