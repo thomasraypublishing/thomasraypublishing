@@ -127,6 +127,25 @@ function realErrorsOnly(errors) {
   return errors.filter((e) => !isBenignSpeculationRulesWarning(e));
 }
 
+/** Poll liveTransitionDetails(page, selector) until every baseline prop is
+    satisfied (satisfiesBaseline) or `timeout` elapses, then return whatever
+    the last read was. Node-side (not page.waitForFunction) because the
+    condition needs satisfiesBaseline's own logic, not just DOM state — but
+    it still gives the caller's precise per-property assertions a real
+    deadline to land within instead of a single fixed sleep, exactly like
+    the page.waitForFunction polls elsewhere in this file. */
+async function pollForBaseline(page, selector, props, { timeout = 10000, interval = 100 } = {}) {
+  const holds = (live) => live !== null
+    && Object.entries(props).every(([prop, timing]) => satisfiesBaseline(live, prop, timing));
+  const deadline = Date.now() + timeout;
+  let live = await liveTransitionDetails(page, selector);
+  while (!holds(live) && Date.now() < deadline) {
+    await new Promise((resolve) => { setTimeout(resolve, interval); });
+    live = await liveTransitionDetails(page, selector);
+  }
+  return live;
+}
+
 describe('craft (Playwright)', () => {
   let site;
   let chromiumBrowser;
@@ -153,22 +172,23 @@ describe('craft (Playwright)', () => {
   });
 
   describe('full motion: GSAP reveals settle to identity instead of fighting the craft press/lift transitions', () => {
-    async function assertSettled(browser, { scrollTo, selector, waitMs }) {
+    async function assertSettled(browser, { scrollTo, selector }) {
       const { context, page, errors } = await newPage(browser, site.url, { viewport: VIEWPORT });
       try {
         await page.goto(`${site.url}/index.html`, { waitUntil: 'networkidle' });
         if (scrollTo) {
           await page.evaluate((sel) => document.querySelector(sel).scrollIntoView({ block: 'center', behavior: 'instant' }), scrollTo);
         }
-        // Poll for rest rather than sleeping a fixed time: slower CI runners
-        // can still be mid-tween at waitMs (seen: a sticker at scale 1.0079,
-        // y -0.88 on ubuntu WebKit). The regression this guards left elements
-        // stuck forever, so a generous deadline still catches it.
-        await page.waitForTimeout(waitMs);
+        // Poll for rest instead of sleeping a fixed time: a loaded CI runner
+        // can still be mid-tween well past any fixed deadline (seen: a
+        // sticker at scale 1.0079, y -0.88 on ubuntu WebKit at 3s). The
+        // regression this guards left elements stuck forever, so a generous
+        // poll deadline still catches it without racing a fast-tween
+        // assumption borrowed from a fast Mac.
         await page.waitForFunction((sel) => [...document.querySelectorAll(sel)].every((el) => {
           const cs = getComputedStyle(el);
           return (cs.transform === 'none' || cs.transform === 'matrix(1, 0, 0, 1, 0, 0)') && cs.opacity === '1';
-        }), selector, { timeout: 7000, polling: 100 }).catch(() => { /* fall through to the precise assertions below */ });
+        }), selector, { timeout: 10000, polling: 100 }).catch(() => { /* fall through to the precise assertions below */ });
         const results = await page.evaluate((sel) => [...document.querySelectorAll(sel)].map((el) => ({
           transform: getComputedStyle(el).transform,
           opacity: getComputedStyle(el).opacity,
@@ -185,27 +205,27 @@ describe('craft (Playwright)', () => {
     }
 
     it('home .specimen cards settle within 3s — Chromium', async () => {
-      await assertSettled(chromiumBrowser, { selector: '.specimens .specimen', waitMs: 3000 });
+      await assertSettled(chromiumBrowser, { selector: '.specimens .specimen' });
     });
 
     it('home .specimen cards settle within 3s — WebKit', async () => {
-      await assertSettled(webkitBrowser, { selector: '.specimens .specimen', waitMs: 3000 });
+      await assertSettled(webkitBrowser, { selector: '.specimens .specimen' });
     });
 
     it('catalog books settle after their reveal — Chromium', async () => {
-      await assertSettled(chromiumBrowser, { scrollTo: '.catalog', selector: '.catalog .book', waitMs: 3000 });
+      await assertSettled(chromiumBrowser, { scrollTo: '.catalog', selector: '.catalog .book' });
     });
 
     it('catalog books settle after their reveal — WebKit', async () => {
-      await assertSettled(webkitBrowser, { scrollTo: '.catalog', selector: '.catalog .book', waitMs: 3000 });
+      await assertSettled(webkitBrowser, { scrollTo: '.catalog', selector: '.catalog .book' });
     });
 
     it('stickers settle after their reveal — Chromium', async () => {
-      await assertSettled(chromiumBrowser, { scrollTo: '.stickers', selector: '.stickers .stk', waitMs: 3000 });
+      await assertSettled(chromiumBrowser, { scrollTo: '.stickers', selector: '.stickers .stk' });
     });
 
     it('stickers settle after their reveal — WebKit', async () => {
-      await assertSettled(webkitBrowser, { scrollTo: '.stickers', selector: '.stickers .stk', waitMs: 3000 });
+      await assertSettled(webkitBrowser, { scrollTo: '.stickers', selector: '.stickers .stk' });
     });
   });
 
@@ -230,7 +250,19 @@ describe('craft (Playwright)', () => {
           null,
           { timeout: 10000 },
         );
-        await page.waitForTimeout(1500); // craft.js's fade-in duration plus its settle margin
+        // Poll for craft.js's fade cleanup instead of sleeping its nominal
+        // duration: settleFade() itself races a transitionend against a
+        // 100ms safety-net timeout, so a fixed sleep here would race the
+        // same clock twice removed. Mirrors the assertion below exactly.
+        await page.waitForFunction(
+          () => [...document.querySelectorAll('img')].every((img) => {
+            const cs = getComputedStyle(img);
+            const transparent = cs.backgroundColor === 'rgba(0, 0, 0, 0)' || cs.backgroundColor === 'transparent';
+            return !img.classList.contains('craft-fade') && !img.classList.contains('craft-loaded') && transparent;
+          }),
+          null,
+          { timeout: 10000, polling: 100 },
+        ).catch(() => { /* fall through to the precise assertions below */ });
         const results = await page.evaluate(() => [...document.querySelectorAll('img')].map((img) => ({
           src: img.currentSrc || img.src,
           craftFade: img.classList.contains('craft-fade'),
@@ -330,7 +362,14 @@ describe('craft (Playwright)', () => {
             scrollTo,
           );
         }
-        await page.waitForTimeout(2500); // the per-card reveal + its clearProps settle in this window
+        // Poll for the per-card reveal's clearProps instead of sleeping a
+        // fixed window: this block exists specifically to catch a dropped
+        // or narrowed clearProps (QA round 3 LOW-1), so it must not pass
+        // just because the sleep outlasted a slow reveal on this runner.
+        await page.waitForFunction((sel) => {
+          const el = document.querySelector(sel);
+          return el && el.style.translate === '' && el.style.scale === '' && el.style.rotate === '';
+        }, selector, { timeout: 10000, polling: 100 }).catch(() => { /* fall through to the precise assertion below */ });
 
         // GSAP's clearProps hands the inline scale/translate/rotate it drove
         // back to the stylesheet once the reveal finishes — if a future edit
@@ -351,9 +390,25 @@ describe('craft (Playwright)', () => {
         const restTranslate = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).translate, lift);
         const box = await page.locator(selector).first().boundingBox();
         await page.mouse.move(2, 2);
-        await page.waitForTimeout(100);
+        // Confirm the card is actually back at rest before hovering it —
+        // moving the mouse away is a no-op wait on a fast runner, but a
+        // fixed sleep would race it on a loaded one — before measuring the
+        // hover-in transition below.
+        await page.waitForFunction(
+          ([sel, rest]) => getComputedStyle(document.querySelector(sel)).translate === rest,
+          [lift, restTranslate],
+          { timeout: 5000, polling: 50 },
+        ).catch(() => { /* fall through; the notEqual assertion below still reports the real state */ });
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-        await page.waitForTimeout(500);
+        // Poll for the hover-lift transition to actually move the card
+        // instead of sleeping its nominal duration — this block exists to
+        // catch a hover-lift that silently stopped moving (QA round 3
+        // LOW-1), so it must not pass just because the sleep was generous.
+        await page.waitForFunction(
+          ([sel, rest]) => getComputedStyle(document.querySelector(sel)).translate !== rest,
+          [lift, restTranslate],
+          { timeout: 5000, polling: 50 },
+        ).catch(() => { /* fall through to the precise assertion below */ });
         const hoverTranslate = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).translate, lift);
         assert.notEqual(
           hoverTranslate, restTranslate,
@@ -363,7 +418,14 @@ describe('craft (Playwright)', () => {
         // Pressing actually presses (computed `scale` changes on :active).
         const restScale = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).scale, selector);
         await page.mouse.down();
-        await page.waitForTimeout(150);
+        // Poll for the :active press transition to actually move the scale
+        // instead of sleeping its nominal duration, for the same reason as
+        // the hover-lift poll above.
+        await page.waitForFunction(
+          ([sel, rest]) => getComputedStyle(document.querySelector(sel)).scale !== rest,
+          [selector, restScale],
+          { timeout: 5000, polling: 50 },
+        ).catch(() => { /* fall through to the precise assertion below */ });
         const pressedScale = await page.evaluate((sel) => getComputedStyle(document.querySelector(sel)).scale, selector);
         await page.mouse.up();
         assert.notEqual(
@@ -410,9 +472,13 @@ describe('craft (Playwright)', () => {
       const { context, page, errors } = await newPage(browser, site.url, { viewport: VIEWPORT });
       try {
         await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
-        await page.waitForTimeout(500);
         for (const [selector, props] of Object.entries(entries)) {
-          const live = await liveTransitionDetails(page, selector);
+          // Poll for the baseline to hold instead of sleeping a fixed
+          // settle window after navigation: style recalculation following
+          // motion.js's data-motion="full" attribute can still be pending a
+          // moment after networkidle on a loaded runner. The final assert
+          // below is unchanged, so a genuine regression still fails it.
+          const live = await pollForBaseline(page, selector, props);
           assert.ok(live !== null, `${route} ${selector}: element no longer found on the page`);
           for (const [prop, timing] of Object.entries(props)) {
             assert.ok(
