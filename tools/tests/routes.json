@@ -4,6 +4,7 @@
     { "path": "404.html", "static": false, "sharedNav": true, "motion": false },
     { "path": "accessibility.html", "static": false, "sharedNav": true, "motion": false },
     { "path": "coming-soon.html", "static": false, "sharedNav": true, "motion": false },
+    { "path": "email-confirmed.html", "static": false, "sharedNav": false, "motion": false },
     { "path": "hush-hush-snap-snap/index.html", "static": true, "sharedNav": false, "motion": true },
     { "path": "hush-hush-snap-snap/privacy.html", "static": false, "sharedNav": true, "motion": false },
     { "path": "hush-hush-snap-snap/terms.html", "static": false, "sharedNav": true, "motion": false },

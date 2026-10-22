@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /tools/
 Disallow: /reset-password.html
+Disallow: /email-confirmed.html
 
 Sitemap: https://thomasraypublishing.com/sitemap.xml

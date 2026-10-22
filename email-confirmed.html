@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <!-- TRC-886 — landing page for the sign-up confirmation email
+       (AuthRedirects.emailConfirmed). Supabase confirms the address BEFORE it
+       redirects here and appends #access_token=... to this URL. This page never
+       reads, stores, or forwards those tokens: the inline script reads only
+       error_code, then scrubs the fragment from the address bar and history.
+       The app finishes sign-in on its own by re-checking the account when it
+       comes back to the foreground, so no token ever has to reach the app.
+       No third-party scripts, no Supabase JS, no network requests
+       (default-src 'none'). script-src is 'unsafe-inline' rather than a
+       sha256 pin to match the site's other pages and so the website repo's
+       axe-core harness can inject its checker; the script never writes URL
+       data into the DOM, so there is no injection sink to protect. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Email confirmed — Trade RC</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #faf7f2;
+      --surface: #ffffff;
+      --text: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --accent: #5b2a86;
+      --accent-text: #ffffff;
+      --border: #e0dcd5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e;
+        --surface: #2c2c2e;
+        --text: #f5f5f7;
+        --text-secondary: #98989d;
+        --accent: #b380e6;
+        --accent-text: #1c1c1e;
+        --border: #3a3a3c;
+      }
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+      line-height: 1.4;
+    }
+    main {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 32px 24px;
+      border: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    p {
+      color: var(--text-secondary);
+      margin: 0 0 16px;
+      font-size: 1rem;
+    }
+    a.button {
+      display: block;
+      text-align: center;
+      min-height: 44px;
+      padding: 12px 16px;
+      margin-top: 8px;
+      border-radius: 12px;
+      background: var(--accent);
+      color: var(--accent-text);
+      font-weight: 600;
+      font-size: 1.0625rem;
+      text-decoration: none;
+    }
+    a.button:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="ok" aria-live="polite">
+      <h1>Email confirmed</h1>
+      <p>Your Trade RC account is ready. Go back to the app and it will finish signing you in.</p>
+      <p>Confirmed this on a different device? Open Trade RC where you signed up, or sign in with your email and password.</p>
+    </section>
+    <section id="expired" aria-live="polite" hidden>
+      <h1>This link has expired</h1>
+      <p>It may already have been used. If you already confirmed your email, go back to Trade RC and sign in.</p>
+      <p>Otherwise, open Trade RC and choose Resend email to get a new link.</p>
+    </section>
+    <section id="failed" aria-live="polite" hidden>
+      <h1>Something went wrong</h1>
+      <p>We couldn't confirm your email from this link. Open Trade RC and choose Resend email to get a new one.</p>
+    </section>
+    <!-- Token-free: this only brings the app forward. -->
+    <a class="button" href="traderc://auth/confirmed">Open Trade RC</a>
+  </main>
+  <script>(function(){var h=window.location.hash.slice(1);var p=new URLSearchParams(h);var q=new URLSearchParams(window.location.search);var c=p.get("error_code")||q.get("error_code");var e=p.get("error")||q.get("error");if(h||window.location.search){history.replaceState(null,"",window.location.pathname);}if(!c&&!e){return;}document.getElementById("ok").hidden=true;document.getElementById(c==="otp_expired"?"expired":"failed").hidden=false;})();</script>
+</body>
+</html>
