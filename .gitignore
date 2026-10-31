@@ -14,3 +14,8 @@ prototypes/
 
 # W13 verification suite (tools/tests/) — installed via `npm install`, not tracked.
 node_modules/
+
+# Site status lives in the private TRP-Reference repo
+# (marketing/website/STATUS.md). Everything tracked here is published
+# by GitHub Pages, so a root STATUS.md must never be committed.
+STATUS.md
