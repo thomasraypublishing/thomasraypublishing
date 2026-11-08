@@ -1,0 +1,23 @@
+# Thomas Ray Publishing website: how each git-ignored path is kept identical on both Macs.
+# Convention and commands: ~/.claude/TRP_Machine_Sync.md  (tool: ~/.claude/scripts/trp-sync)
+# This repo is PUBLIC: anything not meant for the site stays out of git.
+
+# Private: real files in iCloud Drive (TRP-Private/thomasraypublishing/...), symlinked here.
+private Feedback/
+private Research/
+private prototypes/
+private Top Website.zip
+private Production-Ready Privacy Policy and Terms of Use Templates for iOS Developers.pdf
+# Full-size photo originals (the site serves the optimized copies in images/photos/opt/).
+private images/photos/2N7A3053.jpeg
+private images/photos/2N7A3348.jpeg
+private images/photos/2N7A5509.jpeg
+private images/photos/2N7A6172.jpeg
+private images/photos/2N7A8788.jpeg
+private images/photos/C2E1A397-C5D7-4111-8835-77B6E46256D3.jpeg
+private images/photos/IMG_2078.jpeg
+private images/photos/IMG_3093.jpeg
+private images/photos/IMG_3161.jpeg
+private images/photos/IMG_3409.jpeg
+private images/photos/IMG_9102.jpeg
+private images/photos/IMG_9196.jpeg

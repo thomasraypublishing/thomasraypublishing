@@ -1,7 +1,7 @@
 .DS_Store
 .claude/
 *.pdf
-Feedback/
+/Feedback
 *.zip
 
 # Photo originals (optimized copies live in images/photos/opt/)
@@ -9,8 +9,8 @@ images/photos/*.jpeg
 images/photos/*.jpg
 images/photos/*.png
 images/photos/*.heic
-Research/
-prototypes/
+/Research
+/prototypes
 
 # W13 verification suite (tools/tests/) — installed via `npm install`, not tracked.
 node_modules/
