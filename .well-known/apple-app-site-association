@@ -3,7 +3,13 @@
     "apps": ["JQZZMC6259.com.thomasray.TradeRC"]
   },
   "applinks": {
-    "apps": [],
-    "details": []
+    "details": [
+      {
+        "appIDs": ["JQZZMC6259.PomPet.PomPet"],
+        "components": [
+          { "/": "/pom/*", "comment": "Pomagotchi deep links, including App Store In-App Events" }
+        ]
+      }
+    ]
   }
 }
