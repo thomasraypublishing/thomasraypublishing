@@ -357,3 +357,50 @@ initBookmark();
 onMotionChange((state) => {
   if (state !== 'full' && hasGsap) settleGsap({ clear: ['[data-reveal]', '.letter'] });
 });
+
+/* ========================================================================
+   The short loop (bubble machine). The video carries no autoplay attribute
+   and preload="none", so nothing is requested until it is played. A labelled
+   Play / Pause button always controls it. Only under the full-motion state
+   may it start by itself, and only while at least half of it is on screen;
+   in every reduced, paused or static state (and with JavaScript off) it
+   shows its poster and plays only when the visitor presses Play.
+   ======================================================================== */
+function initClip() {
+  const fig = document.querySelector('[data-clip]');
+  const video = fig && fig.querySelector('video');
+  const btn = fig && fig.querySelector('[data-clip-btn]');
+  if (!video || !btn) return;
+
+  const label = () => { btn.textContent = video.paused ? 'Play loop' : 'Pause loop'; };
+  let visible = false;
+  let heldByVisitor = false; // the visitor pressed Pause: do not restart on scroll
+
+  const play = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+  const sync = () => {
+    if (isStatic() || heldByVisitor) return;
+    if (visible && video.paused) play();
+    else if (!visible && !video.paused) video.pause();
+  };
+
+  btn.hidden = false;
+  label();
+  video.addEventListener('play', label);
+  video.addEventListener('pause', label);
+
+  btn.addEventListener('click', () => {
+    if (video.paused) { heldByVisitor = false; play(); }
+    else { heldByVisitor = true; video.pause(); }
+  });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      visible = entries[entries.length - 1].isIntersecting;
+      sync();
+    }, { threshold: 0.5 }).observe(video);
+  }
+  // Leaving full motion (Reduce Motion, the site pause) stops a running loop.
+  onMotionChange((state) => { if (state !== 'full' && !video.paused) video.pause(); else sync(); });
+}
+
+initClip();

@@ -426,13 +426,33 @@ html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.sp
 @media (min-width: 600px) { .cards.cards-2x2 { grid-template-columns: repeat(2, 1fr); } }
 
 .shot-row {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 18px; margin-top: 30px;
+  display: grid; grid-template-columns: 1fr;
+  gap: 28px 18px; margin-top: 30px; align-items: start;
 }
-.shot-row img {
-  border-radius: 22px;
-  border: 1.5px solid var(--pg-rule);
+@media (min-width: 560px) { .shot-row { grid-template-columns: repeat(2, 1fr); } }
+/* One generic device frame (no brand, no notch: the capture carries its own status bar).
+   Screen corners follow the capture's own radius (about 62 of 402 points). */
+.dframe { margin: 0; width: 100%; max-width: 320px; justify-self: center; }
+.dframe-body {
+  background: #0c0a12; padding: 8px;
+  border-radius: 16.4% / 7.4%;
+  box-shadow: 0 22px 44px -22px rgba(36, 26, 46, 0.45), inset 0 0 0 1.5px rgba(255, 255, 255, 0.05);
 }
+.dframe-body img, .dframe-body video {
+  display: block; width: 100%; height: auto; aspect-ratio: 1206 / 2622;
+  border-radius: 15.4% / 7.1%; background: #0c0a12;
+}
+
+/* the short loop: a labelled Play / Pause control, shown only when JavaScript is on */
+.clip-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; min-width: 44px; margin: 12px auto 0; padding: 0 20px;
+  font: 600 0.9375rem/1 var(--sans); color: var(--pg-ink);
+  background: transparent; border: 1.5px solid var(--pg-tx-accent); border-radius: 999px;
+  cursor: pointer;
+}
+.clip-btn[hidden] { display: none; }
+.clip-btn:hover { background: var(--pg-rule); }
 
 /* ---------- The Paper Pom letter ---------- */
 
