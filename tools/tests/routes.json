@@ -18,6 +18,7 @@
     { "path": "terms.html", "static": false, "sharedNav": true, "motion": false },
     { "path": "thedevice/index.html", "static": true, "sharedNav": false, "motion": true },
     { "path": "trade-rc/index.html", "static": true, "sharedNav": false, "motion": true },
+    { "path": "trade-rc/health-data.html", "static": false, "sharedNav": false, "motion": false },
     { "path": "trade-rc/privacy.html", "static": false, "sharedNav": false, "motion": false },
     { "path": "trade-rc/support.html", "static": false, "sharedNav": false, "motion": false },
     { "path": "trade-rc/terms.html", "static": false, "sharedNav": false, "motion": false }
