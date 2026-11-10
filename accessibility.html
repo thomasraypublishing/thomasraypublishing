@@ -9,8 +9,8 @@
     <meta name="description" content="Thomas Ray Publishing LLC's commitment to accessibility, current conformance level, known limitations, and how to report barriers.">
     <meta name="theme-color" content="#0F0C1F">
     <link rel="canonical" href="https://thomasraypublishing.com/accessibility.html">
-    <link rel="icon" type="image/jpeg" href="images/logo.jpg">
-    <link rel="apple-touch-icon" href="images/logo.jpg">
+    <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon-180.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Thomas Ray Publishing LLC">
     <meta property="og:title" content="Accessibility Statement | Thomas Ray Publishing LLC">
@@ -24,6 +24,7 @@
     <link rel="preload" href="assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="assets/fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/legal.css">
     <link rel="stylesheet" href="assets/css/reveals.css">
     <noscript><link rel="stylesheet" href="assets/nojs.css"></noscript>
 </head>
@@ -74,7 +75,7 @@
 </div>
 
 
-<main class="prose" id="main">
+<main class="prose legal" id="main">
     <div class="wrap">
         <a href="index.html" class="back-link">&larr;&nbsp;&nbsp;Back to Home</a>
         <div class="eyebrow">
@@ -84,12 +85,32 @@
         <h1>Accessibility <em>Statement</em></h1>
         <p class="updated">Version 1.0.3 &middot; Effective May 16, 2026 &middot; Last updated November 9, 2026</p>
 
+        <details class="legal-toc">
+        <summary>Contents</summary>
+        <nav class="legal-toc__nav" aria-label="On this page">
+        <p class="legal-toc__title" aria-hidden="true">On this page</p>
+        <ol class="legal-toc__list">
+        <li><a href="#the-short-version">The short version</a></li>
+        <li><a href="#1-our-commitment">1. Our commitment</a></li>
+        <li><a href="#2-standards-we-follow">2. Standards we follow</a></li>
+        <li><a href="#3-per-app-conformance">3. Per-app conformance</a></li>
+        <li><a href="#4-known-limitations">4. Known limitations</a></li>
+        <li><a href="#5-reporting-barriers">5. Reporting barriers</a></li>
+        <li><a href="#6-how-we-test">6. How we test</a></li>
+        <li><a href="#7-legal-context">7. Legal context</a></li>
+        <li><a href="#8-changes">8. Changes</a></li>
+        <li><a href="#9-contact">9. Contact</a></li>
+        <li><a href="#help-us-do-better">Help us do better</a></li>
+        </ol>
+        </nav>
+        </details>
+
         <aside class="card-callout" aria-label="The short version">
-            <h2>The short version</h2>
+            <h2 id="the-short-version">The short version<a class="legal-anchor" href="#the-short-version" aria-label="Link to section: The short version"><span aria-hidden="true">#</span></a></h2>
             <p>Every Thomas Ray Publishing app is built to be usable by people with disabilities &mdash; full VoiceOver coverage, Dynamic Type at every size including AX1&ndash;AX5, Reduce Motion support, color-independent information, and Switch / Voice Control compatibility. If something is broken or missing, email <a href="mailto:contact@thomasraypublishing.com">contact@thomasraypublishing.com</a> and we'll fix it as a priority issue.</p>
         </aside>
 
-        <h2>1. Our commitment</h2>
+        <h2 id="1-our-commitment">1. Our commitment<a class="legal-anchor" href="#1-our-commitment" aria-label="Link to section: 1. Our commitment"><span aria-hidden="true">#</span></a></h2>
         <p>Thomas Ray Publishing LLC ("TRP") designs every app and the marketing website and tests them against the <a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) 2.2 Level AA</a> and Apple's accessibility frameworks. Accessibility is not a feature we add at the end &mdash; it is a TRP Prime Directive that governs the first line of code we write for each app:</p>
         <ul>
             <li>VoiceOver labels, hints, and traits on every interactive element.</li>
@@ -102,7 +123,7 @@
             <li>Live Activities and widgets that read correctly with VoiceOver.</li>
         </ul>
 
-        <h2>2. Standards we follow</h2>
+        <h2 id="2-standards-we-follow">2. Standards we follow<a class="legal-anchor" href="#2-standards-we-follow" aria-label="Link to section: 2. Standards we follow"><span aria-hidden="true">#</span></a></h2>
         <ul>
             <li><strong>WCAG 2.2 Level AA</strong> (or its successor) for web content and digital interfaces.</li>
             <li>Apple's <a href="https://developer.apple.com/accessibility/">Human Interface Guidelines &mdash; Accessibility</a>.</li>
@@ -111,7 +132,7 @@
             <li>EN 301 549 (European harmonized accessibility standard) as it incorporates WCAG 2.2 AA.</li>
         </ul>
 
-        <h2>3. Per-app conformance</h2>
+        <h2 id="3-per-app-conformance">3. Per-app conformance<a class="legal-anchor" href="#3-per-app-conformance" aria-label="Link to section: 3. Per-app conformance"><span aria-hidden="true">#</span></a></h2>
 
         <h3>3.1 Pomagotchi</h3>
         <p><strong>Target: WCAG 2.2 AA &middot; Self-assessed May 2026; not independently certified.</strong></p>
@@ -155,7 +176,7 @@
             <li>All images include descriptive <code>alt</code> attributes or are flagged as decorative.</li>
         </ul>
 
-        <h2>4. Known limitations</h2>
+        <h2 id="4-known-limitations">4. Known limitations<a class="legal-anchor" href="#4-known-limitations" aria-label="Link to section: 4. Known limitations"><span aria-hidden="true">#</span></a></h2>
         <p>We are honest about the gaps:</p>
         <ul>
             <li>Localization beyond English currently relies on Apple's on-device Translation framework for AI-generated text in Pomagotchi and The Device. Static UI is localized progressively per app; some strings may briefly appear in English while a locale is being added.</li>
@@ -164,7 +185,7 @@
         </ul>
         <p>When we identify a barrier, we add it to our public roadmap with a target fix release; reach out at <a href="mailto:contact@thomasraypublishing.com">contact@thomasraypublishing.com</a> for the latest status.</p>
 
-        <h2>5. Reporting barriers</h2>
+        <h2 id="5-reporting-barriers">5. Reporting barriers<a class="legal-anchor" href="#5-reporting-barriers" aria-label="Link to section: 5. Reporting barriers"><span aria-hidden="true">#</span></a></h2>
         <p>If you encounter an accessibility barrier in any TRP app or on this website, please tell us. We treat accessibility reports as priority issues and respond within 5 business days, with a remediation plan within 30 days where the fix is non-trivial.</p>
         <p><strong>Email:</strong> <a href="mailto:contact@thomasraypublishing.com">contact@thomasraypublishing.com</a></p>
         <p>In your message please include:</p>
@@ -176,7 +197,7 @@
             <li>Whether you'd like a follow-up when the fix ships.</li>
         </ul>
 
-        <h2>6. How we test</h2>
+        <h2 id="6-how-we-test">6. How we test<a class="legal-anchor" href="#6-how-we-test" aria-label="Link to section: 6. How we test"><span aria-hidden="true">#</span></a></h2>
         <ul>
             <li>VoiceOver runs on every screen as part of pre-release QA on iPhone, iPad, and Mac.</li>
             <li>Dynamic Type is tested at AX5 on the smallest supported device (iPhone SE class) and on the largest (iPhone 17 Pro Max, iPad Pro).</li>
@@ -185,21 +206,23 @@
             <li>The marketing website is checked with <code>axe DevTools</code> and the Pa11y CLI on every deploy.</li>
         </ul>
 
-        <h2>7. Legal context</h2>
+        <h2 id="7-legal-context">7. Legal context<a class="legal-anchor" href="#7-legal-context" aria-label="Link to section: 7. Legal context"><span aria-hidden="true">#</span></a></h2>
         <p>This statement is intended in good faith to describe our actual conformance and our remediation commitment. It does not waive any rights you may have under the Americans with Disabilities Act (ADA), Section 508, the EU Accessibility Act (Directive (EU) 2019/882) effective June 28, 2025, the UK Equality Act 2010, California's Unruh Civil Rights Act, or any other applicable law.</p>
 
-        <h2>8. Changes</h2>
+        <h2 id="8-changes">8. Changes<a class="legal-anchor" href="#8-changes" aria-label="Link to section: 8. Changes"><span aria-hidden="true">#</span></a></h2>
         <p>We review this statement at least annually and after every major app release. The version number and effective date at the top of this page reflect the current text.</p>
 
-        <h2>9. Contact</h2>
+        <h2 id="9-contact">9. Contact<a class="legal-anchor" href="#9-contact" aria-label="Link to section: 9. Contact"><span aria-hidden="true">#</span></a></h2>
         <p>Email: <a href="mailto:contact@thomasraypublishing.com">contact@thomasraypublishing.com</a><br>
         Thomas Ray Publishing LLC, 1601 N Main St, Ste 101 #184, Walnut Creek, CA 94596</p>
 
         <aside class="card-callout" aria-label="Help us do better">
-            <h2>Help us do better</h2>
+            <h2 id="help-us-do-better">Help us do better<a class="legal-anchor" href="#help-us-do-better" aria-label="Link to section: Help us do better"><span aria-hidden="true">#</span></a></h2>
             <p>Accessibility reports go straight to the developer. Every fix ships in the next release.</p>
             <a class="btn" href="mailto:contact@thomasraypublishing.com?subject=Accessibility%20Report">Report a barrier</a>
         </aside>
+
+        <p class="legal-top"><a href="#main">Back to top</a></p>
     </div>
 </main>
 
@@ -241,5 +264,6 @@
 <script type="module" src="assets/js/prose.js"></script>
 <script type="module" src="assets/js/paw-reveal.js"></script>
 <script type="module" src="assets/js/craft.js"></script>
+<script src="assets/js/legal-toc.js" defer></script>
 </body>
 </html>

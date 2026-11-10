@@ -289,6 +289,51 @@ function initFrameCounter() {
   bar.hidden = false;
   var current = 0;
 
+  /* Visibility: the pill appears once the hero has left the viewport, so it
+     never covers the first screen (the Japan/Korea note, the hero lede). On
+     phones it also steps aside while scrolling down and returns on scroll up.
+     data-shown is the single switch; CSS turns it into visibility (out of the
+     tab order and assistive tech when hidden) and, under full motion only, a
+     crossfade. */
+  var hero = document.querySelector('.hero');
+  var heroGone = !hero || !('IntersectionObserver' in window);
+  var scrollHidden = false;
+  var stepping = false;
+  var steppingTimer = null;
+  var phone = window.matchMedia('(max-width: 767px)');
+  var applyShown = function () { bar.dataset.shown = String(heroGone && !scrollHidden); };
+
+  if (hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { heroGone = !entry.isIntersecting; });
+      applyShown();
+    }).observe(hero);
+  }
+
+  // A programmatic step scrolls down on purpose: keep the pill up until that
+  // scroll has settled, so "next" can be tapped again straight away.
+  var holdForStep = function (ms) {
+    stepping = true;
+    scrollHidden = false;
+    clearTimeout(steppingTimer);
+    steppingTimer = setTimeout(function () { stepping = false; }, ms);
+  };
+
+  var lastY = window.scrollY;
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    var dy = y - lastY;
+    if (stepping) { holdForStep(160); lastY = y; return; }
+    if (Math.abs(dy) < 8) { return; }
+    lastY = y;
+    scrollHidden = phone.matches && dy > 0 && y > 0;
+    applyShown();
+  }, { passive: true });
+  bar.addEventListener('focusin', function () { scrollHidden = false; applyShown(); });
+  var onPhoneChange = function () { scrollHidden = false; applyShown(); };
+  if (phone.addEventListener) { phone.addEventListener('change', onPhoneChange); }
+  applyShown();
+
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
   var render = function () {
     label.textContent = 'frame ' + pad(current + 1) + ' / ' + pad(frames.length);
@@ -298,6 +343,7 @@ function initFrameCounter() {
     var target = Math.min(frames.length - 1, Math.max(0, current + dir));
     if (target === current) { return; }
     current = target;
+    holdForStep(700);
     frames[current].el.scrollIntoView({ behavior: isStatic() ? 'auto' : 'smooth', block: 'start' });
     settleAfterJump();
     render();

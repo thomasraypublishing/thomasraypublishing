@@ -42,8 +42,17 @@
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
     }
     </script>
+    <!-- No JavaScript: the pyramid reading and the memory demo are built by thedevice.js, so without it they are hidden and a plain note stands in. -->
+    <noscript><style>.pyramid-btn, .pyramid-hint, .reading, .challenge-board { display: none; }</style></noscript>
 </head>
 <body>
+
+<svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <!-- black-on-white line art -> lavender line work on true transparency (no blend mode needed) -->
+    <filter id="line-to-alpha" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values="0 0 0 0 0.93  0 0 0 0 0.9  0 0 0 0 1  -1 0 0 0 1"/>
+    </filter>
+</svg>
 
 <div class="cosmos" aria-hidden="true">
     <img class="webb-base" src="images/webb-deep.webp" alt="" width="1600" height="2001">
@@ -57,15 +66,24 @@
 <div class="starlayer s3" aria-hidden="true"></div>
 
 <header class="mast">
-    <a class="mark" href="#main" aria-label="The Device home">
-        <img src="images/icon.png" alt="" width="34" height="34">
+    <a class="mark" href="#main" aria-label="The Device, back to top">
+        <img src="../images/app-icons/thedevice-128.webp" alt="" width="34" height="34">
         <span>The Device</span>
     </a>
     <span class="mast-cta"><button class="motion-toggle" type="button" data-motion-toggle hidden>
             <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><g class="ico-pause"><rect x="3" y="2" width="3.5" height="12" rx="0.75"/><rect x="9.5" y="2" width="3.5" height="12" rx="0.75"/></g><path class="ico-play" d="M4 2.6v10.8a.6.6 0 0 0 .92.5l8.3-5.4a.6.6 0 0 0 0-1L4.92 2.1A.6.6 0 0 0 4 2.6z"/></svg>
             <span class="lbl">Pause motion</span>
-        </button><a class="btn" href="https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897" target="_blank" rel="noopener">Get the app</a></span>
+        </button><a class="btn" href="https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897" target="_blank" rel="noopener">Get<span class="btn-more"> the app</span></a></span>
 </header>
+
+<nav class="starchart" id="starchart" aria-label="Sections" hidden>
+    <a href="#hero-h"><span class="star" aria-hidden="true"></span><span class="sc-label">i &middot; transmission</span></a>
+    <a href="#instruments"><span class="star" aria-hidden="true"></span><span class="sc-label">ii &middot; the instruments</span></a>
+    <a href="#challenge"><span class="star" aria-hidden="true"></span><span class="sc-label">iii &middot; the challenge</span></a>
+    <a href="#feeds"><span class="star" aria-hidden="true"></span><span class="sc-label">iv &middot; what feeds a reading</span></a>
+    <a href="#plans"><span class="star" aria-hidden="true"></span><span class="sc-label">v &middot; the modes</span></a>
+    <a href="#final-h"><span class="star" aria-hidden="true"></span><span class="sc-label">vi &middot; descend</span></a>
+</nav>
 
 <main id="main">
 
@@ -81,6 +99,7 @@
                     <img class="glass" src="images/pyramid.webp" alt="" width="900" height="645" aria-hidden="true">
                 </button>
                 <p class="pyramid-hint">Tap the pyramid</p>
+                <noscript><img class="glass" src="images/pyramid.webp" alt="" width="900" height="645"></noscript>
             </div>
 
             <div class="reading" id="reading-desc">
@@ -163,6 +182,7 @@
                     <button type="button" class="btn" id="challenge-start">Begin</button>
                 </div>
             </div>
+            <noscript><p class="nojs-note">The pyramid reading and the memory demo need JavaScript. Both are in the app.</p></noscript>
             <figure class="challenge-render" data-reveal>
                 <img src="images/pyramid-render.webp" alt="A render of the pyramid at rest: stones glowing violet on a dark mirrored disc" width="800" height="1192" loading="lazy">
                 <figcaption class="readout">the pyramid, at rest</figcaption>
@@ -259,6 +279,15 @@
 </main>
 
 <footer class="foot">
+    <nav class="studio-row" aria-label="From the same studio">
+        <p class="studio-row__label">From the same studio</p>
+        <ul class="studio-row__list">
+            <li><a href="../index.html"><span class="studio-row__orb" aria-hidden="true"></span><span>Thomas Ray Publishing</span></a></li>
+            <li><a href="../pomagotchi/index.html"><img src="../images/app-icons/pomagotchi-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Pomagotchi</span></a></li>
+            <li><a href="../hush-hush-snap-snap/index.html"><img src="../images/app-icons/hush-hush-snap-snap-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Hush Hush Snap Snap</span></a></li>
+            <li><a href="../trade-rc/index.html"><img src="../images/app-icons/trade-rc-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Trade RC <span class="studio-row__age">18+</span></span></a></li>
+        </ul>
+    </nav>
     <div class="foot-inner">
         <span>&copy; 2026 Thomas Ray Publishing LLC</span>
         <div class="foot-links">
@@ -277,14 +306,6 @@
 <script type="module" src="../assets/js/paw-reveal.js"></script>
 <script type="module" src="../assets/js/craft.js"></script>
 
-<nav class="starchart" id="starchart" aria-label="Sections" hidden>
-    <a href="#hero-h"><span class="star" aria-hidden="true"></span><span class="sc-label">i &middot; transmission</span></a>
-    <a href="#instruments"><span class="star" aria-hidden="true"></span><span class="sc-label">ii &middot; the instruments</span></a>
-    <a href="#challenge"><span class="star" aria-hidden="true"></span><span class="sc-label">iii &middot; the challenge</span></a>
-    <a href="#feeds"><span class="star" aria-hidden="true"></span><span class="sc-label">iv &middot; what feeds a reading</span></a>
-    <a href="#plans"><span class="star" aria-hidden="true"></span><span class="sc-label">v &middot; the modes</span></a>
-    <a href="#final-h"><span class="star" aria-hidden="true"></span><span class="sc-label">vi &middot; descend</span></a>
-</nav>
 
 <script type="speculationrules">
 { "prefetch": [ { "urls": ["../"] } ] }

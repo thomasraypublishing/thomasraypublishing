@@ -1,0 +1,220 @@
+/* ========================================================================
+   legal.css — reading experience for the legal pages (privacy, terms,
+   accessibility, per-app policies) plus their print stylesheet.
+
+   Works in both chromes: the house chrome (styles.css: .prose) and the
+   Trade RC chrome (trade-rc.css: .calm-main). Colours come from each
+   chrome's own custom properties, with fallbacks. Legal pages carry the
+   class .legal on <main>; support pages get the print rules only.
+
+   Everything here is presentation: the contents list, the "#" section
+   links, the back links and "Back to top" are static HTML, so the page
+   reads the same with JavaScript off (assets/js/legal-toc.js only
+   enhances it).
+   ======================================================================== */
+
+.legal {
+  --lg-ink: var(--ink, var(--trc-ink, #14110D));
+  --lg-ink-2: var(--ink-2, var(--trc-ink-2, #3A342A));
+  --lg-ink-3: var(--ink-3, var(--trc-ink-2, #6B6355));
+  --lg-rule: var(--rule, var(--trc-rule, #D8CBB0));
+  --lg-surface: var(--paper-2, var(--trc-charcoal, #EDE2CD));
+  --lg-accent: var(--ginger, var(--trc-amber, #C75A2B));
+  --lg-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+/* Offset below the sticky bar: house pages publish --nav-h; Trade RC has no sticky bar. */
+.prose.legal { --lg-top: calc(var(--nav-h, 64px) + 24px); }
+.calm-main.legal { --lg-top: 24px; }
+
+/* Anchored headings land clear of the sticky bar. House pages get this from styles.css (scroll-padding-top); Trade RC has no bar. */
+.calm-main.legal :is(h1, h2)[id] { scroll-margin-top: 24px; }
+
+/* ---------- Back links (app legal pages) ---------- */
+
+.legal-backs {
+  display: flex; flex-wrap: wrap; align-items: center;
+  column-gap: 24px; row-gap: 0;
+  margin-block: -13px 19px;
+}
+.prose .legal-backs .back-link { margin-block: 0; min-height: 44px; }
+.prose .legal-backs .back-link--policies {
+  text-transform: none; letter-spacing: 0.04em;
+  text-decoration: underline; text-decoration-color: var(--lg-rule);
+  text-underline-offset: 4px; text-decoration-thickness: 1px;
+}
+.prose .legal-backs .back-link--policies:hover { text-decoration-color: currentColor; }
+
+.calm-main .legal-backs { margin: 0 0 28px; }
+.calm-main .legal-backs .calm-back {
+  display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 0;
+}
+.calm-main .legal-backs .calm-back--policies { color: var(--trc-ink-2, inherit); }
+.calm-main .legal-backs .calm-back--policies:hover { color: var(--trc-ink, inherit); }
+
+/* ---------- Contents list (one list; collapsed below 1100px, side column above) ---------- */
+
+.legal .legal-toc {
+  margin: 0 0 32px;
+  border: 1px solid var(--lg-rule); border-radius: 6px;
+  background: var(--lg-surface);
+  font-family: inherit;
+}
+.legal .legal-toc > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 44px; padding-inline: 16px; cursor: pointer;
+  font-family: var(--lg-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--lg-ink); list-style: none;
+}
+.legal .legal-toc > summary::-webkit-details-marker { display: none; }
+.legal .legal-toc > summary::after {
+  content: ""; flex: none; inline-size: 0.5em; block-size: 0.5em;
+  border-inline-end: 2px solid currentColor; border-block-end: 2px solid currentColor;
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+.legal .legal-toc[open] > summary { border-block-end: 1px solid var(--lg-rule); }
+.legal .legal-toc[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+
+.legal .legal-toc__title { display: none; margin: 0; }
+.legal .legal-toc__nav { padding: 6px 8px 10px; max-block-size: min(60vh, 28rem); overflow-y: auto; overscroll-behavior: contain; }
+.legal .legal-toc__list, .legal .legal-toc__list ol { list-style: none; margin: 0; padding: 0; }
+.legal .legal-toc__list ol { padding-inline-start: 12px; }
+.legal .legal-toc li, .legal .legal-toc li + li { margin: 0; }
+.legal .legal-toc a {
+  display: flex; align-items: center; min-height: 44px; padding: 4px 8px;
+  font-size: 0.875rem; line-height: 1.3; text-decoration: none; border-bottom: 0;
+  color: var(--lg-ink-2);
+  border-inline-start: 2px solid transparent;
+}
+.prose.legal .legal-toc a { border-bottom: 0; color: var(--lg-ink-2); }
+.legal .legal-toc a:hover, .prose.legal .legal-toc a:hover { color: var(--lg-ink); text-decoration: underline; }
+.legal .legal-toc a[aria-current="true"] {
+  color: var(--lg-ink); border-inline-start-color: var(--lg-accent); font-weight: 600;
+}
+.prose.legal .legal-toc a[aria-current="true"] { color: var(--lg-ink); }
+.legal .legal-toc__group > a { font-weight: 600; color: var(--lg-ink); }
+.prose.legal .legal-toc__group > a { color: var(--lg-ink); }
+
+@media (min-width: 1100px) {
+  /* The same list, lifted into the empty margin beside the prose. The prose
+     column is 696px of text; the gutter on each side is what is left. */
+  .legal .legal-toc {
+    --toc-w: clamp(160px, calc((100vw - 696px) / 2 - 64px), 248px);
+    float: inline-start;
+    position: sticky; top: var(--lg-top);
+    inline-size: var(--toc-w);
+    margin: 0 0 0 calc(-1 * (var(--toc-w) + 28px));
+    border: 0; background: none; border-radius: 0;
+  }
+  [dir="rtl"] .legal .legal-toc { margin: 0 calc(-1 * (var(--toc-w) + 28px)) 0 0; }
+  .legal .legal-toc > summary { display: none; }
+  .legal .legal-toc::details-content { content-visibility: visible; }
+  .legal .legal-toc__title {
+    display: block; padding: 0 8px 8px;
+    font-family: var(--lg-mono); font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--lg-ink-3);
+  }
+  .legal .legal-toc__nav {
+    padding: 0; max-block-size: calc(100vh - var(--lg-top) - 32px);
+    border-inline-start: 1px solid var(--lg-rule);
+  }
+  .legal .legal-toc a { min-height: 0; padding: 5px 8px; font-size: 0.8125rem; line-height: 1.35; margin-inline-start: -1px; }
+  .legal .legal-toc__group { margin-block-start: 10px; }
+  .legal .legal-toc__list ol { padding-inline-start: 10px; }
+}
+/* Touch iPads in landscape are wide, but still need finger-sized rows. */
+@media (min-width: 1100px) and (pointer: coarse) {
+  .legal .legal-toc a { min-height: 44px; }
+}
+
+/* ---------- "#" section links ---------- */
+
+.legal-anchor {
+  margin-inline-start: 0.3em; padding: 12px 10px;
+  font-family: var(--lg-mono); font-size: 0.6em; font-weight: 500; line-height: 1;
+  text-decoration: none; border-bottom: 0;
+  color: var(--lg-ink-3); opacity: 0;
+}
+.prose h2 .legal-anchor, .calm-main h2 .legal-anchor { border-bottom: 0; color: var(--lg-ink-3); }
+.legal h2:hover .legal-anchor,
+.legal h2:focus-within .legal-anchor,
+.legal .legal-anchor:focus-visible { opacity: 1; }
+.legal .legal-anchor:hover { color: var(--lg-ink); }
+/* No hover on touch: leave the link faintly visible instead of undiscoverable. */
+@media (hover: none) { .legal .legal-anchor { opacity: 0.6; } }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion="full"] .legal .legal-anchor { transition: opacity 0.15s ease; }
+}
+
+/* ---------- Back to top ---------- */
+
+.legal-top { margin: 48px 0 0; }
+.legal .legal-top a {
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: 4px;
+  font-family: var(--lg-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.legal .legal-top a::before { content: "\2191"; margin-inline-end: 0.6em; }
+.prose .legal-top a { color: var(--lg-ink-3); border-bottom: 1px solid var(--lg-rule); }
+.prose .legal-top a:hover { color: var(--lg-ink); }
+
+@media (forced-colors: active) {
+  .legal .legal-toc a[aria-current="true"] { border-inline-start-color: Highlight; }
+  .legal .legal-toc { border-color: CanvasText; }
+}
+
+/* ========================================================================
+   Print. Applies to the legal pages and the support pages.
+   ======================================================================== */
+
+@page { margin: 18mm 16mm; }
+
+@media print {
+  html, body { background: #fff !important; color: #000 !important; }
+  body { font-size: 11pt; line-height: 1.5; -webkit-print-color-adjust: economy; print-color-adjust: economy; }
+
+  /* Chrome, menu, motion, decoration: none of it belongs on paper. */
+  .skip-link, nav.top, .menu-overlay, .menu-btn, .motion-toggle, .cat-reveal-ring,
+  .atmo, canvas, header.mast, footer, noscript,
+  [class*="paw-"], [class*="cat-"],
+  .legal-toc, .legal-top, .legal-backs, .legal-anchor, .back-link, .calm-back,
+  .eyebrow .line, .card-callout .btn, hr.section-rule { display: none !important; }
+
+  *, *::before, *::after {
+    animation: none !important; transition: none !important;
+    box-shadow: none !important; text-shadow: none !important;
+  }
+
+  .prose, .calm-main { padding: 0 !important; border: 0 !important; max-width: none !important; margin: 0 !important; background: none !important; }
+  .prose .wrap { max-width: none !important; padding: 0 !important; }
+  .prose, .prose *, .calm-main, .calm-main * { color: #000 !important; background-color: transparent !important; }
+  .prose h1 em { font-style: italic; }
+  .calm-main h2::before { color: #000 !important; }
+
+  .prose h1, .calm-main h1 { font-size: 22pt; margin: 0 0 4pt; line-height: 1.15; }
+  .prose h2, .calm-main h2 { font-size: 15pt; margin: 20pt 0 6pt; line-height: 1.2; }
+  .prose h3, .calm-main h3 { font-size: 12pt; margin: 14pt 0 4pt; }
+  h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; break-inside: avoid; }
+  /* each EULA / addendum starts on a fresh page */
+  .prose h1[id], .calm-main h1[id] { break-before: page; }
+  p, li { orphans: 3; widows: 3; }
+  .prose p, .prose li, .calm-main p, .calm-main li { font-size: 11pt; line-height: 1.5; }
+  .updated, .prose .updated, .calm-main .updated { margin: 0 0 14pt !important; font-size: 10pt; letter-spacing: 0; }
+
+  /* Links read as links, and the destination is printed. */
+  .legal a, .prose a, .calm-main a { text-decoration: underline !important; border-bottom: 0 !important; }
+  a[href^="http"]:not([href*="thomasraypublishing.com"]):not([data-print-url="skip"])::after {
+    content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; overflow-wrap: anywhere;
+  }
+
+  /* Tables may break across pages; the header row repeats. */
+  .table-scroll { overflow: visible !important; }
+  .table-scroll table, .prose table, .calm-main table { min-width: 0 !important; width: 100% !important; font-size: 10pt; }
+  table { border-collapse: collapse; }
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+  th, td { border: 1px solid #000 !important; padding: 4pt 6pt !important; }
+  th { font-weight: 700; }
+
+  .card-callout { border: 1px solid #000 !important; padding: 10pt !important; break-inside: avoid; text-align: start !important; }
+  img { max-width: 100% !important; break-inside: avoid; }
+}

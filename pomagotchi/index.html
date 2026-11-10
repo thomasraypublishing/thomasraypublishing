@@ -20,7 +20,6 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="preload" href="../assets/fonts/fredoka-normal-600.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../assets/fonts/fredoka-normal-500.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../assets/fonts/inter-tight-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../assets/fonts/fonts.css">
@@ -47,8 +46,8 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="mast">
-    <a class="mark" href="#main" aria-label="Pomagotchi home">
-        <img src="images/icon.png" alt="" width="36" height="36">
+    <a class="mark" href="#main" aria-label="Pomagotchi, back to top">
+        <img src="../images/app-icons/pomagotchi-128.webp" alt="" width="36" height="36">
         <span>Pomagotchi</span>
     </a>
     <span class="mast-cta"><button class="motion-toggle" type="button" data-motion-toggle hidden>
@@ -56,6 +55,14 @@
             <span class="lbl">Pause motion</span>
         </button><a class="btn" href="https://apps.apple.com/us/app/pomagotchi/id6759592794" target="_blank" rel="noopener">Get the app</a></span>
 </header>
+
+<nav class="bookmark" id="bookmark" aria-label="Chapters" hidden>
+    <span class="bm-track" aria-hidden="true"><span class="bm-fill" id="bm-fill"></span></span>
+    <a href="#care"><span class="paw" aria-hidden="true"></span><span class="bm-label">Morning</span></a>
+    <a href="#play"><span class="paw" aria-hidden="true"></span><span class="bm-label">Afternoon</span></a>
+    <a href="#letters"><span class="paw" aria-hidden="true"></span><span class="bm-label">Evening</span></a>
+    <a href="#dreams"><span class="paw" aria-hidden="true"></span><span class="bm-label">Night</span></a>
+</nav>
 
 <main id="main">
 
@@ -89,8 +96,8 @@
             <div class="stage-col">
                 <div class="stage-pom" id="pom-stage">
                     <div class="stage-view" id="stage-view">
-                        <img class="stage-bg bg-day" src="images/yard-day.webp" alt="" width="1400" height="764" aria-hidden="true">
-                        <img class="stage-bg bg-night" src="images/yard-night.webp" alt="" width="1400" height="764" loading="lazy" aria-hidden="true">
+                        <img class="stage-bg bg-day" src="images/yard-day.webp" alt="" width="1400" height="764" fetchpriority="high" decoding="async" aria-hidden="true">
+                        <!-- the night plate is added by pomagotchi.js the first time night is shown -->
                         <div class="pom-wrap">
                             <img class="pom pom-sprite" id="pom" src="images/pom/sable_content.webp"
                                  width="360" height="264"
@@ -171,7 +178,7 @@
                     that runs all the way to International.
                 </p>
             </div>
-            <div class="cards">
+            <div class="cards cards-2x2">
                 <div class="card" data-reveal>
                     <p class="c-title">Pom Shows</p>
                     <p>Four tiers — Regional, State, National, International. Groom, train, and take the podium.</p>
@@ -277,7 +284,7 @@
                     <p class="s-note">A monthly subscription — and the full game is playable without subscribing.</p>
                 </div>
                 <div>
-                    <img src="images/pom-02.webp" alt="" width="720" height="1558" loading="lazy" style="border-radius: 22px; border: 1.5px solid var(--pg-rule);" aria-hidden="true">
+                    <img class="society-shot" src="images/pom-02.webp" alt="" width="720" height="1558" loading="lazy" aria-hidden="true">
                 </div>
             </div>
             <p class="quiet" data-reveal>
@@ -302,6 +309,15 @@
 </main>
 
 <footer class="foot">
+    <nav class="studio-row" aria-label="From the same studio">
+        <p class="studio-row__label">From the same studio</p>
+        <ul class="studio-row__list">
+            <li><a href="../index.html"><span class="studio-row__orb" aria-hidden="true"></span><span>Thomas Ray Publishing</span></a></li>
+            <li><a href="../thedevice/index.html"><img src="../images/app-icons/thedevice-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>The Device</span></a></li>
+            <li><a href="../hush-hush-snap-snap/index.html"><img src="../images/app-icons/hush-hush-snap-snap-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Hush Hush Snap Snap</span></a></li>
+            <li><a href="../trade-rc/index.html"><img src="../images/app-icons/trade-rc-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Trade RC <span class="studio-row__age">18+</span></span></a></li>
+        </ul>
+    </nav>
     <div class="foot-inner">
         <span>&copy; 2026 Thomas Ray Publishing LLC</span>
         <div class="foot-links">
@@ -319,13 +335,6 @@
 <script type="module" src="../assets/js/paw-reveal.js"></script>
 <script type="module" src="../assets/js/craft.js"></script>
 
-<nav class="bookmark" id="bookmark" aria-label="Chapters" hidden>
-    <span class="bm-track" aria-hidden="true"><span class="bm-fill" id="bm-fill"></span></span>
-    <a href="#care"><span class="paw" aria-hidden="true"></span><span class="bm-label">Morning</span></a>
-    <a href="#play"><span class="paw" aria-hidden="true"></span><span class="bm-label">Afternoon</span></a>
-    <a href="#letters"><span class="paw" aria-hidden="true"></span><span class="bm-label">Evening</span></a>
-    <a href="#dreams"><span class="paw" aria-hidden="true"></span><span class="bm-label">Night</span></a>
-</nav>
 
 <script type="speculationrules">
 { "prefetch": [ { "urls": ["../"] } ] }

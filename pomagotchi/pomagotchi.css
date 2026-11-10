@@ -168,6 +168,7 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
 }
 .mast .mark {
   display: inline-flex; align-items: center; gap: 12px;
+  min-height: 44px;
   font-family: var(--fredoka); font-weight: 600; font-size: 1.125rem;
   color: var(--pg-ink); text-decoration: none;
 }
@@ -249,9 +250,11 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
   transition: opacity 1.2s ease;
 }
 .stage-view .bg-day { opacity: 1; }
+/* the night plate is created by pomagotchi.js on first need; the day plate
+   stays up until it is there (.night-ready), so the stage is never empty */
 .stage-view .bg-night { opacity: 0; }
-body[data-tod="night"] .stage-view .bg-day { opacity: 0; }
-body[data-tod="night"] .stage-view .bg-night { opacity: 1; }
+body[data-tod="night"] .stage-view.night-ready .bg-day { opacity: 0; }
+body[data-tod="night"] .stage-view.night-ready .bg-night { opacity: 1; }
 /* dawn + dusk tints over the day art */
 .stage-view::before {
   content: ""; position: absolute; inset: 0; z-index: 1;
@@ -289,8 +292,12 @@ body[data-tod="evening"] .stage-view::before {
 
 /* Coat picker — the real game variants */
 .coat-row {
-  display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+  /* six across where they fit, otherwise 3x2 — never five and an orphan */
+  display: grid; grid-template-columns: repeat(6, 48px); justify-content: center; gap: 8px;
   margin-top: 14px;
+}
+@media (max-width: 374px), (min-width: 861px) and (max-width: 1010px) {
+  .coat-row { grid-template-columns: repeat(3, 48px); gap: 10px; }
 }
 .coat-row .coat {
   width: 48px; height: 48px; padding: 3px;
@@ -414,6 +421,9 @@ html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.sp
   margin: 0 0 6px; color: var(--pg-ink);
 }
 .card p { margin: 0; font-size: 0.9375rem; color: var(--pg-ink2); }
+/* four cards read as a 2x2, never three-and-one */
+.cards.cards-2x2 { grid-template-columns: 1fr; }
+@media (min-width: 600px) { .cards.cards-2x2 { grid-template-columns: repeat(2, 1fr); } }
 
 .shot-row {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -484,7 +494,7 @@ html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.sp
 /* ---------- The Fluff Society ---------- */
 
 .society {
-  margin-top: clamp(56px, 10vw, 104px);
+  margin-top: 0; /* .chap already supplies the space above */
   background: var(--pg-card);
   border: 1.5px solid var(--pg-rule); border-radius: 24px;
   padding: clamp(24px, 5vw, 44px);
@@ -499,6 +509,11 @@ html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.sp
   content: ""; position: absolute; left: 0; top: 0.32em;
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--pg-rose);
+}
+.society .society-shot {
+  width: 100%; max-width: 300px; margin-inline: auto;
+  aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
+  border-radius: 22px; border: 1.5px solid var(--pg-rule);
 }
 .society .s-note { margin-top: 18px; font-size: 0.875rem; color: var(--pg-ink2); }
 @media (max-width: 720px) { .society { grid-template-columns: 1fr; } }
@@ -532,7 +547,45 @@ html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.sp
   display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center;
   font-size: 0.875rem; color: var(--pg-ink2);
 }
-.foot .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-left: auto; }
+.foot .foot-links { display: flex; flex-wrap: wrap; gap: 0 12px; margin-left: auto; }
+.foot .foot-links a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; min-width: 44px; padding-inline: 6px;
+}
+
+/* ---------- From the same studio — a shelf of little name-tags ---------- */
+.foot .studio-row {
+  max-width: var(--col); margin: 0 auto;
+  padding: 32px clamp(16px, 4vw, 32px) 0;
+}
+.studio-row__label {
+  margin: 0 0 12px;
+  font-family: var(--fredoka); font-weight: 500; font-size: 0.8125rem;
+  color: var(--pg-tx-accent);
+}
+.studio-row__list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.studio-row__list a {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 48px; padding: 7px 18px 7px 8px;
+  font-family: var(--fredoka); font-weight: 500; font-size: 0.9375rem; line-height: 1.2;
+  color: var(--pg-ink); text-decoration: none;
+  background: var(--pg-card);
+  border: 1.5px solid var(--pg-rule); border-radius: 999px;
+}
+.studio-row__list a:hover { border-color: var(--pg-tx-accent); color: var(--pg-ink); }
+.studio-row__list img { width: 32px; height: 32px; border-radius: 22%; flex: none; }
+.studio-row__orb {
+  width: 32px; height: 32px; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 34% 30%, #FFFFFF 0%, var(--pg-rose) 38%, var(--pg-accent) 100%);
+}
+.studio-row__age {
+  display: inline-block; margin-inline-start: 4px; padding: 0 7px;
+  font-size: 0.75rem; line-height: 1.5;
+  color: var(--pg-tx-accent); border: 1.5px solid currentColor; border-radius: 999px;
+}
 
 /* ---------- App Store badge (inline SVG anchor, styled like a soft card) ---------- */
 

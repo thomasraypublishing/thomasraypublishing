@@ -26,11 +26,41 @@ function todForHour(h) {
   return 'night';
 }
 
+/* The night plate is not in the markup: a visitor who is not seeing night
+   never downloads it. It is fetched the first time night is wanted (the
+   clock says night, or the dial's Night button is hovered, focused or
+   pressed) and is inserted only once it has loaded. Until then the day plate
+   stays up (.night-ready gates the cross-fade), so the stage is never empty. */
+function initNightPlate() {
+  const view = document.getElementById('stage-view');
+  let requested = false;
+  return function loadNight() {
+    if (!view || requested) return;
+    requested = true;
+    const img = new Image();
+    img.className = 'stage-bg bg-night';
+    img.alt = '';
+    img.width = 1400;
+    img.height = 764;
+    img.decoding = 'async';
+    img.setAttribute('aria-hidden', 'true');
+    img.addEventListener('load', () => {
+      view.insertBefore(img, view.querySelector('.pom-wrap'));
+      // next frame, so the opacity transition has a start value to run from
+      requestAnimationFrame(() => view.classList.add('night-ready'));
+    }, { once: true });
+    img.addEventListener('error', () => { requested = false; }, { once: true });
+    img.src = 'images/yard-night.webp';
+  };
+}
+
 function initTimeOfDay() {
   const dial = document.getElementById('tod-dial');
   const note = document.getElementById('tod-note');
+  const loadNight = initNightPlate();
 
   const apply = (tod, isAuto) => {
+    if (tod === 'night') loadNight();
     document.body.setAttribute('data-tod', tod);
     if (dial) {
       dial.querySelectorAll('button').forEach((b) => {
@@ -49,6 +79,11 @@ function initTimeOfDay() {
   apply(isStatic() ? 'afternoon' : todForHour(new Date().getHours()), true);
 
   if (dial) {
+    // warm the night plate as soon as the visitor reaches for it
+    const nightBtn = dial.querySelector('button[data-tod="night"]');
+    if (nightBtn) ['pointerenter', 'focus', 'touchstart'].forEach((t) => {
+      nightBtn.addEventListener(t, loadNight, { once: true, passive: true });
+    });
     dial.addEventListener('click', (event) => {
       const btn = event.target.closest('button[data-tod]');
       if (!btn || !TODS.includes(btn.dataset.tod)) return;

@@ -20,6 +20,7 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="preload" href="../assets/fonts/jetbrains-mono-normal-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../assets/fonts/fonts.css">
     <link rel="stylesheet" href="hhss.css">
     <link rel="stylesheet" href="../assets/css/reveals.css">
@@ -46,8 +47,8 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="mast">
-    <a class="mark" href="#main" aria-label="Hush Hush Snap Snap home">
-        <img src="images/icon.png" alt="" width="34" height="34">
+    <a class="mark" href="#main" aria-label="Hush Hush Snap Snap, back to top">
+        <img src="../images/app-icons/hush-hush-snap-snap-128.webp" alt="" width="34" height="34">
         <span>Hush Hush Snap Snap</span>
     </a>
     <span class="mast-right">
@@ -56,9 +57,17 @@
             <span class="lbl">Pause motion</span>
         </button>
         <span class="db-chip" aria-hidden="true">0 dB</span>
-        <a class="btn" href="https://apps.apple.com/us/app/hush-hush-snap-snap/id6763808286" target="_blank" rel="noopener">Get the app</a>
+        <a class="btn" href="https://apps.apple.com/us/app/hush-hush-snap-snap/id6763808286" target="_blank" rel="noopener"><span>Get<span class="mast-more"> the app</span></span></a>
     </span>
 </header>
+
+<!-- Section stepper: fixed-position, so its place in the source is free; it sits here so it comes before the page in tab order. -->
+<nav class="frame-counter" id="frame-counter" aria-label="Page sections" hidden>
+    <button type="button" id="frame-prev" aria-label="Previous section">&lsaquo;</button>
+    <span class="fc-label" id="frame-label">frame 01 / 09</span>
+    <button type="button" id="frame-next" aria-label="Next section">&rsaquo;</button>
+    <span class="visually-hidden" id="frame-status" role="status"></span>
+</nav>
 
 <main id="main">
 
@@ -292,7 +301,11 @@
             <div class="shot-row">
                 <img class="capture" src="../images/opt/HHSS_00_welcome_6.5_1284x2778.webp" alt="Hush Hush Snap Snap welcome screen explaining silent triggers" width="720" height="1558" loading="lazy">
                 <img class="capture" src="../images/opt/HHSS_03_triggers_6.5_1284x2778.webp" alt="Gesture triggers: fire the camera with a smile or a wave" width="720" height="1558" loading="lazy">
-                <img class="capture" src="images/watch.webp" alt="The Apple Watch app mid-countdown: three seconds, a shutter button, labeled From Your Wrist" width="410" height="502" loading="lazy">
+                <div class="watch-card">
+                    <div class="watch-frame">
+                        <img class="capture" src="images/watch.webp" alt="The Apple Watch app mid-countdown: three seconds, a shutter button, labeled From Your Wrist" width="410" height="502" loading="lazy">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -480,7 +493,7 @@
                 <li>The 7-day free trial starts only when you tap Start 7-Day Free Trial. It gives you Ultra Snapped for seven days, asks for no payment information, and never turns into a charge.</li>
                 <li>Subscriptions renew automatically unless you turn off auto-renew in your Apple Account settings at least 24 hours before the current period ends. You hold one subscription at a time. The Lifetime purchase never renews.</li>
                 <li>Bought the one-time Pro unlock earlier? You keep it. It is honored at Ultra Snapped, with nothing more to pay.</li>
-                <li>Hushed Pro and Ultra Snapped arrive with version 1.4.0.</li>
+                <li>Hushed Pro and Ultra Snapped are the two paid tiers; the free camera stays free.</li>
             </ul>
         </div>
     </section>
@@ -510,6 +523,15 @@
 </main>
 
 <footer class="foot">
+    <nav class="studio-row" aria-label="From the same studio">
+        <p class="studio-row__label">From the same studio</p>
+        <ul class="studio-row__list">
+            <li><a href="../index.html"><span class="studio-row__orb" aria-hidden="true"></span><span>Thomas Ray Publishing</span></a></li>
+            <li><a href="../pomagotchi/index.html"><img src="../images/app-icons/pomagotchi-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Pomagotchi</span></a></li>
+            <li><a href="../thedevice/index.html"><img src="../images/app-icons/thedevice-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>The Device</span></a></li>
+            <li><a href="../trade-rc/index.html"><img src="../images/app-icons/trade-rc-128.webp" width="32" height="32" alt="" loading="lazy" decoding="async"><span>Trade RC <span class="studio-row__age">18+</span></span></a></li>
+        </ul>
+    </nav>
     <div class="foot-inner">
         <span>&copy; 2026 Thomas Ray Publishing LLC</span>
         <div class="foot-links">
@@ -527,13 +549,6 @@
 <script type="module" src="hhss.js"></script>
 <script type="module" src="../assets/js/paw-reveal.js"></script>
 <script type="module" src="../assets/js/craft.js"></script>
-
-<nav class="frame-counter" id="frame-counter" aria-label="Page sections" hidden>
-    <button type="button" id="frame-prev" aria-label="Previous section">&lsaquo;</button>
-    <span class="fc-label" id="frame-label">frame 01 / 09</span>
-    <button type="button" id="frame-next" aria-label="Next section">&rsaquo;</button>
-    <span class="visually-hidden" id="frame-status" role="status"></span>
-</nav>
 
 <script type="speculationrules">
 { "prefetch": [ { "urls": ["../"] } ] }

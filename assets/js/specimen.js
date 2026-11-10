@@ -53,6 +53,7 @@ export function initCaptureSpecimen({ motion }) {
     // Leaf-shutter blink: a brief dim, never a flash. Silent cameras don't shout.
     const stage = specimen.querySelector('.stage');
     stage.classList.add('shuttering');
+    stage.classList.add('has-shot'); // the dimmed photograph in the viewfinder comes up
     setTimeout(() => stage.classList.remove('shuttering'), 140);
 
     const shot = upcoming;

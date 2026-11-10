@@ -225,6 +225,7 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
 }
 .mast .mark {
   display: inline-flex; align-items: center; gap: 12px;
+  min-height: 44px; min-width: 44px;
   font-family: var(--orbitron); font-weight: 600; font-size: 0.9375rem;
   letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--dv-ink); text-decoration: none;
@@ -251,6 +252,16 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
   .motion-toggle .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
 .mast .mast-cta .btn { min-height: 44px; padding: 10px 20px; }
+/* phones: one slim row. Icon mark only (the wordmark stays in the accessible
+   name), icon-only Pause (from 560px down), and "Get" for "Get the app". */
+@media (max-width: 429px) {
+  .mast { flex-wrap: nowrap; gap: 10px; padding-block: 8px; }
+  .mast .mark span, .mast .btn-more {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  .mast .mast-cta .btn { padding-inline: 22px; }
+}
 
 /* ---------- Layout ---------- */
 
@@ -276,10 +287,16 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
 }
 /* The pyramid is the app's own art (poster render of the 15 stones);
    a radial mask feathers its dark plate into the page cosmos. */
-.pyramid-btn img.glass {
+img.glass {
   display: block; width: min(320px, 72vw); height: auto;
-  -webkit-mask-image: radial-gradient(96% 88% at 50% 52%, #000 46%, transparent 70%);
-  mask-image: radial-gradient(96% 88% at 50% 52%, #000 46%, transparent 70%);
+  /* dimension-independent: the plate fades to nothing at every edge, and a
+     short top ramp removes the faint lighter band along the top edge */
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 52%, #000 74%, transparent 100%),
+                      linear-gradient(180deg, transparent 0, #000 9%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 52%, #000 74%, transparent 100%),
+              linear-gradient(180deg, transparent 0, #000 9%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 .pyramid-btn .glass { transition: filter 0.4s ease; }
 .pyramid-btn:hover .glass { filter: drop-shadow(0 0 34px rgba(201, 181, 255, 0.65)) brightness(1.08); }
@@ -491,27 +508,74 @@ h2 { font-size: clamp(1.25rem, 2.8vw, 1.85rem); }
 
 /* ---------- Sean's line-art glyphs: black-on-white sources become
    luminous line work via invert + screen (black vanishes on any dark) */
-.glyph img, .eye-divider img {
+.glyph img {
   filter: invert(1) brightness(1.02);
   mix-blend-mode: screen;
 }
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .glyph img { width: 100%; height: 100%; object-fit: contain; opacity: 0.92; }
 .eye-divider {
   display: flex; justify-content: center;
   margin-top: clamp(48px, 8vw, 88px);
-  position: relative; z-index: 1;
 }
-.eye-divider img { width: 92px; height: 92px; opacity: 0.5; }
+/* The glyph is black line art on white. It used to be inverted and blended
+   with `screen`, but the divider sits inside <main>'s own stacking context
+   where there is nothing behind it to blend with, so the white plate showed
+   as a dark square. The filter turns the lines into real alpha instead. */
+.eye-divider img { width: 92px; height: 92px; opacity: 0.5; filter: url(#line-to-alpha); }
 
 /* the rendered pyramid beside the playable board */
 .challenge-render { margin: 30px auto 0; text-align: center; }
 .challenge-render img {
   width: min(280px, 64%); height: auto;
-  -webkit-mask-image: radial-gradient(92% 88% at 50% 50%, #000 52%, transparent 74%);
-  mask-image: radial-gradient(92% 88% at 50% 50%, #000 52%, transparent 74%);
+  margin-inline: auto;
+  /* closest-side: fully transparent at every edge whatever the file's size */
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 58%, transparent 98%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 58%, transparent 98%);
 }
+.nojs-note { text-align: center; margin: 30px auto 0; max-width: 460px; color: var(--dv-ink-2); font-size: 0.9375rem; }
 .challenge-render figcaption { margin-top: 4px; }
-.foot .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-left: auto; }
+.foot .foot-links { display: flex; flex-wrap: wrap; gap: 0 12px; margin-left: auto; }
+.foot .foot-links a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; min-width: 44px; padding-inline: 6px;
+}
+
+/* ---------- From the same studio — a shelf of glass tiles ---------- */
+.foot .studio-row {
+  max-width: var(--col); margin: 0 auto;
+  padding: 32px clamp(16px, 4vw, 32px) 0;
+}
+.studio-row__label {
+  margin: 0 0 12px;
+  font-family: var(--smono); font-size: 0.75rem; letter-spacing: 0.08em;
+  text-transform: lowercase; color: var(--dv-accent);
+}
+.studio-row__list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.studio-row__list a {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 48px; padding: 7px 16px 7px 8px;
+  font-family: var(--smono); font-size: 0.8125rem; letter-spacing: 0.04em; line-height: 1.3;
+  color: var(--dv-ink); text-decoration: none;
+  background: linear-gradient(165deg, rgba(29, 16, 53, 0.78), rgba(38, 20, 71, 0.6));
+  border: 1px solid var(--dv-rule); border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(242, 237, 245, 0.08);
+}
+.studio-row__list a:hover { border-color: var(--dv-accent); color: var(--dv-ink); box-shadow: 0 0 22px rgba(201, 181, 255, 0.2); }
+.studio-row__list img { width: 32px; height: 32px; border-radius: 22%; flex: none; }
+.studio-row__orb {
+  width: 32px; height: 32px; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 34% 30%, #FFFFFF 0%, var(--dv-lav) 40%, var(--dv-purple) 100%);
+  box-shadow: 0 0 14px rgba(201, 181, 255, 0.45);
+}
+.studio-row__age {
+  display: inline-block; margin-inline-start: 4px; padding: 0 7px;
+  font-size: 0.6875rem; color: var(--dv-accent);
+  border: 1px solid currentColor; border-radius: 999px;
+}
 
 /* ---------- Reflow: enlarged text wraps long words instead of widening the page ---------- */
 h1, h2, h3, .lede { overflow-wrap: break-word; }
