@@ -468,9 +468,26 @@ describe('craft (Playwright)', () => {
     const fixturePath = path.join(__dirname, 'fixtures', 'transitions-baseline.json');
     const baseline = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
 
+    // Routes whose markup depends on the visitor's clock get a fixed hour,
+    // so this test measures the same page at any time of day (W25).
+    // Pomagotchi follows the clock, and since the night yard image became
+    // lazy (inserted only when night is wanted) the baseline's
+    // `img.stage-bg.bg-night` entry exists only at night: without the pin
+    // these two tests passed after dark and failed in daytime, locally and
+    // in CI alike. 23:00 is night by pomagotchi.js's todForHour(), which is
+    // the state the baseline's night entry describes; the day image is in
+    // the markup at every hour. Only Date#getHours is pinned, and only for
+    // the routes named here.
+    const PINNED_HOUR = { 'pomagotchi/index.html': 23 };
+
     async function assertRouteHoldsBaseline(browser, route, entries) {
       const { context, page, errors } = await newPage(browser, site.url, { viewport: VIEWPORT });
       try {
+        if (route in PINNED_HOUR) {
+          await context.addInitScript((hour) => {
+            Date.prototype.getHours = function getHours() { return hour; };
+          }, PINNED_HOUR[route]);
+        }
         await page.goto(`${site.url}/${route}`, { waitUntil: 'networkidle' });
         for (const [selector, props] of Object.entries(entries)) {
           // Poll for the baseline to hold instead of sleeping a fixed
