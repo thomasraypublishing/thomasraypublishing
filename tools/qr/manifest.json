@@ -1,0 +1,22 @@
+{
+  "codes" : [
+    {
+      "file" : "pomagotchi/images/qr-app-store.svg",
+      "id" : "pomagotchi",
+      "sha256" : "b5204bb32e9d1ab86189074c7d25029296203049716044d071e132b13b9bf32a",
+      "url" : "https://apps.apple.com/us/app/pomagotchi/id6759592794"
+    },
+    {
+      "file" : "thedevice/images/qr-app-store.svg",
+      "id" : "the-device",
+      "sha256" : "585c7be9929b2395d2b9f1935e0f35880e0751656ed7af4732212e75e9f43e59",
+      "url" : "https://apps.apple.com/us/app/the-device-cosmic-pyramid/id6759922897"
+    },
+    {
+      "file" : "hush-hush-snap-snap/images/qr-app-store.svg",
+      "id" : "hush-hush-snap-snap",
+      "sha256" : "95ba3f87d02a24ba857e8fee9d0eaa0f6847bcd6150500551413fb09b1793cfb",
+      "url" : "https://apps.apple.com/us/app/hush-hush-snap-snap/id6763808286"
+    }
+  ]
+}

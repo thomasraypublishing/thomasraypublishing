@@ -92,6 +92,79 @@ describe('cta.test.js — App Store links match their product', () => {
     }
   });
 
+  /* W20: the "scan with your iPhone" QR code beside each final App Store
+     link. tools/qr/build.swift writes the SVGs, reads each back with Vision
+     to prove it decodes to the product's canonical URL, and records the URL
+     and SHA-256 in tools/qr/manifest.json. No QR decoder runs here (CI is
+     Linux); instead the committed file must still be the one that build
+     verified, and the URL it verified must still be the canonical one. A
+     changed store URL or a hand-edited SVG fails until build.swift is rerun. */
+  describe('QR codes (W20)', () => {
+    const { codes } = require('../qr/manifest.json');
+    const crypto = require('node:crypto');
+
+    it('every product has one code, built from its canonical URL, unchanged since it was verified', () => {
+      assert.deepEqual(codes.map((c) => c.id).sort(), products.map((p) => p.id).sort(), 'manifest and products.json list different products');
+      for (const product of products) {
+        const code = codes.find((c) => c.id === product.id);
+        assert.equal(code.url, product.canonicalUrl, `${product.id}: QR code was built from "${code.url}" — rerun: swift tools/qr/build.swift`);
+        const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, code.file))).digest('hex');
+        assert.equal(sha, code.sha256, `${code.file} is not the file build.swift verified — rerun: swift tools/qr/build.swift`);
+      }
+    });
+
+    describe('on the page (Playwright)', () => {
+      let site;
+      let browser;
+      before(async () => { site = await start(); browser = await launch(); });
+      after(async () => { await browser.close(); await stop(site); });
+
+      for (const product of products) {
+        const code = codes.find((c) => c.id === product.id);
+        const pagePath = `${code.file.split('/')[0]}/index.html`;
+        const read = (page) => page.evaluate(() => {
+          const img = document.querySelector('.qr-handoff img');
+          if (!img) return null;
+          const box = img.getBoundingClientRect();
+          return { src: img.getAttribute('src'), alt: img.alt, shown: box.width > 0 && box.height > 0, loaded: img.complete && img.naturalWidth > 0 };
+        });
+
+        it(`${product.name}: shown and loaded at 1280px, sits with the final App Store link`, async () => {
+          const { context, page } = await newPage(browser, site.url, { viewport: { width: 1280, height: 900 } });
+          try {
+            await page.goto(`${site.url}/${pagePath}?static=1`, { waitUntil: 'networkidle' });
+            await page.locator('.qr-handoff').scrollIntoViewIfNeeded();
+            await page.waitForFunction(() => { const i = document.querySelector('.qr-handoff img'); return i && i.complete; });
+            const state = await read(page);
+            assert.notEqual(state, null, `${pagePath} has no .qr-handoff image`);
+            assert.equal(`${pagePath.split('/')[0]}/${state.src}`, code.file, `${pagePath}: QR image src is not this product's code`);
+            assert.ok(state.shown && state.loaded, `${pagePath}: QR code is not visible and loaded at 1280px`);
+            assert.ok(state.alt.includes(product.name), `${pagePath}: QR alt text does not name ${product.name}`);
+            const besideLink = await page.evaluate((url) => {
+              const block = document.querySelector('.qr-handoff').parentElement;
+              return Array.from(block.querySelectorAll('a')).some((a) => a.getAttribute('href') === url);
+            }, product.canonicalUrl);
+            assert.ok(besideLink, `${pagePath}: QR code is not in the same block as the App Store link`);
+          } finally {
+            await context.close();
+          }
+        });
+
+        it(`${product.name}: not rendered at 375px`, async () => {
+          const { context, page } = await newPage(browser, site.url, { viewport: { width: 375, height: 812 } });
+          try {
+            await page.goto(`${site.url}/${pagePath}?static=1`, { waitUntil: 'networkidle' });
+            const state = await read(page);
+            assert.notEqual(state, null, `${pagePath} has no .qr-handoff image`);
+            assert.equal(state.shown, false, `${pagePath}: QR code takes space at phone width`);
+          } finally {
+            await context.close();
+          }
+        });
+      }
+    });
+  });
+
   describe('sitewide scan (filesystem)', () => {
     it('every apps.apple.com/.../<product-slug>/id... URL on the site matches its canonical URL exactly', () => {
       const bySlug = new Map(products.map((p) => [p.slug, p]));

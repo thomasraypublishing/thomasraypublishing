@@ -554,6 +554,15 @@ html[data-motion="full"] .pom-sprite:not(.wiggle):not(.bounce):not(.sit):not(.sp
 .final { text-align: center; padding: clamp(48px, 9vw, 96px) 0 clamp(24px, 5vw, 48px); }
 .final h2 { margin-bottom: 24px; }
 .final .microline { margin-top: 16px; font-size: 0.875rem; color: var(--pg-ink2); }
+/* W20: a way onto the phone for someone reading on a computer. Built by
+   tools/qr/build.swift; encodes the same canonical App Store URL as the link
+   above. Hidden on phones and touch screens, where the link already works. */
+.qr-handoff { display: none; }
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .qr-handoff { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 32px; }
+  .qr-handoff img { width: 128px; height: 128px; border-radius: 12px; box-shadow: 0 0 0 1px rgba(36, 26, 46, 0.12); }
+  .qr-handoff p { margin: 0; text-align: left; font-size: 0.875rem; color: var(--pg-ink2); }
+}
 
 /* ---------- Footer ---------- */
 

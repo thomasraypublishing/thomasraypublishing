@@ -196,6 +196,19 @@ stop it.
   (`apps.apple.com/redeem`, `apps.apple.com/account/subscriptions`) — see
   the comment at the top of `products.json`.
 
+  It also covers the W20 QR codes (the "scan with your iPhone" code beside
+  each final App Store link, shown at desktop widths only). The codes are
+  written by `tools/qr/build.swift` (macOS: Core Image encodes, Vision
+  reads each file back and the build fails unless it decodes to the
+  product's canonical URL), which records each file's URL and SHA-256 in
+  `tools/qr/manifest.json`. No QR decoder runs in this suite; the test
+  holds the committed SVG to that hash and the manifest's URL to
+  `products.json`, then checks in a browser that the code is visible and
+  loaded at 1280px, sits in the same block as the App Store link, names
+  the product in its alt text, and takes no space at 375px. If a store URL
+  changes, or a new product is added, rerun `swift tools/qr/build.swift`
+  from the repo root and commit the SVGs and the manifest together.
+
 - **`modules.test.js`** — every first-party ES module (listed explicitly —
   see the file) parses as one, using `vm.SourceTextModule` under
   `--experimental-vm-modules` (`node --check` treats a bare `.js` file as

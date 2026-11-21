@@ -489,6 +489,16 @@ img.glass {
 .final h2 { margin-bottom: 10px; }
 .final .oracle-voice { margin: 0 0 26px; }
 .final .microline { margin-top: 16px; }
+/* W20: a way onto the phone for someone reading on a computer. Built by
+   tools/qr/build.swift; encodes the same canonical App Store URL as the link
+   above. Dark modules on a light card, because cameras read inverted codes
+   unreliably. Hidden on phones and touch screens, where the link already works. */
+.qr-handoff { display: none; }
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .qr-handoff { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 32px; }
+  .qr-handoff img { width: 128px; height: 128px; border-radius: 12px; }
+  .qr-handoff p { margin: 0; text-align: left; font-family: var(--smono); font-size: 0.75rem; letter-spacing: 0.06em; color: var(--dv-ink-2); }
+}
 
 /* ---------- App Store badge ---------- */
 
