@@ -635,4 +635,211 @@ describe('behavior (Playwright)', () => {
       }
     });
   });
+
+  /* W24: the Transfer Hush demo in the Snappy Kit card on the Hush Hush Snap
+     Snap page. It plays real Transfer Hush codes so a visitor's iPhone can
+     receive a photograph from the screen. What these tests hold it to:
+     nothing moves or downloads until the button is pressed; it is
+     unavailable whenever motion is not 'full'; a change of that state, a
+     hidden tab, or three complete loops stops it; it is not rendered at
+     phone width; and the committed frame data is the data that was proven
+     against the app's own decoder (tools/transfer-hush/manifest.json).
+     Whether a real iPhone receives the photograph is a device check and is
+     not, and cannot be, asserted here. */
+  describe('transfer hush: the live demo on Hush Hush Snap Snap (W24)', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const crypto = require('node:crypto');
+    const ROOT = path.resolve(__dirname, '..', '..');
+    const manifest = require('../transfer-hush/manifest.json');
+    const PAGE = 'hush-hush-snap-snap/index.html';
+
+    const open = async (options = {}, query = '', beforeGoto = null) => {
+      const made = await newPage(browser, site.url, { viewport: { width: 1280, height: 900 }, ...options });
+      made.frameRequests = [];
+      made.page.on('request', (req) => { if (req.url().includes('transfer-hush/frames.bin')) made.frameRequests.push(req.url()); });
+      if (beforeGoto) await beforeGoto(made);
+      await made.page.goto(`${site.url}/${PAGE}${query}`, { waitUntil: 'networkidle' });
+      await made.page.waitForFunction(() => document.getElementById('th-demo') && !document.getElementById('th-demo').hidden);
+      return made;
+    };
+    const read = (page) => page.evaluate(() => {
+      const root = document.getElementById('th-demo');
+      const shown = (el) => { const box = el.getBoundingClientRect(); return !el.hidden && box.width > 0 && box.height > 0; };
+      return {
+        motion: document.documentElement.dataset.motion,
+        rendered: getComputedStyle(root).display !== 'none',
+        state: root.dataset.state,
+        frame: root.dataset.frame === undefined ? null : Number(root.dataset.frame),
+        button: shown(document.getElementById('th-toggle')),
+        buttonText: document.getElementById('th-toggle').textContent,
+        offNote: shown(document.getElementById('th-off')),
+        still: shown(document.getElementById('th-still')),
+        canvas: shown(document.getElementById('th-canvas')),
+        status: document.getElementById('th-status').textContent,
+      };
+    });
+    const pressStart = async (page) => {
+      await page.locator('#th-toggle').scrollIntoViewIfNeeded();
+      await page.locator('#th-toggle').click();
+      await page.waitForFunction(() => document.getElementById('th-demo').dataset.state === 'sending');
+    };
+
+    it('the committed frames and still are the ones proven against the app decoder', () => {
+      const frames = fs.readFileSync(path.join(ROOT, manifest.frames.file));
+      assert.equal(crypto.createHash('sha256').update(frames).digest('hex'), manifest.frames.sha256, 'frames.bin changed since it was proven');
+      assert.equal(frames.length, manifest.frames.count * manifest.frames.bytesPerFrame, 'frames.bin is not a whole number of frames');
+      assert.equal(manifest.frames.bytesPerFrame, Math.ceil(manifest.frames.modules ** 2 / 8));
+      const still = fs.readFileSync(path.join(ROOT, manifest.still.file));
+      assert.equal(crypto.createHash('sha256').update(still).digest('hex'), manifest.still.sha256, 'still.png changed since it was built');
+    });
+
+    it('full motion: still until pressed, then two codes a second, and Stop stops it', async () => {
+      const { context, page, errors, frameRequests } = await open();
+      try {
+        const idle = await read(page);
+        assert.equal(idle.motion, 'full');
+        assert.ok(idle.rendered && idle.button && idle.still && !idle.canvas && !idle.offNote, `unexpected idle state: ${JSON.stringify(idle)}`);
+        assert.equal(idle.state, 'idle');
+        assert.deepEqual(frameRequests, [], 'frame data was fetched before the button was pressed');
+
+        await pressStart(page);
+        const started = await read(page);
+        assert.ok(started.canvas && !started.still, 'the canvas should replace the still while sending');
+        assert.equal(started.buttonText, 'Stop sending');
+        assert.match(started.status, /^Sending\./);
+        assert.equal(frameRequests.length, 1, 'frame data should be fetched exactly once');
+
+        // Two codes a second: after 2.2 s the fifth code (index 4) is up, give or take one.
+        await page.waitForTimeout(2200);
+        const later = await read(page);
+        assert.ok(later.frame >= 3 && later.frame <= 5, `expected about 4 frame changes in 2.2 s, saw frame ${later.frame}`);
+
+        // The drawn code: white quiet zone, a dark finder-pattern corner at 80% contrast, 375px square.
+        const pixels = await page.evaluate(() => {
+          const canvas = document.getElementById('th-canvas');
+          const ctx = canvas.getContext('2d');
+          const at = (x, y) => Array.from(ctx.getImageData(x, y, 1, 1).data.slice(0, 3));
+          return { width: canvas.width, height: canvas.height, quiet: at(5, 5), finder: at(13, 13), role: canvas.getAttribute('role'), label: canvas.getAttribute('aria-label') };
+        });
+        assert.deepEqual(pixels.quiet, [255, 255, 255], 'the quiet zone should be white');
+        assert.deepEqual(pixels.finder, [94, 94, 94], 'modules should be drawn at the 80%-contrast grey');
+        assert.equal(pixels.width, 375);
+        assert.equal(pixels.height, 375);
+        assert.equal(pixels.role, 'img');
+        assert.ok(pixels.label && pixels.label.length > 0, 'the canvas needs an accessible name');
+
+        await page.locator('#th-toggle').click();
+        const stopped = await read(page);
+        assert.equal(stopped.state, 'idle');
+        assert.ok(stopped.still && !stopped.canvas, 'the still should return when stopped');
+        await page.waitForTimeout(1200);
+        assert.equal((await read(page)).frame, stopped.frame, 'frames kept changing after Stop');
+
+        // A second run reuses the data already fetched.
+        await pressStart(page);
+        assert.equal(frameRequests.length, 1, 'frame data was fetched again on the second run');
+        assert.deepEqual(errors, [], `page/console error(s):\n  ${errors.join('\n  ')}`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('pausing motion or hiding the tab while sending stops it', async () => {
+      const { context, page } = await open();
+      try {
+        await pressStart(page);
+        await page.locator('[data-motion-toggle]').first().click();
+        await page.waitForFunction(() => document.documentElement.dataset.motion === 'paused');
+        const paused = await read(page);
+        assert.equal(paused.state, 'idle', 'Pause motion should stop the demo');
+        assert.ok(!paused.button && paused.offNote && paused.still && !paused.canvas, `unexpected paused state: ${JSON.stringify(paused)}`);
+        assert.match(paused.status, /motion is off/);
+        await page.waitForTimeout(1200);
+        assert.equal((await read(page)).frame, paused.frame, 'frames kept changing after Pause motion');
+
+        await page.locator('[data-motion-toggle]').first().click();
+        await page.waitForFunction(() => document.documentElement.dataset.motion === 'full');
+        const resumed = await read(page);
+        assert.ok(resumed.button && !resumed.offNote, 'the button should return when motion is back');
+        assert.equal(resumed.state, 'idle', 'resuming motion must not restart the demo by itself');
+
+        await pressStart(page);
+        await page.evaluate(() => {
+          Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+          document.dispatchEvent(new Event('visibilitychange'));
+        });
+        assert.equal((await read(page)).state, 'idle', 'a hidden tab should stop the demo');
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('stops by itself after three loops', async () => {
+      const { context, page } = await open();
+      try {
+        await page.locator('#th-toggle').scrollIntoViewIfNeeded();
+        // Speed the demo's own timer up; everything else on the page keeps real time.
+        await page.evaluate(() => {
+          const real = window.setInterval.bind(window);
+          window.setInterval = (fn, ms, ...rest) => real(fn, ms === 500 ? 2 : ms, ...rest);
+        });
+        await page.locator('#th-toggle').click();
+        await page.waitForFunction(() => /three loops/.test(document.getElementById('th-status').textContent), null, { timeout: 15000 });
+        const done = await read(page);
+        assert.equal(done.state, 'idle');
+        assert.equal(done.frame, manifest.frames.count - 1, 'the third loop should end on the last frame');
+        assert.ok(done.still && !done.canvas);
+      } finally {
+        await context.close();
+      }
+    });
+
+    for (const [name, options, query, seed] of [
+      ['?static=1', {}, '?static=1', null],
+      ['Reduce Motion', { reducedMotion: 'reduce' }, '', null],
+      ['a stored pause', {}, '', (made) => made.context.addInitScript(() => { try { window.localStorage.setItem('trp-motion', 'paused'); } catch { /* ignore */ } })],
+    ]) {
+      it(`${name}: the still and a sentence, no button, nothing fetched, nothing moving`, async () => {
+        const { context, page, frameRequests } = await open(options, query, seed);
+        try {
+          const state = await read(page);
+          assert.notEqual(state.motion, 'full');
+          assert.ok(state.rendered && state.still && state.offNote, `unexpected state: ${JSON.stringify(state)}`);
+          assert.ok(!state.button && !state.canvas, `the demo must not be startable: ${JSON.stringify(state)}`);
+          await page.evaluate(() => document.getElementById('th-toggle').click()); // a scripted click must not start it either
+          await page.waitForTimeout(700);
+          const after = await read(page);
+          assert.equal(after.state, 'idle');
+          assert.equal(after.frame, null, 'no frame was ever drawn');
+          assert.deepEqual(frameRequests, [], 'frame data was fetched while the demo was unavailable');
+        } finally {
+          await context.close();
+        }
+      });
+    }
+
+    it('not rendered at 375px, and narrowing the window while sending stops it', async () => {
+      const phone = await newPage(browser, site.url, { viewport: { width: 375, height: 812 } });
+      try {
+        await phone.page.goto(`${site.url}/${PAGE}`, { waitUntil: 'networkidle' });
+        const rendered = await phone.page.evaluate(() => getComputedStyle(document.getElementById('th-demo')).display !== 'none');
+        assert.equal(rendered, false, 'the demo takes space at phone width');
+      } finally {
+        await phone.context.close();
+      }
+      const { context, page } = await open();
+      try {
+        await pressStart(page);
+        await page.setViewportSize({ width: 700, height: 900 });
+        await page.waitForFunction(() => document.getElementById('th-demo').dataset.state === 'idle');
+        const narrow = await read(page);
+        assert.equal(narrow.rendered, false);
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        assert.ok(overflow <= 1, `page overflows by ${overflow}px after narrowing`);
+      } finally {
+        await context.close();
+      }
+    });
+  });
 });

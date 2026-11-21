@@ -1,0 +1,43 @@
+{
+  "_comment": "Provenance of the Transfer Hush demo on hush-hush-snap-snap/index.html (ticket W24). frames.bin holds the display frames for one photograph, rendered by the camera app's own OpticalKit encoder (calm profile) and packed one bit per module, row by row, most significant bit first, each frame padded to a whole byte. The frames were proven before they were committed: every symbol read back through Vision, and the app's own decoder rebuilt the photograph byte for byte. The tool that renders them links the private app repo and is kept outside this public repo. behavior.test.js holds the committed files to the hashes below.",
+  "frames": {
+    "file": "hush-hush-snap-snap/images/transfer-hush/frames.bin",
+    "sha256": "6330c5d81f29d457dfd60d8a03b6f24ce5cb871369b225ec37cac4871df63bce",
+    "bytes": 99296,
+    "count": 58,
+    "modules": 117,
+    "bytesPerFrame": 1712,
+    "symbolVersion": 25,
+    "profile": "calm"
+  },
+  "still": {
+    "file": "hush-hush-snap-snap/images/transfer-hush/still.png",
+    "sha256": "4dfa6ea9a3dde004dbe8816ae306ecfbe022eb6aa3f95009bcef0cb17d33e828",
+    "frameIndex": 0,
+    "pixels": 125
+  },
+  "photo": {
+    "filename": "the-quiet-camera.jpg",
+    "mediaType": "image/jpeg",
+    "bytes": 30855,
+    "sha256": "e8b3b83160cb9716cb4da23b5c3879380a91561b0b15fc5dcaf890ea10bb3d65",
+    "pixels": "640x426",
+    "verificationCode": "Y43RTY",
+    "credit": "Sean Dryden"
+  },
+  "playback": {
+    "codesPerSecond": 2,
+    "pixelsPerModule": 3,
+    "quietZoneModules": 4,
+    "darkLevelSRGB": 94,
+    "michelsonContrast": 0.8,
+    "loopsBeforeAutoStop": 3
+  },
+  "encoder": {
+    "package": "OpticalKit (camera app repo)",
+    "renderedAtAppCommit": "94aa4426",
+    "liveAppStoreBuild": "1.5 (573)",
+    "liveBuildCommit": "5393c514",
+    "note": "The envelope, fountain, scheduler, whitening, PRNG, CRC, profile and symbol-parser sources are identical between the live build's commit and the commit the frames were rendered at, and the live build's receiver uses the same raw-then-text decode path."
+  }
+}

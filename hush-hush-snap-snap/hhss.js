@@ -22,7 +22,7 @@
    without a reload. isStatic() is read at use time by the demo and the
    frame counter for the same reason. This file adds the page's own
    capability diagnostics. */
-import { isStatic } from '../assets/js/motion.js';
+import { isStatic, onMotionChange } from '../assets/js/motion.js';
 import { initQuietControl } from '../assets/js/quiet.js';
 
 const params = new URLSearchParams(window.location.search);
@@ -151,8 +151,140 @@ function initDemo() {
   });
 }
 
+/* ------------------------------------------------------------------------
+   Transfer Hush, from this page (W24). The card plays real Transfer Hush
+   codes carrying one photograph, so a visitor with the app can receive it
+   by pointing an iPhone at the screen. The frames were rendered by the
+   app's own encoder and are only played here; nothing is encoded in the
+   browser (tools/transfer-hush/manifest.json records what they are).
+
+   Rules, all of them deliberate:
+   - Nothing moves until the visitor presses the button, and the frame data
+     is not fetched until then.
+   - Unavailable whenever motion is not 'full' (Reduce Motion, the visitor's
+     Pause, ?static=1): the still code and a sentence remain. A change of
+     that state while sending stops it.
+   - Desktop widths with a mouse or trackpad only; a phone cannot scan its
+     own screen. Narrowing the window while sending stops it.
+   - Stops when the tab is hidden, and by itself after three loops, so a
+     changing pattern is never left running unattended.
+   - Two codes a second (the app sends three) at 80% contrast.
+   ------------------------------------------------------------------------ */
+function initTransferHush() {
+  const root = document.getElementById('th-demo');
+  if (!root) return;
+  const still = document.getElementById('th-still');
+  const canvas = document.getElementById('th-canvas');
+  const button = document.getElementById('th-toggle');
+  const off = document.getElementById('th-off');
+  const status = document.getElementById('th-status');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const MODULES = 117, QUIET = 4, SCALE = 3;
+  const BYTES_PER_FRAME = Math.ceil(MODULES * MODULES / 8);
+  const CODES_PER_SECOND = 2, MAX_LOOPS = 3;
+  const DARK = 'rgb(94, 94, 94)'; // Michelson contrast 0.8 against white
+  const FRAMES_URL = 'images/transfer-hush/frames.bin';
+  const START_LABEL = button.textContent;
+  const desktop = window.matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)');
+
+  let frames = null, count = 0, index = 0, shown = 0, timer = null, loading = false;
+
+  function draw(i) {
+    const side = (MODULES + QUIET * 2) * SCALE;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, side, side);
+    ctx.fillStyle = DARK;
+    const base = i * BYTES_PER_FRAME;
+    for (let y = 0; y < MODULES; y++) {
+      let run = -1;
+      for (let x = 0; x <= MODULES; x++) {
+        const bit = y * MODULES + x;
+        const dark = x < MODULES && ((frames[base + (bit >> 3)] >> (7 - (bit & 7))) & 1) === 1;
+        if (dark && run < 0) run = x;
+        if (!dark && run >= 0) {
+          ctx.fillRect((run + QUIET) * SCALE, (y + QUIET) * SCALE, (x - run) * SCALE, SCALE);
+          run = -1;
+        }
+      }
+    }
+    root.dataset.frame = String(i);
+  }
+
+  function setState(state, message) {
+    root.dataset.state = state;
+    const sending = state === 'sending';
+    still.hidden = sending;
+    canvas.hidden = !sending;
+    button.textContent = sending ? 'Stop sending' : START_LABEL;
+    if (message !== undefined) status.textContent = message;
+  }
+
+  function stop(message) {
+    if (timer) { window.clearInterval(timer); timer = null; }
+    setState('idle', message);
+  }
+
+  function play() {
+    index = 0; shown = 1;
+    draw(0);
+    setState('sending', 'Sending. Point your iPhone at the code.');
+    timer = window.setInterval(() => {
+      if (shown >= count * MAX_LOOPS) {
+        stop('Stopped after three loops. Press the button to send again.');
+        return;
+      }
+      index = (index + 1) % count;
+      shown += 1;
+      draw(index);
+    }, 1000 / CODES_PER_SECOND);
+  }
+
+  async function start() {
+    if (loading || timer || isStatic() || !desktop.matches) return;
+    if (!frames) {
+      loading = true;
+      setState('loading', 'Loading the codes.');
+      try {
+        const response = await fetch(FRAMES_URL);
+        if (!response.ok) throw new Error(String(response.status));
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        if (bytes.length === 0 || bytes.length % BYTES_PER_FRAME !== 0) throw new Error('size');
+        frames = bytes;
+        count = bytes.length / BYTES_PER_FRAME;
+      } catch {
+        loading = false;
+        stop('The codes could not be loaded. Check your connection and try again.');
+        return;
+      }
+      loading = false;
+      // The page may have been stilled, narrowed or hidden while loading.
+      if (isStatic() || !desktop.matches || document.hidden) { stop(''); return; }
+    }
+    play();
+  }
+
+  function sync() {
+    const available = !isStatic();
+    root.hidden = false;
+    button.hidden = !available;
+    off.hidden = available;
+    if (!available && timer) stop('Stopped, because motion is off on this page.');
+    else if (available && !timer && !loading) status.textContent = '';
+  }
+
+  button.addEventListener('click', () => { if (timer) stop('Stopped.'); else start(); });
+  onMotionChange(sync);
+  desktop.addEventListener('change', () => { if (!desktop.matches && timer) stop(''); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && timer) stop('Stopped while this tab was hidden.'); });
+  window.addEventListener('pagehide', () => { if (timer) stop(''); });
+  sync();
+}
+
 initQuietControl();
 initDemo();
+initTransferHush();
 
 /* ========================================================================
    2. Aperture settle — a jump must not park a photograph half-open.

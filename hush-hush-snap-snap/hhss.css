@@ -519,6 +519,28 @@ dl.caps dd { margin: 0; color: var(--hh-paper-2); font-size: 0.9375rem; }
 .tools li strong { font-weight: 600; color: var(--hh-paper); }
 .tools + .card { margin-top: 32px; max-width: 62ch; }
 
+/* W24: the Transfer Hush demo inside its card. hhss.js removes [hidden] when
+   it can run; below desktop widths it stays out of the layout, because a phone
+   cannot scan its own screen. The code is drawn dark grey on white (80%
+   contrast), a fixed 375px, three whole pixels per module. */
+.th-demo, .th-demo[hidden] { display: none; }
+.th-stage [hidden], .th-off[hidden] { display: none; }
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .tools + .card:has(.th-demo:not([hidden])) { max-width: none; }
+  .th-demo:not([hidden]) {
+    display: grid; grid-template-columns: 375px minmax(0, 1fr); gap: 28px; align-items: start;
+    margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--hh-rule);
+  }
+  .th-stage { width: 375px; height: 375px; background: #fff; border-radius: 10px; overflow: hidden; line-height: 0; }
+  .th-stage img, .th-stage canvas { display: block; width: 375px; height: 375px; image-rendering: pixelated; }
+  .th-steps { margin: 6px 0 0; padding-left: 1.4em; font-size: 0.9375rem; color: var(--hh-paper-2); }
+  .th-steps li { padding: 4px 0; }
+  .th-steps li::marker { color: var(--hh-paper); font-weight: 600; }
+  .card .th-off { margin-top: 18px; color: var(--hh-paper); }
+  .card .demo-note { margin-top: 12px; font-size: 0.8125rem; }
+  .card .demo-note:empty { display: none; }
+}
+
 /* ---------- Private by design ---------- */
 
 .private-lines { list-style: none; margin: 32px 0 0; padding: 0; max-width: 62ch; }

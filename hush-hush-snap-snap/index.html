@@ -404,6 +404,31 @@
             <div class="card">
                 <p class="c-title">Transfer Hush, with no network at all</p>
                 <p>Send a photo to a nearby iPhone with no network, cable, or pairing: your screen shows a stream of colour codes at three per second and the other phone's camera reads them. Pick a photo size, follow the aiming guide, and watch the progress. Reduce Motion stops the codes and says so.</p>
+                <!-- W24: a real transfer from this page. Hidden until hhss.js
+                     enables it; shown at desktop widths only (a phone cannot
+                     scan its own screen). Nothing moves until the button is
+                     pressed. Frames come from the app's own encoder: see
+                     tools/transfer-hush/manifest.json. -->
+                <div class="th-demo" id="th-demo" data-state="idle" hidden>
+                    <div class="th-stage">
+                        <img id="th-still" src="images/transfer-hush/still.png" width="375" height="375" alt="A Transfer Hush code, not moving." loading="lazy" decoding="async">
+                        <canvas id="th-canvas" width="375" height="375" role="img" aria-label="A Transfer Hush code, changing twice a second." hidden></canvas>
+                    </div>
+                    <div class="th-body">
+                        <p class="c-title">Try it from this page</p>
+                        <ol class="th-steps">
+                            <li>On your iPhone, open Transfer Hush in Hush Hush Snap Snap and choose Receive.</li>
+                            <li>Press the button below. The code starts changing twice a second.</li>
+                            <li>Point your iPhone at the code and hold it steady until the photo arrives.</li>
+                        </ol>
+                        <div class="demo-controls">
+                            <button type="button" class="btn" id="th-toggle">Send a photo to your iPhone</button>
+                        </div>
+                        <p class="th-off" id="th-off" hidden>The live demo is off while motion is reduced or paused on this page.</p>
+                        <p class="demo-note" id="th-status" role="status"></p>
+                        <p class="demo-note">One photograph, about 31 KB, in the same codes the app reads, played a little slower than the app sends them. Allow about a minute. Nothing leaves this page except light.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

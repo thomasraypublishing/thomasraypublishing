@@ -139,6 +139,23 @@ stop it.
     labeled correctly, pauses and resumes site-wide, survives a reload,
     hides under `?static=1` and under Reduce Motion (nothing left to
     pause), and meets the 44×44px minimum target at 375 and 320px.
+  - *transfer hush* (W24): the live demo in the Snappy Kit card on the Hush
+    Hush Snap Snap page, which plays real Transfer Hush codes so a
+    visitor's iPhone can receive a photograph from the screen. Nothing
+    moves and `images/transfer-hush/frames.bin` is not fetched until the
+    button is pressed; once pressed it draws two codes a second on a 375px
+    canvas at the 80%-contrast grey; Stop, Pause motion, a hidden tab,
+    narrowing below the desktop breakpoint, and three complete loops each
+    stop it; under `?static=1`, Reduce Motion, and a stored pause it shows
+    the still code and a sentence with no button, and even a scripted
+    click fetches and draws nothing; it is not rendered at 375px. The
+    frame data and the still are held to the hashes in
+    `tools/transfer-hush/manifest.json`. The frames were rendered by the
+    camera app's own encoder and proven against its decoder before they
+    were committed; the tool that does that links the private app repo and
+    is not in this repo, so a new photograph means regenerating the frames
+    there and updating the manifest. **Not covered, and not coverable
+    here:** a real iPhone receiving the photograph off a real screen.
   - *resize*: Trade RC loaded at 1280px and then resized to 375, back to
     1280, and to 375 again without a reload never overflows horizontally,
     and the stacked query pane (`#query-scene .q-dm`) sheds the 44px
