@@ -238,6 +238,289 @@ describe('reset-password.html (Playwright)', () => {
     }
   });
 
+  describe('password helpers: Show/Hide, rule hint, contact route (W19)', () => {
+    const MAILTO = 'mailto:contact@thomasraypublishing.com?subject=Trade%20RC%20password%20reset';
+
+    // Opens the page against a stubbed SDK and hands the page to `fn`.
+    // By default waits until the page has left its "Checking" state, a real condition rather than a sleep.
+    async function withPage(sc, fn, { settle = true } = {}) {
+      const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
+      const consoleText = [];
+      try {
+        const page = await context.newPage();
+        page.on('console', (m) => consoleText.push(m.text()));
+        await context.route('**/*', (route) => {
+          const url = route.request().url();
+          if (url.includes('supabase-js')) {
+            return route.fulfill({ status: 200, contentType: 'application/javascript', body: mockSupabaseJs(sc) });
+          }
+          let origin;
+          try {
+            origin = new URL(url).origin;
+          } catch {
+            return route.abort();
+          }
+          return origin === site.url ? route.continue() : route.abort();
+        });
+        await page.goto(`${site.url}/reset-password.html${sc.url}`, { waitUntil: settle ? 'networkidle' : 'domcontentloaded' });
+        if (settle) {
+          await page.waitForFunction(() => !/^Checking/.test(document.getElementById('lede').textContent), null, { timeout: 8000 });
+        }
+        await fn(page, consoleText);
+      } finally {
+        await context.close();
+      }
+    }
+
+    const readyScenario = MOCK_SCENARIOS.recovery;
+    const rejectedScenario = MOCK_SCENARIOS.codeRejected;
+    const networkScenario = MOCK_SCENARIOS.codeNetwork;
+
+    const contactState = (page) => page.evaluate(() => {
+      const line = document.getElementById('contact');
+      const a = line.querySelector('a');
+      const r = a.getBoundingClientRect();
+      return { shown: line.offsetParent !== null, href: a.getAttribute('href'), text: a.textContent, height: r.height };
+    });
+
+    for (const [id, toggleId, noun] of [['password', 'togglePassword', 'new password'], ['confirm', 'toggleConfirm', 'confirmation password']]) {
+      it(`Show/Hide toggles the ${noun} field without moving focus, losing the value or submitting`, async () => {
+        await withPage(readyScenario, async (page) => {
+          await page.fill(`#${id}`, 'correct-horse-battery');
+          const btn = page.locator(`#${toggleId}`);
+          assert.equal(await btn.textContent(), 'Show');
+          assert.equal(await btn.getAttribute('aria-label'), `Show ${noun}`);
+          assert.equal(await btn.getAttribute('aria-pressed'), null, 'aria-pressed would announce the state twice');
+
+          // Keyboard: focus the button, press Space; focus must stay on it.
+          await btn.focus();
+          await page.keyboard.press('Space');
+          let st = await page.evaluate((i) => ({
+            type: document.getElementById(i).type,
+            value: document.getElementById(i).value,
+            activeId: document.activeElement && document.activeElement.id,
+            calls: (window.__mockCalls || []).filter((c) => c.name === 'update').length,
+            status: document.getElementById('status').textContent.trim(),
+          }), id);
+          assert.equal(st.type, 'text');
+          assert.equal(st.value, 'correct-horse-battery');
+          assert.equal(st.activeId, toggleId, 'focus moved off the toggle');
+          assert.equal(st.calls, 0, 'toggling submitted the form');
+          assert.equal(st.status, '', 'toggling produced a form status');
+          assert.equal(await btn.textContent(), 'Hide');
+          assert.equal(await btn.getAttribute('aria-label'), `Hide ${noun}`);
+          assert.equal(await btn.getAttribute('aria-pressed'), null, 'aria-pressed would announce the state twice');
+
+          // Pointer: click again restores the masked field.
+          await btn.click();
+          st = await page.evaluate((i) => ({
+            type: document.getElementById(i).type,
+            value: document.getElementById(i).value,
+            activeId: document.activeElement && document.activeElement.id,
+            calls: (window.__mockCalls || []).filter((c) => c.name === 'update').length,
+          }), id);
+          assert.equal(st.type, 'password');
+          assert.equal(st.value, 'correct-horse-battery');
+          assert.equal(st.activeId, toggleId);
+          assert.equal(st.calls, 0);
+          assert.equal(await btn.textContent(), 'Show');
+          assert.equal(await btn.getAttribute('aria-label'), `Show ${noun}`);
+          assert.equal(await btn.getAttribute('aria-pressed'), null, 'aria-pressed would announce the state twice');
+          // The accessible name must contain the visible word (WCAG 2.5.3).
+          assert.ok((await btn.getAttribute('aria-label')).startsWith(await btn.textContent()));
+        });
+      });
+    }
+
+    it('both password inputs keep password-field protections, masked and revealed', async () => {
+      await withPage(readyScenario, async (page) => {
+        const read = () => page.evaluate(() => ['password', 'confirm'].map((id) => {
+          const el = document.getElementById(id);
+          return { id, type: el.type, spellcheck: el.getAttribute('spellcheck'), cap: el.getAttribute('autocapitalize'), correct: el.getAttribute('autocorrect') };
+        }));
+        const check = (rows, when) => {
+          for (const r of rows) {
+            assert.equal(r.spellcheck, 'false', `${r.id} ${when}: spellcheck`);
+            assert.ok(['none', 'off'].includes(r.cap), `${r.id} ${when}: autocapitalize is ${r.cap}`);
+            assert.equal(r.correct, 'off', `${r.id} ${when}: autocorrect`);
+          }
+        };
+        check(await read(), 'masked');
+        await page.click('#togglePassword');
+        await page.click('#toggleConfirm');
+        const shown = await read();
+        assert.deepEqual(shown.map((r) => r.type), ['text', 'text']);
+        check(shown, 'revealed');
+      });
+    });
+
+    const toggleUsable = (page) => page.evaluate(() => ['togglePassword', 'toggleConfirm'].map((i) => {
+      const b = document.getElementById(i);
+      return !b.disabled && b.offsetParent !== null;
+    }));
+    const lockedAfterUpdate = {
+      url: '?code=SYNTHETIC_CODE_MARKER',
+      init: null, // the page checks the link itself, after its 2.5 s failsafe
+      exchange: { error: null },
+      update: { error: { name: 'AuthApiError', message: 'session gone', status: 401, code: 'session_not_found' } },
+    };
+
+    it('Show buttons follow the real sequence: unusable while checking, usable once validated, locked again with the field masked', async () => {
+      await withPage(lockedAfterUpdate, async (page) => {
+        // Still checking.
+        assert.match(await page.locator('#lede').textContent(), /^Checking/);
+        assert.deepEqual(await toggleUsable(page), [false, false], 'a Show button is usable while the link is being checked');
+        // Validated.
+        await page.waitForFunction(() => !document.getElementById('password').disabled, null, { timeout: 8000 });
+        assert.deepEqual(await toggleUsable(page), [true, true], 'the Show buttons did not become usable after validation');
+        await page.fill('#password', 'correct-horse-battery');
+        await page.fill('#confirm', 'correct-horse-battery');
+        await page.click('#togglePassword');
+        await page.click('#toggleConfirm');
+        assert.deepEqual(await page.evaluate(() => ['password', 'confirm'].map((i) => document.getElementById(i).type)), ['text', 'text']);
+        // Locked by a session-ended failure while revealed.
+        await page.click('#submit');
+        await page.waitForFunction(() => document.getElementById('password').disabled);
+        assert.deepEqual(await toggleUsable(page), [false, false], 'a Show button is usable after the form locked');
+        assert.deepEqual(await page.evaluate(() => ['password', 'confirm'].map((i) => document.getElementById(i).type)), ['password', 'password'], 'a locked field is still revealed');
+      }, { settle: false });
+    });
+
+    it('Show buttons are not usable on a terminal failure', async () => {
+      await withPage(rejectedScenario, async (page) => {
+        assert.deepEqual(await toggleUsable(page), [false, false]);
+      });
+    });
+
+    it('Show buttons are real buttons, absent from the no-JS page markup', async () => {
+      const res = await fetch(`${site.url}/reset-password.html`);
+      const html = await res.text();
+      for (const id of ['togglePassword', 'toggleConfirm']) {
+        const m = html.match(new RegExp(`<button[^>]*id="${id}"[^>]*>`));
+        assert.ok(m, `${id} missing`);
+        assert.match(m[0], /type="button"/);
+        assert.match(m[0], /\shidden[\s>]/, `${id} must be hidden in markup so no-JS visitors never see it`);
+      }
+    });
+
+    it('success returns both fields to type=password and disables the Show buttons', async () => {
+      await withPage(readyScenario, async (page) => {
+        await page.fill('#password', 'correct-horse-battery');
+        await page.fill('#confirm', 'correct-horse-battery');
+        await page.click('#togglePassword');
+        await page.click('#toggleConfirm');
+        await page.click('#submit');
+        await page.waitForFunction(() => document.getElementById('submit').textContent === 'Done');
+        const st = await page.evaluate(() => ({
+          types: [document.getElementById('password').type, document.getElementById('confirm').type],
+          disabled: [document.getElementById('togglePassword').disabled, document.getElementById('toggleConfirm').disabled],
+          contactShown: document.getElementById('contact').offsetParent !== null,
+        }));
+        assert.deepEqual(st.types, ['password', 'password']);
+        assert.deepEqual(st.disabled, [true, true]);
+        assert.equal(st.contactShown, false, 'contact line must not appear on success');
+      });
+    });
+
+    it('the New password input is described by a static hint that states the 8-character rule', async () => {
+      await withPage(readyScenario, async (page) => {
+        const d = await page.evaluate(() => {
+          const ids = (document.getElementById('password').getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+          return {
+            ids,
+            texts: ids.map((i) => (document.getElementById(i) ? document.getElementById(i).textContent : null)),
+            live: ids.includes('lede'),
+            hintLive: ids.map((i) => document.getElementById(i)).some((el) => el && el.closest('[aria-live]')),
+            minlength: [document.getElementById('password').getAttribute('minlength'), document.getElementById('confirm').getAttribute('minlength')],
+            ac: [document.getElementById('password').autocomplete, document.getElementById('confirm').autocomplete],
+          };
+        });
+        const lede = await page.locator('#lede').textContent();
+        assert.doesNotMatch(lede, /8 characters/, 'the rule is stated in the lede as well as the hint');
+        assert.ok(d.ids.length > 0, 'aria-describedby missing');
+        assert.equal(d.live, false, 'aria-describedby must not point at the live lede');
+        assert.equal(d.hintLive, false);
+        assert.ok(d.texts.every((t) => t !== null), 'aria-describedby points at a missing element');
+        assert.ok(d.texts.some((t) => t.includes('8')), `hint text: ${JSON.stringify(d.texts)}`);
+        assert.deepEqual(d.minlength, ['8', '8']);
+        assert.deepEqual(d.ac, ['new-password', 'new-password']);
+      });
+    });
+
+    it('retryable failure shows the fixed contact link', async () => {
+      await withPage(networkScenario, async (page) => {
+        const c = await contactState(page);
+        assert.equal(c.shown, true);
+        assert.equal(c.href, MAILTO);
+        assert.match(c.text, /contact@thomasraypublishing\.com/);
+        assert.ok(c.height >= 44, `contact link height ${c.height}`);
+      });
+    });
+
+    it('terminal failure shows the fixed contact link', async () => {
+      await withPage(rejectedScenario, async (page) => {
+        const c = await contactState(page);
+        assert.equal(c.shown, true);
+        assert.equal(c.href, MAILTO);
+        assert.ok(c.height >= 44, `contact link height ${c.height}`);
+      });
+    });
+
+    it('the contact line is hidden while checking and when the link validates', async () => {
+      await withPage(lockedAfterUpdate, async (page) => {
+        assert.match(await page.locator('#lede').textContent(), /^Checking/, 'not sampling during the check');
+        assert.equal((await contactState(page)).shown, false, 'contact line shown while checking');
+        await page.waitForFunction(() => !document.getElementById('password').disabled, null, { timeout: 8000 });
+        assert.equal((await contactState(page)).shown, false, 'contact line shown after the link validated');
+      }, { settle: false });
+    });
+
+    it('Try again hides the contact line while the check re-runs', async () => {
+      await withPage(networkScenario, async (page) => {
+        assert.equal((await contactState(page)).shown, true);
+        await page.evaluate(() => {
+          window.__contactHidden = [];
+          new MutationObserver(() => window.__contactHidden.push(document.getElementById('contact').hidden))
+            .observe(document.getElementById('contact'), { attributes: true, attributeFilter: ['hidden'] });
+        });
+        await page.click('#retry');
+        await page.waitForFunction(() => window.__contactHidden.length >= 2, null, { timeout: 8000 });
+        const log = await page.evaluate(() => window.__contactHidden);
+        assert.equal(log[0], true, `the contact line stayed visible when Try again was pressed (${log})`);
+      });
+    });
+
+    it('with the new elements present, no token or code text reaches the DOM or console', async () => {
+      for (const sc of [rejectedScenario, networkScenario, MOCK_SCENARIOS.expiredLink]) {
+        await withPage(sc, async (page, consoleText) => {
+          const html = await page.evaluate(() => document.documentElement.outerHTML);
+          assert.doesNotMatch(html, MARKER_RE);
+          assert.deepEqual(consoleText.filter((t) => MARKER_RE.test(t)), []);
+          const c = await contactState(page);
+          assert.equal(c.href, MAILTO);
+          assert.doesNotMatch(c.text, MARKER_RE);
+        });
+      }
+    });
+
+    it('touch targets are at least 44px at 375px wide and the page does not overflow', async () => {
+      await withPage(readyScenario, async (page) => {
+        for (const id of ['togglePassword', 'toggleConfirm']) {
+          const box = await page.locator(`#${id}`).boundingBox();
+          assert.ok(box.width >= 44 && box.height >= 44, `${id} is ${box.width}x${box.height}`);
+        }
+        const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        assert.ok(over <= 1, `horizontal overflow ${over}px`);
+      });
+      await withPage(networkScenario, async (page) => {
+        const c = await contactState(page);
+        assert.ok(c.height >= 44, `contact link height ${c.height}`);
+        const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        assert.ok(over <= 1, `horizontal overflow ${over}px`);
+      });
+    });
+  });
+
   describe('real SDK, network blocked — cases ported from probe.cjs', () => {
     for (const [name, c] of Object.entries(REAL_SDK_CASES)) {
       it(name, async () => {
