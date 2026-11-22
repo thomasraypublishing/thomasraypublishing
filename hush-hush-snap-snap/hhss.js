@@ -491,6 +491,8 @@ function initFrameCounter() {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') { return; }
     if (event.metaKey || event.ctrlKey || event.altKey) { return; }
     var active = document.activeElement;
+    // A focused horizontally scrolling region (the plan comparison table) owns the arrows.
+    if (active && active.closest && active.closest('.compare-scroll')) { return; }
     if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT' || active.getAttribute('role') === 'switch' || active.isContentEditable)) { return; }
     event.preventDefault();
     step(event.key === 'ArrowRight' ? 1 : -1);

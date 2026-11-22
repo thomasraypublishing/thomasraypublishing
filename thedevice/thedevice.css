@@ -854,3 +854,32 @@ a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
 
 /* -------- Edges: overscroll bounce matches the page; themed scrollbar -------- */
 html { background: var(--dv-bg); scrollbar-color: var(--dv-ink-2) var(--dv-bg); }
+
+/* ---------- Pinned masthead (W21) ----------
+   The existing masthead stays reachable while reading, so "Get the app" never
+   needs a scroll back to the top. No new control; nothing at the bottom.
+   Pinned only where the bar is one row with margin (measured one row at every
+   width from 320px; pinned from 48em, about 768px, to leave the phone masthead
+   untouched); below that, or in a short window, it stays in flow and scrolls
+   away exactly as before. Layout, not motion: it applies in every motion
+   state and never animates.
+   Deep plum at 92% over the starfield (the page's own --dv-bg), solid under
+   Reduce Transparency. Worst case behind it is a white star at 8%: ink on it
+   stays far above 4.5:1. The earlier `header.mast { position: relative;
+   z-index: 1 }` rule is overridden here (later, same specificity).
+   z-index 50: above content (1), below the fixed instruments (60) and overlays.
+   scroll-padding-top keeps anchors and focus from landing under the bar. */
+@media screen and (min-width: 48em) and (min-height: 30em) {
+  :root { --mast-h: 80px; scroll-padding-top: var(--mast-h); }
+  header.mast {
+    position: -webkit-sticky; position: sticky; top: 0; z-index: 50;
+    background: rgba(20, 10, 38, 0.92); /* --dv-bg */
+    box-shadow: 0 1px 0 var(--dv-rule);
+    /* full-bleed bar, same column as before: side padding grows with the viewport */
+    max-width: none; margin: 0;
+    padding-inline: calc(max(0px, (100% - 1080px) / 2) + clamp(16px, 4vw, 32px));
+  }
+}
+@media screen and (min-width: 48em) and (min-height: 30em) and (prefers-reduced-transparency: reduce) {
+  header.mast { background: var(--dv-bg); }
+}

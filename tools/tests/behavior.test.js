@@ -842,4 +842,321 @@ describe('behavior (Playwright)', () => {
       }
     });
   });
+
+  describe('pinned masthead (W21)', () => {
+    // The masthead of the three app pages that carry a "Get the app" link is
+    // pinned to the top from 48em wide and 30em tall; below that it scrolls
+    // away exactly as it always did. Trade RC has no download control and is
+    // deliberately not in this list.
+    const { injectAxe } = require('./lib/browser.js');
+    const PINNED = ['pomagotchi', 'thedevice', 'hush-hush-snap-snap'];
+    const GET = 'header.mast a[href*="apps.apple.com"]';
+
+    async function openPage(name, viewport, query = '?static=1') {
+      const handle = await newPage(browser, site.url, { viewport });
+      await handle.page.goto(`${site.url}/${name}/index.html${query}`, { waitUntil: 'networkidle' });
+      return handle;
+    }
+    // Jump without smooth scrolling, whatever the motion state.
+    async function jumpTo(page, y) {
+      await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), y);
+      await page.waitForFunction((top) => Math.abs(window.scrollY - top) <= 1, y);
+    }
+    const mastBox = (page) =>
+      page.evaluate(() => {
+        const r = document.querySelector('header.mast').getBoundingClientRect();
+        return { top: r.top, bottom: r.bottom, height: r.height };
+      });
+    async function assertPinned(page, label) {
+      await jumpTo(page, 2000);
+      const box = await mastBox(page);
+      assert.ok(Math.abs(box.top) <= 1, `${label}: masthead top is ${box.top}, not 0`);
+      assert.ok(box.height <= 90, `${label}: masthead is ${box.height}px tall, more than one row`);
+      const hit = await page.evaluate((sel) => {
+        const a = document.querySelector(sel);
+        const r = a.getBoundingClientRect();
+        const el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        return {
+          inView: r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth,
+          hit: el === a || a.contains(el),
+        };
+      }, GET);
+      assert.ok(hit.inView, `${label}: "Get the app" is not inside the viewport`);
+      assert.ok(hit.hit, `${label}: something covers the centre of "Get the app"`);
+    }
+
+    for (const name of PINNED) {
+      it(`${name}: stays at the top with "Get the app" reachable, 1280x900`, async () => {
+        const { context, page } = await openPage(name, { width: 1280, height: 900 });
+        try {
+          await assertPinned(page, name);
+        } finally {
+          await context.close();
+        }
+      });
+
+      it(`${name}: an in-page jump never leaves its target under the bar, 1280x900`, async () => {
+        const { context, page } = await openPage(name, { width: 1280, height: 900 });
+        try {
+          // In-page jump: a mid-page section heading, top-aligned.
+          await page.evaluate(() => {
+            const h = [...document.querySelectorAll('main h2')].filter((el) => el.getBoundingClientRect().top + scrollY > 1500)[0];
+            h.setAttribute('data-w21', 'jump');
+            h.scrollIntoView({ block: 'start' });
+          });
+          await page.waitForTimeout(150);
+          const jump = await page.evaluate(() => ({
+            top: document.querySelector('[data-w21="jump"]').getBoundingClientRect().top,
+            bottom: document.querySelector('header.mast').getBoundingClientRect().bottom,
+          }));
+          assert.ok(jump.top >= jump.bottom - 1, `${name}: jump target top ${jump.top} is under the bar (bottom ${jump.bottom})`);
+        } finally {
+          await context.close();
+        }
+      });
+
+      it(`${name}: focusing a control half-hidden under the bar scrolls it clear, 1280x900`, async () => {
+        const { context, page } = await openPage(name, { width: 1280, height: 900 });
+        try {
+          // A real control in the page body, positioned with its top
+          // about 20px below the viewport top (that is, under the pinned bar),
+          // then focused. The browser only has to nudge it, so scroll-padding-top
+          // decides where it lands (a far-off target is simply centred).
+          const targetTop = await page.evaluate(() => {
+            const c = [...document.querySelectorAll('main a[href], main button')].filter((el) => {
+              if (el.closest('header.mast')) return false;
+              const r = el.getBoundingClientRect();
+              return r.width > 0 && r.height > 0 && r.top + scrollY > 2200 && r.top + scrollY < 6000;
+            })[0];
+            c.setAttribute('data-w21', 'focus');
+            return c.getBoundingClientRect().top + scrollY;
+          });
+          await jumpTo(page, targetTop - 20);
+          const placed = await page.evaluate(() => document.querySelector('[data-w21="focus"]').getBoundingClientRect().top);
+          assert.ok(Math.abs(placed - 20) <= 1, `${name}: set-up failed, target top is ${placed}, not about 20`);
+          await page.evaluate(() => document.querySelector('[data-w21="focus"]').focus({ preventScroll: false }));
+          await page.waitForTimeout(150);
+          const focus = await page.evaluate(() => ({
+            focused: document.activeElement === document.querySelector('[data-w21="focus"]'),
+            top: document.activeElement.getBoundingClientRect().top,
+            bottom: document.querySelector('header.mast').getBoundingClientRect().bottom,
+          }));
+          assert.ok(focus.focused, `${name}: the control did not take focus`);
+          assert.ok(focus.top >= focus.bottom - 1, `${name}: focused element top ${focus.top} is under the bar (bottom ${focus.bottom}); it started at ${placed}`);
+        } finally {
+          await context.close();
+        }
+      });
+
+      it(`${name}: pinned, one row, "Get the app" reachable, no overflow at 900x800`, async () => {
+        const { context, page } = await openPage(name, { width: 900, height: 800 });
+        try {
+          await assertPinned(page, `${name} 900x800`);
+          const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+          assert.ok(overflow <= 1, `${name}: ${overflow}px of horizontal overflow at 900px`);
+        } finally {
+          await context.close();
+        }
+      });
+
+      it(`${name}: unchanged at 375x812 (scrolls away, no horizontal overflow)`, async () => {
+        const { context, page } = await openPage(name, { width: 375, height: 812 });
+        try {
+          await jumpTo(page, 2000);
+          const box = await mastBox(page);
+          assert.ok(box.bottom <= 0, `${name}: masthead is still on screen at 375px (bottom ${box.bottom})`);
+          const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+          assert.ok(overflow <= 1, `${name}: ${overflow}px of horizontal overflow at 375px`);
+        } finally {
+          await context.close();
+        }
+      });
+    }
+
+    it('pinned under default full motion too (no ?static)', async () => {
+      for (const name of PINNED) {
+        const { context, page } = await openPage(name, { width: 1280, height: 900 }, '');
+        try {
+          assert.equal(await page.evaluate(() => document.documentElement.dataset.motion), 'full');
+          await assertPinned(page, `${name} (full motion)`);
+        } finally {
+          await context.close();
+        }
+      }
+    });
+
+    it('a short landscape window keeps the masthead in flow', async () => {
+      const { context, page } = await openPage('pomagotchi', { width: 1000, height: 400 });
+      try {
+        await jumpTo(page, 2000);
+        const box = await mastBox(page);
+        assert.ok(box.bottom <= 0, `masthead is pinned in a 400px-tall window (bottom ${box.bottom})`);
+      } finally {
+        await context.close();
+      }
+    });
+
+    it('pomagotchi: bar text, including the visible motion toggle, keeps AA contrast in all four times of day, 1280', async () => {
+      // Full motion on purpose: under ?static the toggle is hidden (quiet.js),
+      // which is how an earlier version of this test never saw it.
+      const { context, page } = await openPage('pomagotchi', { width: 1280, height: 900 }, '');
+      try {
+        assert.equal(await page.evaluate(() => document.documentElement.dataset.motion), 'full');
+        await injectAxe(page);
+        for (const y of [2000, 0]) {
+          for (const tod of ['morning', 'afternoon', 'evening', 'night']) {
+            const label = `${tod} at scrollY ${y}`;
+            await page.evaluate((t) => { document.body.dataset.tod = t; }, tod);
+            await jumpTo(page, y);
+            // The bar's own colour settle; the rest of the page's ambient animation never ends.
+            await page.waitForFunction(
+              () => document.querySelector('header.mast').getAnimations({ subtree: true }).every((a) => a.playState !== 'running'),
+              null,
+              { polling: 'raf', timeout: 4000 },
+            );
+            const toggle = await page.evaluate(() => {
+              const t = document.querySelector('header.mast .motion-toggle');
+              const r = t.getBoundingClientRect();
+              return { visible: !t.hidden && r.width > 0 && r.height > 0 && getComputedStyle(t).visibility === 'visible' };
+            });
+            assert.ok(toggle.visible, `${label}: the motion toggle is not visible, so its contrast is not being tested`);
+            const result = await page.evaluate(() =>
+              window.axe.run(document.querySelector('header.mast'), { runOnly: { type: 'rule', values: ['color-contrast'] } }),
+            );
+            const describe = (nodes) => nodes.map((n) => n.target.join(' ') + ' ' + n.any.map((a) => a.message).join(' '));
+            assert.deepEqual(result.violations.flatMap((v) => describe(v.nodes)), [], `${label}: color-contrast violations in the bar`);
+            const unverified = result.incomplete.flatMap((v) => describe(v.nodes)).filter((t) => /motion-toggle/.test(t));
+            assert.deepEqual(unverified, [], `${label}: axe could not verify the motion toggle`);
+            assert.ok(
+              result.passes.flatMap((v) => v.nodes).some((n) => n.target.join(' ').includes('motion-toggle')),
+              `${label}: axe did not positively pass the motion toggle`,
+            );
+          }
+        }
+      } finally {
+        await context.close();
+      }
+    });
+  });
+
+  describe('compare tables (W22)', () => {
+    // A collapsed <details> holding a real data table, on two pages. The table
+    // scrolls sideways inside a focusable region on narrow screens; a keyboard
+    // user must be able to scroll it with the arrow keys without the page's
+    // own arrow-key handlers (frame counter) taking the key.
+    const { injectAxe, runAxe, AXE_TAGS } = require('./lib/browser.js');
+    const PAGES = [
+      { name: 'hush-hush-snap-snap', rows: 19, summary: 'Compare plans' },
+      { name: 'trade-rc', rows: 12, summary: 'Compare tiers' },
+    ];
+
+    async function openCompare(name, viewport) {
+      const handle = await newPage(browser, site.url, { viewport });
+      await handle.page.goto(`${site.url}/${name}/index.html?static=1`, { waitUntil: 'networkidle' });
+      const closed = await handle.page.evaluate(() => document.querySelector('details.compare').open);
+      assert.equal(closed, false, `${name}: the comparison starts open`);
+      await handle.page.click('details.compare > summary');
+      await handle.page.waitForFunction(() => document.querySelector('details.compare').open);
+      return handle;
+    }
+    // Wait until the region's scrollLeft has stopped changing (keyboard scrolling may be animated).
+    const settleScroll = (page) =>
+      page.evaluate(
+        () =>
+          new Promise((resolve) => {
+            const el = document.querySelector('.compare-scroll');
+            let last = -1;
+            let still = 0;
+            const tick = () => {
+              if (el.scrollLeft === last) still += 1; else { still = 0; last = el.scrollLeft; }
+              if (still >= 6) resolve(last); else requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }),
+      );
+    const overflowOf = (page) => page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+
+    for (const { name, rows, summary } of PAGES) {
+      for (const viewport of [{ width: 375, height: 812 }, { width: 320, height: 700 }]) {
+        it(`${name}: open table is accessible and keyboard-scrollable, ${viewport.width}x${viewport.height}`, async () => {
+          const { context, page } = await openCompare(name, viewport);
+          try {
+            assert.ok((await overflowOf(page)) <= 1, `${name}: the page overflows sideways with the table open`);
+            await injectAxe(page);
+            const result = await runAxe(page, AXE_TAGS);
+            assert.deepEqual(
+              result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`),
+              [],
+              `${name}: axe violations with the table open`,
+            );
+
+            const region = await page.evaluate(() => {
+              const el = document.querySelector('.compare-scroll');
+              return {
+                tabindex: el.tabIndex,
+                role: el.getAttribute('role'),
+                name: (el.getAttribute('aria-label') || '').trim(),
+                scrolls: el.scrollWidth > el.clientWidth,
+              };
+            });
+            assert.equal(region.tabindex, 0, `${name}: the scroll region is not focusable`);
+            assert.equal(region.role, 'region');
+            assert.ok(region.name.length > 0, `${name}: the scroll region has no accessible name`);
+            assert.ok(region.scrolls, `${name}: the table does not scroll sideways at ${viewport.width}px`);
+
+            // Keyboard: ArrowRight scrolls the table and must not jump the page.
+            await page.evaluate(() => document.querySelector('.compare-scroll').focus());
+            const before = await page.evaluate(() => scrollY);
+            for (let i = 0; i < 4; i += 1) await page.keyboard.press('ArrowRight');
+            await settleScroll(page);
+            const right = await page.evaluate(() => ({
+              left: document.querySelector('.compare-scroll').scrollLeft,
+              y: scrollY,
+              focused: document.activeElement === document.querySelector('.compare-scroll'),
+            }));
+            assert.ok(right.focused, `${name}: the region lost focus on ArrowRight`);
+            assert.ok(right.left > 0, `${name}: ArrowRight did not scroll the table (scrollLeft ${right.left}, page scrollY ${before} -> ${right.y})`);
+            assert.ok(Math.abs(right.y - before) <= 3, `${name}: ArrowRight jumped the page (scrollY ${before} -> ${right.y})`);
+
+            for (let i = 0; i < 6; i += 1) await page.keyboard.press('ArrowLeft');
+            await settleScroll(page);
+            const back = await page.evaluate(() => ({ left: document.querySelector('.compare-scroll').scrollLeft, y: scrollY }));
+            assert.ok(back.left < right.left, `${name}: ArrowLeft did not scroll the table back (${right.left} -> ${back.left})`);
+            assert.ok(Math.abs(back.y - before) <= 3, `${name}: ArrowLeft jumped the page (scrollY ${before} -> ${back.y})`);
+          } finally {
+            await context.close();
+          }
+        });
+      }
+
+      it(`${name}: open table at 1280x900 is clean and complete`, async () => {
+        const { context, page } = await openCompare(name, { width: 1280, height: 900 });
+        try {
+          assert.ok((await overflowOf(page)) <= 1, `${name}: the page overflows sideways with the table open`);
+          await injectAxe(page);
+          const result = await runAxe(page, AXE_TAGS);
+          assert.deepEqual(
+            result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`),
+            [],
+            `${name}: axe violations with the table open`,
+          );
+          const table = await page.evaluate(() => {
+            const feature = [...document.querySelectorAll('.compare tbody tr')].filter((tr) => tr.querySelector('th[scope="row"]'));
+            return {
+              rows: feature.length,
+              cells: feature.map((tr) => [...tr.querySelectorAll('td')].filter((td) => td.textContent.trim() !== '').length),
+              summaryHeight: document.querySelector('.compare > summary').getBoundingClientRect().height,
+              summaryText: document.querySelector('.compare > summary').textContent.trim(),
+            };
+          });
+          assert.equal(table.rows, rows, `${name}: expected ${rows} feature rows`);
+          assert.ok(table.cells.every((n) => n === 3), `${name}: a row does not have exactly 3 non-empty data cells (${table.cells})`);
+          assert.ok(table.summaryHeight >= 44, `${name}: summary is ${table.summaryHeight}px tall, under 44`);
+          assert.equal(table.summaryText, summary);
+        } finally {
+          await context.close();
+        }
+      });
+    }
+  });
 });

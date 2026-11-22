@@ -180,7 +180,7 @@ h2 em, h1 em { font-style: normal; color: var(--pg-tx-accent); }
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 44px; padding: 0 16px;
   font-family: var(--fredoka); font-weight: 500; font-size: 0.8125rem;
-  color: var(--pg-tx-accent); background: transparent;
+  color: var(--pg-ink); background: transparent; /* ink, not the accent: the accent is 4.23:1 on the evening sky bar */
   border: 1.5px solid var(--pg-rule); border-radius: 999px; cursor: pointer;
 }
 .motion-toggle:hover { border-color: var(--pg-tx-accent); }
@@ -916,3 +916,26 @@ html { background: #FFF6EC; scrollbar-color: var(--pg-rose) #FFF6EC; }
 html:has(body[data-tod="morning"]) { background: #FBF1F5; scrollbar-color: var(--pg-rose) #FBF1F5; }
 html:has(body[data-tod="evening"]) { background: #EBD9E8; scrollbar-color: #94447C #EBD9E8; }
 html:has(body[data-tod="night"]) { background: #2E2340; scrollbar-color: #D199B8 #2E2340; }
+
+/* ---------- Pinned masthead (W21) ----------
+   The existing masthead stays reachable while reading, so "Get the app" never
+   needs a scroll back to the top. No new control; nothing at the bottom.
+   Pinned only where the bar is one row with margin (measured one row from
+   about 375px up; pinned from 48em, about 768px); below that, or in a short
+   window, it stays in flow and scrolls away exactly as before. Layout, not
+   motion: it applies in every motion state and never animates.
+   Solid sky colour from the same time-of-day variables as the page, so it is
+   readable in all four states and matches the top of the body gradient at rest.
+   z-index 50: above content, below the fixed bookmark (60) and every overlay.
+   scroll-padding-top keeps anchors and focus from landing under the bar. */
+@media screen and (min-width: 48em) and (min-height: 30em) {
+  :root { --mast-h: 80px; scroll-padding-top: var(--mast-h); }
+  header.mast {
+    position: -webkit-sticky; position: sticky; top: 0; z-index: 50;
+    background: var(--pg-sky-a);
+    box-shadow: 0 1px 0 var(--pg-rule);
+    /* full-bleed bar, same column as before: side padding grows with the viewport */
+    max-width: none; margin: 0;
+    padding-inline: calc(max(0px, (100% - 1080px) / 2) + clamp(16px, 4vw, 32px));
+  }
+}

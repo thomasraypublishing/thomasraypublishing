@@ -156,6 +156,22 @@ stop it.
     is not in this repo, so a new photograph means regenerating the frames
     there and updating the manifest. **Not covered, and not coverable
     here:** a real iPhone receiving the photograph off a real screen.
+  - *pinned masthead* (W21): on Pomagotchi, The Device and Hush Hush Snap
+    Snap the existing masthead is `position: sticky` from 48em wide and
+    30em tall. At 1280 and 900px wide it stays at the top after scrolling,
+    is one row, and "Get the app" is the element actually hit at its own
+    centre; an in-page jump and a focus move both land below the bar
+    (`scroll-padding-top`), and that test fails if the padding is removed;
+    at 375px and in a short window the bar scrolls away as before.
+    Pomagotchi's bar is checked for contrast at full motion, with the
+    Pause control visible, in all four times of day. Trade RC is not
+    pinned: its masthead has no download control.
+  - *compare tables* (W22): the collapsed "Compare plans" / "Compare
+    tiers" tables on Hush Hush Snap Snap and Trade RC. `routes.test.js`
+    only scans them closed, so this opens each one and checks axe, page
+    overflow at 375 and 320px, the labelled focusable scroll region, the
+    row counts, and that Left/Right arrow keys scroll the table instead
+    of being taken by the page's own key handler.
   - *resize*: Trade RC loaded at 1280px and then resized to 375, back to
     1280, and to 375 again without a reload never overflows horizontally,
     and the stacked query pane (`#query-scene .q-dm`) sheds the 44px
@@ -177,6 +193,14 @@ stop it.
   scrubs it. What never changes, and what every scenario in this file
   checks: the raw code/token/description text is never rendered into the
   DOM or written to the console, under any outcome.
+
+  It also covers the page's helpers (W19): a text Show/Hide button on each
+  field (usable only once the link validates, absent without JavaScript,
+  never moving focus, changing the value or submitting), the static
+  8-character hint tied to the new-password field, the attributes that
+  keep a revealed password out of autocorrect and spell-check, and the
+  fixed `mailto:` contact link, which appears on failure states only and
+  never carries anything from the URL.
 
 - **`game.test.js`** — ported from `game-race.cjs`. Restarting The Device's
   memory challenge (mid-playback, inside the 900ms success delay, inside

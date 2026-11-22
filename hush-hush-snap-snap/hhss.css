@@ -583,6 +583,32 @@ dl.caps dd { margin: 0; color: var(--hh-paper-2); font-size: 0.9375rem; }
 .plans-note { list-style: none; margin: 24px 0 0; padding: 0; max-width: 62ch; }
 .plans-note li { font-size: 0.9375rem; color: var(--hh-paper-2); padding: 6px 0; }
 
+/* Compare plans (W22): a collapsed native <details> holding a real data table, below the plan cards.
+   Words in every cell; "Not included" is quieter (paper-2 on surface, AA) but never a symbol or colour alone.
+   No motion, no JS. */
+.compare { margin-top: 28px; border-top: 1px solid var(--hh-rule); }
+.compare > summary {
+  display: list-item; list-style-position: inside;
+  min-height: 44px; box-sizing: border-box; padding: 10px 0;
+  font-size: 1rem; line-height: 1.5; font-weight: 600; color: var(--hh-paper);
+  cursor: pointer;
+}
+.compare > summary::marker { color: var(--hh-pink); }
+.compare > summary:focus-visible { outline: 2px solid var(--hh-paper); outline-offset: 3px; border-radius: 4px; }
+.compare-scroll { overflow-x: auto; margin-top: 6px; background: var(--hh-surface); border: 1px solid var(--hh-rule); border-radius: 12px; }
+.compare-scroll:focus-visible { outline: 2px solid var(--hh-paper); outline-offset: 3px; }
+.compare table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 0.9375rem; text-align: left; }
+.compare caption { text-align: left; padding: 14px 16px 6px; font-size: 0.8125rem; letter-spacing: 0.02em; color: var(--hh-paper-2); }
+.compare thead th { padding: 10px 16px; font-weight: 600; color: var(--hh-paper); border-bottom: 1px solid var(--hh-rule); vertical-align: bottom; }
+.compare thead th:first-child { min-width: 12rem; }
+.compare tbody th[scope="row"] { font-weight: 400; color: var(--hh-paper); padding: 10px 16px; vertical-align: top; min-width: 12rem; }
+.compare td { padding: 10px 16px; color: var(--hh-paper); vertical-align: top; min-width: 8.5rem; }
+.compare td.no { color: var(--hh-paper-2); }
+.compare tbody tr + tr > * { border-top: 1px solid var(--hh-rule); }
+.compare tr.grp th { padding: 18px 16px 6px; border-top: 1px solid var(--hh-rule); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hh-pink); }
+.compare tbody:first-of-type tr.grp th { border-top: 0; }
+@media (forced-colors: active) { .compare-scroll:focus-visible, .compare > summary:focus-visible { outline-color: Highlight; } }
+
 /* ---------- Closer + get ---------- */
 
 .closer { padding-top: clamp(96px, 12vw, 128px); }
@@ -1005,3 +1031,28 @@ a:hover { text-decoration-thickness: 2px; text-underline-offset: 2px; }
 
 /* -------- Edges: overscroll bounce matches the page; themed scrollbar -------- */
 html { background: var(--hh-ink); scrollbar-color: var(--hh-paper-2) var(--hh-ink); }
+
+/* ---------- Pinned masthead (W21) ----------
+   The existing masthead stays reachable while reading, so "Get the app" never
+   needs a scroll back to the top. No new control; nothing at the bottom (the
+   frame counter keeps the bottom edge to itself).
+   Pinned only where the bar is one row with margin (measured one row from
+   about 640px up; pinned from 48em, about 768px, so the wrapped tablet-narrow
+   and phone mastheads are untouched); below that, or in a short window, it
+   stays in flow and scrolls away exactly as before. Layout, not motion: it
+   applies in every motion state and never animates.
+   True black with the hairline rule, same as the rest of the page.
+   z-index 50: above content, below the frame counter (60) and the capture
+   flash (10000). scroll-padding-top sits beside scroll-padding-bottom above,
+   so the frame counter's scrollIntoView lands the section under the bar. */
+@media screen and (min-width: 48em) and (min-height: 30em) {
+  :root { --mast-h: 80px; scroll-padding-top: var(--mast-h); }
+  header.mast {
+    position: -webkit-sticky; position: sticky; top: 0; z-index: 50;
+    background: var(--hh-ink);
+    box-shadow: 0 1px 0 var(--hh-rule);
+    /* full-bleed bar, same column as before: side padding grows with the viewport */
+    max-width: none; margin: 0;
+    padding-inline: calc(max(0px, (100% - var(--wide)) / 2) + var(--pad));
+  }
+}
